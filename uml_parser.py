@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 import tempfile
 import db_attribute
 import db_table
+import error_handler
 
 class umlParser:
     
@@ -10,6 +11,7 @@ class umlParser:
         
         self.xml_tree = ET.parse(xml_path)
         self.table_dict = {}
+        self.error_handler = error_handler.ErrorHandler()
         
         
     
@@ -50,6 +52,14 @@ class umlParser:
                 new_table = db_table.Table(name,t_id)
                 
         
+        #check if table name found and table created
+        if new_table == None:                                           ###
+            self.error_handler.print_error("dia:table_name_missing")    ###
+            e_code = self.error_handler.exit_code["xml"]                ###
+                                                                        ###
+            exit(e_code)                                                ###
+                
+        
         #then cycles again to find the other relevant child elements
         for child in table:
             
@@ -60,7 +70,6 @@ class umlParser:
                     new_attr = self.parse_attribute(child,table)
                     attr_list.append(new_attr)
                     
-        #TODO check if table name found and table created
         new_table.attr_list = attr_list
         self.table_dict[t_id] = new_table
                 
@@ -128,7 +137,14 @@ class umlParser:
                 slave_id = child.attrib['to']  #gets the slave id
                 slave = self.table_dict[slave_id] 
                 
-        #TODO: error check if either table not found
+                
+        #error check if either table not found
+        if master == None or slave == None:                        ###
+            self.error_handler.print_error("dia:ref_not_closed")   ###
+            e_code = self.error_handler.exit_code["diagram"]       ###
+                                                                   ###
+            exit(e_code)                                           ###
+        
         
         #updating both tables
         master.add_slave(slave)
