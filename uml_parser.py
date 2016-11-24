@@ -68,13 +68,11 @@ class umlParser:
                 new_root = child
                 
                 for child in new_root:
-                    new_attr = self.parse_attribute(child,table)
+                    new_attr = self.parse_attribute(child,new_table)
                     attr_list.append(new_attr)
                     
                     if new_attr.p_key_flag:
-                        new_table.p_key = new_attr
-                        print "pkey set"
-                        print new_table.p_key
+                        new_table.p_key.append(new_attr)
                     
         new_table.attr_list = attr_list
         self.table_dict[t_id] = new_table
@@ -108,7 +106,7 @@ class umlParser:
             #else it's string stroed as text
             else:
                 attr_dict[name] = self.stripHashtags(child[0].text)
-            
+        
         attr = db_attribute.Attribute(table,attr_dict)
         
         return attr
@@ -175,5 +173,6 @@ class umlParser:
 parser = umlParser('./Diagram5.dia')
 parser.parse()
 
-generator = db_generator.DatabaseGenerator()
+db_type = "mysql"
+generator = db_generator.DatabaseGenerator(db_type)
 generator.generate(parser.table_dict)

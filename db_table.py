@@ -8,13 +8,15 @@ class Table:
                         
         self.name = table_name  
         self.id = table_id
-        self.p_key = None               #primary key attribute
+        self.p_key = []                 #primary key attribute
         
         self.is_f_key_cnt = 0           #is foreign key flag (cnt)
         self.referenced_by = []         #list for tables that reference
                                         #this table
         
-        self.f_key_cnt = 0              #has foreign key flag
+        self.f_key_cnt = 0              #how many foreign keys does this table have
+                                        #NOTE: one foreign key can consist of more columns
+                                        #of the referenced table!
         self.f_key_attr_list = []       #list of links to foreign key attrs
         
         self.attr_list = []
@@ -40,6 +42,7 @@ class Table:
         Updates this table's attr_list with the new attribute
         and updates f_key_cnt and f_key_attr_list variables.
         '''
-
+        
+        #NOTE: appends a LIST of primary key collumns
         self.f_key_attr_list.append(master.p_key)
         self.f_key_cnt =+ 1
