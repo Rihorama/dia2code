@@ -4,6 +4,7 @@ import tempfile
 import db_attribute
 import db_table
 import error_handler
+import db_generator
 
 class umlParser:
     
@@ -69,6 +70,11 @@ class umlParser:
                 for child in new_root:
                     new_attr = self.parse_attribute(child,table)
                     attr_list.append(new_attr)
+                    
+                    if new_attr.p_key_flag:
+                        new_table.p_key = new_attr
+                        print "pkey set"
+                        print new_table.p_key
                     
         new_table.attr_list = attr_list
         self.table_dict[t_id] = new_table
@@ -168,3 +174,6 @@ class umlParser:
     
 parser = umlParser('./Diagram5.dia')
 parser.parse()
+
+generator = db_generator.DatabaseGenerator()
+generator.generate(parser.table_dict)

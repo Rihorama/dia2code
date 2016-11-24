@@ -14,8 +14,3 @@ class Attribute:
         self.comment = attr_dict['comment']        
         
         self.p_key_flag = attr_dict['primary_key']    #primary key flag
-        
-        #in case this is a primary key, sets its mother table's primary key
-        #to itself
-        if self.p_key_flag:
-            table.pkey = self
