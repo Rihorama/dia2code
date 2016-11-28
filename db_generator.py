@@ -22,15 +22,23 @@ class DatabaseGenerator:
         #Cycles over tables and adds them to the file
         for i in sorted(table_dict):
             
-            table = table_dict[i]            
-            attr_string = ""            
-            constraint_string = ""      #used if needed, e.g. for mysql
-            foreign_string = ""         #for foreign keys if present
+            table = table_dict[i]  
+            
+            self.txt.startTable(table)
+            #attr_string = ""            
+            #constraint_string = ""      #used if needed, e.g. for mysql
+            #foreign_string = ""         #for foreign keys if present
             
             
             
             #adding individual rows
-            for attr in table.attr_list:                
+            for attr in table.attr_list: 
+                
+                self.txt.addAttribute(attr)
+                
+            print self.txt.wrapUpTable()
+                
+            '''
                 s = self.txt.getAttributeString(attr.name,attr.d_type,attr.nullable)
                 attr_string = "{}{},\n".format(attr_string,s)            
             
@@ -80,11 +88,12 @@ class DatabaseGenerator:
             if (len(table.p_key) != 0): #TODO: deal with primary key absence, either error or fix
                 s = self.txt.getPrimaryString(table.p_key)
                 attr_string = attr_string + s + "\n"
+            '''
             
             
             #wrapping it all together in one table
-            fin = self.txt.getTableString(table.name,attr_string)
-            print fin
+            #fin = self.txt.getTableString(table.name,attr_string)
+            #print fin
         
         
     
