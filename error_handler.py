@@ -14,7 +14,7 @@ class ErrorHandler:
         #dictionary for error print quotes
         self.err_dict = {}
         
-        self.err_dict["dia:ref_not_closed"] = "In given diagram: reference not connected on one or both sides."
+        self.err_dict["dia:ref_not_closed"] = "In dia xml file: reference not connected on one or both sides. \nCheck your diagram for connections not properly connected to their tables."
         self.err_dict["dia:table_name_missing"] = "In dia xml file: incomplete table element. Name attribute missing."
         
         

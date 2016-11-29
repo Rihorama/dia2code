@@ -128,6 +128,14 @@ class umlParser:
             if local_tag == 'connections':
                 new_root = child
                 break
+        
+        #new_root == None means the connection exists but is not properly
+        #connected to either table in the diagram
+        if new_root == None:
+            self.error_handler.print_error("dia:ref_not_closed")   ###
+            e_code = self.error_handler.exit_code["diagram"]       ###
+                                                                   ###
+            exit(e_code)                                           ###
             
                 
         for child in new_root: 
@@ -170,7 +178,7 @@ class umlParser:
             
     
     
-parser = umlParser('./Diagram5.dia')
+parser = umlParser('./Diagram_firma.dia')
 parser.parse()
 
 db_type = "mysql"

@@ -6,10 +6,10 @@ class TextBank:
     def __init__(self):
         
         self.indent = "    " #four spaces
-        self.table_format = "CREATE TABLE {} (\n{})\n"
+        self.table_format = "CREATE TABLE {} (\n{}\n)\n"
         self.primary_format = self.indent + "PRIMARY KEY ({})"
         self.constraint_format = self.indent + "CREATE CONSTRAINT {} {} ({})"
-        self.foreign_format = self.indent + "{}FOREIGN KEY ({}) REFERENCES {}({})"
+        self.foreign_format = self.indent + "FOREIGN KEY {} ({}) REFERENCES {}({})"
         
         self.table = None
         self.table_string = ""          #filled with wrapUpTable()
@@ -43,7 +43,8 @@ class TextBank:
             
         #foreign keys
         for f_key_list in table.f_key_attr_list:  #if there is any
-            all_names = ""   #string for all foreign collumn names to be put together for one FK
+            here_names = ""       #string for all foreign collumn names to be put together for one FK
+            foreign_names = ""   #string for names of attributes that are referenced by this FK
             reffed_table_name = f_key_list[0].my_table.name                
             
             #referenced table can have a multiple-column primary keys
@@ -53,7 +54,8 @@ class TextBank:
                 #first we add a new attribute that will serve as the foreign key
                 #based on the name of the referenced table and its primary key
                 new_name = "{}_{}".format(f_key.my_table.name,f_key.name)
-                all_names = "{},{}".format(all_names,new_name)
+                here_names = "{},{}".format(here_names,new_name)          #attributes in child table
+                foreign_names = "{},{}".format(foreign_names,f_key.name) #referenced attributes
                 
                 #we use the new name we created and data type and nullable flag from the reffed one
                 s = self.getAttributeString(new_name,f_key.d_type,f_key.nullable)
@@ -61,8 +63,9 @@ class TextBank:
             
             #now we'll also add the FOREIGN KEY statement, add it to foreign_string
             #to be printed later
-            all_names = all_names[1:] #it always starts with a comma, we cut it off
-            s = self.getForeignString(reffed_table_name,all_names)
+            here_names = here_names[1:]    #it always starts with a comma, we cut it off
+            foreign_names = foreign_names[1:] #same story
+            s = self.getForeignString(here_names,reffed_table_name,foreign_names)
             self.foreign_string = "{}{},\n".format(self.foreign_string,s)
             
         return
@@ -83,8 +86,8 @@ class TextBank:
         self.attr_string = "{}{},\n".format(self.attr_string,s)
         
         
-        #UNIQUE CONSTRAINT if present
-        if attr.unique:
+        #UNIQUE CONSTRAINT if present and not for primary key (included in being primary key)
+        if attr.unique and not attr.p_key_flag:
             s = self.getConstraintString("UNIQUE",attr.name)
             self.constraint_string = "{}{},\n".format(self.constraint_string,s)
 
@@ -164,14 +167,14 @@ class TextBank:
         return s
     
     
-    def getForeignString(self,for_table, for_attr):
+    def getForeignString(self,here_attr, for_table, for_attr):
         '''
         Creates a string for a foreign key of name referencing
         for_attr attribute in table for_table.
         '''
         
         name = "fk_{}".format(for_table) #the foreign key will be named "fk_FKTableName"
-        s = "{}FOREIGN KEY ({}) REFERENCES {}({})".format(self.indent,name,for_table,for_attr)
+        s = self.foreign_format.format(name,here_attr,for_table,for_attr)
         
         return s
             
