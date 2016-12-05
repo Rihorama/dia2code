@@ -25,24 +25,32 @@ class Table:
         
         
     def add_slave(self, by_table):
-        '''
-        Adds info that this table is referenced by
+        """Adds info that this table is referenced by
         another table. Updates is_f_key_cnt and
         referenced_by attributes.
-        '''
+        
+        Args:
+            by_table (Table): Table that references this table.
+        """
         
         self.is_f_key_cnt =+ 1 
         self.referenced_by.append(by_table)
         
+        return
+        
         
         
     def add_foreign_key(self, master):
-        '''
-        Creates a foreign key referencing the given master table.
+        """Creates a foreign key referencing the given master table.
         Updates this table's attr_list with the new attribute
         and updates f_key_cnt and f_key_attr_list variables.
-        '''
+        
+        Args:
+            master (Table): Table that is referenced by this table.
+        """
         
         #NOTE: appends a LIST of primary key collumns
         self.f_key_attr_list.append(master.p_key)
         self.f_key_cnt =+ 1
+        
+        return

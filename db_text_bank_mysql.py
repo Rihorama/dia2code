@@ -23,10 +23,14 @@ class TextBank:
         
         
     def startTable(self,table):
-        '''
-        1) Sets variable strings to empty strings again.
-        2) Parses primary key and foreign keys
-        '''
+        """
+        Method that prepares the instance attributes to work on a new
+        table and begins the process. Sets variable strings to empty
+        strings again, then parses primary key and foreign keys.
+        
+        Args:
+            table (Table): Table instance to work with.
+        """
         self.table = table
         
         self.attr_string = ""           
@@ -73,13 +77,14 @@ class TextBank:
 
 
     def addAttribute(self,attr):
-        '''
-        Parses the info of given Attribute instance so all neccessary info
+        """Parses the info of given Attribute instance so all neccessary info
         is included in the final string in the way that this language
-        requests.
+        requests. Creates needed strings and adds them to their respective
+        self.x_string variables.
         
-        Creates needed strings and adds them to their respective self.x_string variables.
-        '''
+        Args:
+            attr (Attribute): Attribute instance to parse into text.
+        """
         
         #ROW DECLARATION (name, data type, not null if neccessary - provided by getAttributeString)
         s = self.getAttributeString(attr.name,attr.d_type,attr.nullable)
@@ -94,10 +99,12 @@ class TextBank:
 
 
     def wrapUpTable(self):
-        '''
-        Puts together all stored strings to create a CREATE statement for the whole
+        """Puts together all stored strings to create a CREATE statement for the whole
         table. Saves the string in self.table_string and returns it.
-        '''
+            
+        Returns:
+            Final CREATE TABLE string.
+        """
         self.attr_string = "{}{}".format(self.attr_string,self.fk_attributes)
         s = "{}{}{}{}".format(self.attr_string,self.constraint_string,self. \
                               foreign_string,self.primary_string)
@@ -105,31 +112,23 @@ class TextBank:
         
         return self.table_string
 
-
-
-    def getTableString(self,name, attr_string):
-        '''
-        Uses given strings to create a formated string, wrapping the whole
-        table creation:
-        
-        CREATE TABLE name (
-        attr_string
-        )
-        '''
-        
-        s = "CREATE TABLE {} (\n{})\n".format(name, attr_string)
-        
-        return s
     
     
     def getAttributeString(self,name,d_type,nullable):
-        '''
-        Uses elements stored in attribute dictionary to create
+        """Uses elements stored in attribute dictionary to create
         a string defining one column of the table.
         
-        NOTE:Does not include either comma or \n at the end. Must be added
+        NOTE: Does not include either comma or \n at the end. Must be added
         manually if needed.
-        '''
+        
+        Args:
+            name     (String):  Attribute name.
+            d_type   (String):  Attribute data type.
+            nullable (Boolean): Can-be-null flag.
+            
+        Returns:
+            Formated string.
+        """
   
         s = self.indent + name + " " + d_type
         
@@ -140,10 +139,15 @@ class TextBank:
     
     
     def getPrimaryString(self,p_key):
-        '''
-        Creates a primary key definition for the row of given name.
+        """Creates a primary key definition for the row of given name.
         No comma or \n at the end.
-        '''
+        
+        Args:
+            p_key (List): List of primary key attributes. 
+            
+        Returns:
+            Formated string.
+        """
 
         names = p_key[0].name #one will 
         
@@ -157,9 +161,15 @@ class TextBank:
     
     
     def getConstraintString(self,constraint,name):
-        '''
-        Creates a constraint string for row of the given name.
-        '''
+        """Creates a constraint string for row of the given name.
+        
+        Args:
+            constraint (String): Constraint type.
+            name       (String): Name of the constrained attribute.
+            
+        Returns:
+            Formated string.
+        """
         
         constraint_name = "{}_{}".format(name,constraint.lower())
         s = self.constraint_format.format(constraint_name,constraint,name)
@@ -168,10 +178,17 @@ class TextBank:
     
     
     def getForeignString(self,here_attr, for_table, for_attr):
-        '''
-        Creates a string for a foreign key of name referencing
+        """Creates a string for a foreign key of name referencing
         for_attr attribute in table for_table.
-        '''
+        
+        Args:
+            here_attr (Attribute): Attribute becoming a foreign key.
+            for_table (Table):     Referenced table.
+            for_attr  (Attribute): PK of the referenced table.            
+            
+        Returns:
+            Formated string.
+        """
         
         name = "fk_{}".format(for_table) #the foreign key will be named "fk_FKTableName"
         s = self.foreign_format.format(name,here_attr,for_table,for_attr)

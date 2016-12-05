@@ -17,6 +17,13 @@ class umlParser:
         
     
     def parse(self):
+        """
+        Core method of this class. Organizes the whole process
+        of XML parsing and turning the acquired info into instances
+        of Table and Attribute.
+
+        Parses the XML structure given during initialization.
+        """
     
         root = self.xml_tree.getroot()
         
@@ -29,14 +36,18 @@ class umlParser:
         for child in root[1]:
             if child.attrib['type'] == 'Database - Reference':
                 self.add_reference(child)
+                
+        return
       
                 
                 
     def add_table(self,table):
-        '''
-        Takes an element reprezenting a dia table
+        """Takes an element reprezenting a dia table
         and creates a db_table object based on it.
-        '''
+        
+        Args:
+            table (XML Element): XML structure holding info of one table.
+        """
         
         attr_list = []
         name = None
@@ -76,15 +87,23 @@ class umlParser:
                     
         new_table.attr_list = attr_list
         self.table_dict[t_id] = new_table
+        
+        return
                 
         
         
     def parse_attribute(self,attr,table):
-        '''
-        Method receives an element representing a single attribute
+        """Method receives an element representing a single attribute
         of a table. It parses the attribute's info into a dictionary,
         which is returned.
-        '''
+        
+        Args:
+            attr  (XML Element): XML structure with one attribute info.
+            table (Table): Table instance to be connected with the new Attribute instance.
+            
+        Returns:
+            Properly initialized Attribute instance.
+        """
         
         attr_dict = {}
         
@@ -114,10 +133,12 @@ class umlParser:
     
     
     def add_reference(self,ref):
-        '''
-        This method finds tables on both side of the given reference
+        """This method finds tables on both sides of the given reference
         arrow element and updates them.
-        '''
+        
+        Args:
+            ref (XML Element): XML structure holding info of the reference.
+        """
         
         master = None  #for the table that is referenced
         slave = None   #for the table that uses the reference
@@ -161,26 +182,37 @@ class umlParser:
         #updating both tables
         master.add_slave(slave)
         slave.add_foreign_key(master)
-            
         
+        return
         
     
     
     def stripHashtags(self,string):
-        '''
-        A simple method that strips first and last character
+        """A simple method that strips the and last character
         of the given string. Used to strip hashtags from Dia strings.
         
         Example: "#I'm a nice string#" to "I'm a nice string".
-        '''
+        
+        Args:
+            string (String): The string to be parsed.
+            
+        Returns:
+            The parsed string, stripped of the hashtags, if used properly.
+        """
         return string[1:-1]
         
             
+def run():    
     
-    
-parser = umlParser('./Diagram_firma.dia')
-parser.parse()
+    parser = umlParser('./Diagram_firma.dia')
+    parser.parse()
 
-db_type = "mysql"
-generator = db_generator.DatabaseGenerator(db_type)
-generator.generate(parser.table_dict)
+    db_type = "mysql"
+    generator = db_generator.DatabaseGenerator(db_type)
+    generator.generate(parser.table_dict)
+    
+    
+    
+if __name__ == "__main__":
+    
+    run()
