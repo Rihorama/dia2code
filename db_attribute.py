@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-class Attribute:
+class DbAttribute:
     
     def __init__(self, table, attr_dict):
                 

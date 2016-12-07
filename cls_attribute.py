@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-class Attribute:
+class ClsAttribute:
     
     visibility_dict = {0 : "public",
                        1 : "private",

@@ -164,7 +164,7 @@ class umlParser:
         
         #now initializing instance of the chosen class
         if child_type == "attribute":
-            ret = cls_attribute.Attribute(parent,attr_dict)
+            ret = cls_attribute.ClsAttribute(parent,attr_dict)
         elif child_type == "method":
             ret = cls_method.Method(parent,attr_dict)
         else:

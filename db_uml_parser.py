@@ -31,7 +31,6 @@ class umlParser:
         for child in root[1]:
             if child.attrib['type'] == 'Database - Table':
                 self.add_table(child)
-                break
                 
         #run for adding references
         for child in root[1]:
@@ -127,7 +126,7 @@ class umlParser:
             else:
                 attr_dict[name] = self.stripHashtags(child[0].text)
         
-        attr = db_attribute.Attribute(table,attr_dict)
+        attr = db_attribute.DbAttribute(table,attr_dict)
         
         return attr
     
