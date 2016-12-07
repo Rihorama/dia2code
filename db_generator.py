@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/python3
+
 import db_text_bank_mysql
 
 class DatabaseGenerator:
@@ -38,4 +39,4 @@ class DatabaseGenerator:
                 
                 self.txt.addAttribute(attr)
                 
-            print self.txt.wrapUpTable()
+            print(self.txt.wrapUpTable())

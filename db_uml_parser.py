@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import xml.etree.ElementTree as ET
 import tempfile
 import db_attribute
@@ -31,6 +31,7 @@ class umlParser:
         for child in root[1]:
             if child.attrib['type'] == 'Database - Table':
                 self.add_table(child)
+                break
                 
         #run for adding references
         for child in root[1]:

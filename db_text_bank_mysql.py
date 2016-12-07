@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 class TextBank:  
     #TODO: deal with possibility of wrong parameter coming...?
