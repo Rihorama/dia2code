@@ -4,6 +4,7 @@ import cls_class
 import cls_attribute
 import cls_method
 import cls_parameter
+import cls_association
 import error_handler
 
 class umlParser:
@@ -29,14 +30,30 @@ class umlParser:
         
         #run for creating classes
         for child in root[1]:
-            if child.attrib['type'] == 'UML - Class':
+            if child.attrib['type'] == "UML - Class":
                 self.add_class(child)
                 
+        #run for creating connections
+        for child in root[1]:
+            if child.attrib['type'] == "UML - Association":
+                self.add_connection(child,"association")
+            
+            elif child.attrib['type'] == "UML - Generalization":
+                self.add_connection(child,"generalization")
                 
+            elif child.attrib['type'] == "UML - Dependency":
+                self.add_connection(child,"dependency")
+                
+            elif child.attrib['type'] == "UML - Realizes":
+                self.add_connection(child,"realizes")
+
+        
+        ###TEMPORARY PRINT 
         for class_id in self.class_dict:
             cls = self.class_dict[class_id]
-            print("Class name: {}, id: {}, stereotype: {}".format(cls.name,cls.id,cls.stereotype))
-            
+
+            #print("Class name: {}, id: {}, stereotype: {}, inherits: {}, from: {}, depends: {}, on: {}, realizes: {}, what: {} ".format(cls.name,cls.id,cls.stereotype,cls.inherits_flag,cls.inherits,cls.depends_flag,cls.depends_on_list, cls.realizes_flag, cls.realizes))
+            cls.print_me()
             #for attr in cls.attr_list:
             #    attr.print_me()
                 
@@ -171,6 +188,161 @@ class umlParser:
             ret = cls_parameter.Parameter(parent,attr_dict)
         
         return ret
+    
+    
+    
+    def add_connection(self,connection,name):
+        """This method finds classes on both sides of the given connection
+        arrow element and updates them.
+        
+        Args:
+            connection  (XML Element): XML structure holding info of the connection.
+            name        (String):      Type of the connection (e.g.: generalization, interface)
+        """
+        
+        master = None  #class that is "superior" in the connection (is inherited from etc.)
+        slave = None   #for the table that is dependent
+        new_root = None
+        
+        for child in connection:
+            local_tag = child.tag.split("}")[1] #gets the local part of the tag
+            if local_tag == 'connections':
+                new_root = child
+                break
+        
+        #new_root == None means the connection exists but is not properly
+        #connected to either class in the diagram
+        if new_root == None:
+            self.error_handler.print_error("dia:ref_not_closed")   ###
+            e_code = self.error_handler.exit_code["diagram"]       ###
+                                                                   ###
+            exit(e_code)                                           ###
+            
+                
+        for child in new_root: 
+            #master class
+            if child.attrib['handle'] == "0":
+                master_id = child.attrib['to']  #gets the master id
+                master = self.class_dict[master_id] 
+            
+            #slave class
+            elif child.attrib['handle'] == "1":
+                slave_id = child.attrib['to']  #gets the slave id
+                slave = self.class_dict[slave_id] 
+                
+                
+        #error check if either table not found
+        if master == None or slave == None:                        ###
+            self.error_handler.print_error("dia:ref_not_closed")   ###
+            e_code = self.error_handler.exit_code["diagram"]       ###
+                                                                   ###
+            exit(e_code)                                           ###
+        
+        
+        #updating what's neccessary
+        if name == "association":
+            self.parseAssociation(connection,master,slave)
+        
+        elif name == "generalization":
+            slave.inherits_flag = True
+            slave.inherits =  master    #NOTE> We suppose a 1:1 relation
+            
+        elif name == "dependency":
+            slave.depends_flag = True
+            slave.depends_on_list.append(master)
+            
+        elif name == "realizes":
+            slave.realizes_flag = True
+            slave.realizes = master     #NOTE> We suppose a 1:1 relation
+        
+        
+        return
+    
+    
+    
+    def parseAssociation(self,connection,A_class,B_class):
+        """Performs additional operations and parsing over a connection of association
+        needed to properly initialize or update respective class instances.
+        This method creates an instance of Assoctiation class and updated one or both
+        classes participating in this connection, depending on its parameters.
+        
+        Args:
+            connection   (XML Element): XML structure holding info of the connection.
+            A_class      (Class):       Class on the A side of the connection.
+            B_class      (Class):       Class on the B side of the connection.
+        """
+
+        direction = None
+        
+        new_assoc = cls_association.Association()  #new Association instance
+        new_assoc.A_class = A_class
+        new_assoc.B_class = B_class
+        
+        
+        #filling the attributes
+        for child in connection:
+            #local_tag = child.tag.split("}")[1] #gets the local part of the tag
+            if "name" in child.attrib.keys():
+                name = child.attrib["name"]
+            else:
+                continue
+            
+            
+            if name == "name":
+                new_assoc.name = self.stripHashtags(child[0].text) #getting the name, can be empty
+            
+            elif name == "direction":
+                i = int(child[0].attrib["val"])          #direction index
+                direction = new_assoc.direction_dict[i]
+                
+            elif name == "assoc_type":
+                i = int(child[0].attrib["val"])          #type index
+                new_assoc.assoc_type = new_assoc.assoc_type_dict[i]
+            
+            
+            #A CLASS
+            elif name == "role_a":
+                new_assoc.A_role = self.stripHashtags(child[0].text)
+                
+            elif name == "multiplicity_a":
+                new_assoc.A_multiplicity = self.stripHashtags(child[0].text)
+                
+            elif name == "visibility_a":
+                new_assoc.A_visibility = int(child[0].attrib["val"])
+            
+            
+            #B CLASS
+            elif name == "role_b":
+                new_assoc.B_role = self.stripHashtags(child[0].text)
+                
+            elif name == "multiplicity_b":
+                new_assoc.B_multiplicity = self.stripHashtags(child[0].text)
+                
+            elif name == "visibility_b":
+                new_assoc.B_visibility = int(child[0].attrib["val"])
+                
+        
+        #NOTE: Dia 0.97.2 arrows are probably bugged because they always initially
+        #      point from left to right with default direction set to "A to B"
+        #      but this happens even if the A table is on the right and B on the left.
+        #      If the user swaps arrows to make it visually right, the XML structure
+        #      might actually say exactly the opposite, leading to the opposite
+        #      outcome than intended (class X knows about class Y instead of the opposite).
+        
+        #no direction means that both sides know about each other
+        if direction == "none":
+            A_class.association_list.append(new_assoc)
+            B_class.assoctiation_list.append(new_assoc)
+        
+        #A knows about B
+        elif direction == "A to B":
+            A_class.association_list.append(new_assoc)
+        
+        #B knows about A
+        elif direction == "B to A":
+            B_class.association_list.append(new_assoc)            
+                
+        return
     
     
     

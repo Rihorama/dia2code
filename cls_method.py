@@ -23,12 +23,19 @@ class Method:
 
             
     def print_me(self):
+        """A simple print method for debugging purposes.
+        """
 
-        print(self.name)
-        print(self.d_type)
-        print(self.visibility_dict[self.visibility])
-        
         for i in self.param_list:
             i.print_me()
+            
+        print("  METHOD {}".format(self))
+        print("  Name: {}".format(self.name))
+        print("  Data type: {}".format(self.d_type))
+        print("  Visibility: {}".format(self.visibility))
+        print("  Parameters: {}")
+        for i in self.param_list:
+            i.print_me()
+        print("  ###############")
 
             

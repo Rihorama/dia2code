@@ -24,9 +24,13 @@ class ClsAttribute:
             
             
     def print_me(self):
+        """A simple print method for debugging purposes.
+        """
 
-        print(self.name)
-        print(self.d_type)
-        print(self.visibility_dict[self.visibility])
-        print(self.value)
+        print("  ATTRIBUTE {}".format(self))
+        print("  Name: {}".format(self.name))
+        print("  Data type: {}".format(self.d_type))
+        print("  Visibility: {}".format(self.visibility))
+        print("  Value: {}".format(self.value))
+        print("  ###############")
             

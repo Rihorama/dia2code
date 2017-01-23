@@ -19,9 +19,13 @@ class Parameter:
 
             
     def print_me(self):
-
-        print(self.name)
-        print(self.d_type)
-        print(self.value)
+        """A simple print method for debugging purposes.
+        """
+        
+        print("    PARAMETER")
+        print("    Name: {}".format(self.name))
+        print("    Data type: {}".format(self.d_type))
+        print("    Value: {}".format(self.value))
+        print("    ######")
 
             
