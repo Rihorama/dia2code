@@ -29,7 +29,7 @@ class TextBank:
         strings again, then parses primary key and foreign keys.
         
         Args:
-            table (Table): Table instance to work with.
+            table (db_table.Table): Table instance to work with.
         """
         self.table = table
         
@@ -83,7 +83,7 @@ class TextBank:
         self.x_string variables.
         
         Args:
-            attr (Attribute): Attribute instance to parse into text.
+            attr (db_attribute.Attribute): Attribute instance to parse into text.
         """
         
         #ROW DECLARATION (name, data type, not null if neccessary - provided by getAttributeString)
@@ -182,9 +182,9 @@ class TextBank:
         for_attr attribute in table for_table.
         
         Args:
-            here_attr (Attribute): Attribute becoming a foreign key.
-            for_table (Table):     Referenced table.
-            for_attr  (Attribute): PK of the referenced table.            
+            here_attr (db_attrbitue.Attribute): Attribute becoming a foreign key.
+            for_table (db_table.Table):         Referenced table.
+            for_attr  (db_attribute.Attribute): PK of the referenced table.            
             
         Returns:
             Formated string.

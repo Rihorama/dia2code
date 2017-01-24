@@ -5,6 +5,7 @@ import cls_attribute
 import cls_method
 import cls_parameter
 import cls_association
+import cls_generator
 import error_handler
 
 class umlParser:
@@ -365,6 +366,12 @@ def run():
     
     parser = umlParser('./Class1.dia')
     parser.parse()
+    
+    cls_type = "cpp"
+    saving_type = 0
+    
+    generator = cls_generator.ClassGenerator(cls_type,saving_type)
+    generator.generate(parser.class_dict)
 
     
 if __name__ == "__main__":
