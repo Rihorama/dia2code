@@ -9,7 +9,7 @@ class Parameter:
         self.d_type = attr_dict["type"]        
         
         self.comment = attr_dict["comment"]
-        self.value = None
+        self.value = None               #NOTE: Value not really taken in account
         
         #if value present
         if attr_dict["value"] != "":

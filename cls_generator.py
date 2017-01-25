@@ -33,8 +33,13 @@ class ClassGenerator:
             
             self.txt.startClass(cls)
             
+            #attributes
             for attr in cls.attr_list:
                 self.txt.addAttribute(attr)
+            
+            #methods
+            for mtd in cls.method_list:
+                self.txt.addMethod(mtd)
                 
             s = self.txt.wrapUpClass()
             

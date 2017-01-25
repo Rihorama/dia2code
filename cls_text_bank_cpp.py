@@ -6,21 +6,28 @@ class TextBank:
     def __init__(self):
         
         self.indent = "    " #four spaces
-        self.class_format = "class {} {{\n{}\n}}\n"
-        self.private_format = "{}private:\n{}\n"      #formatted string for private elements
-        self.protected_format = "{}protected:\n{}\n"  #formatted string for protected elements
-        self.public_format = "{}public:\n{}\n"        #formatted string for public elements
+        self.class_format = "class {} {{\n{}}};\n{}\n"
+        self.private_format = "{}private:\n{}\n"           #formated string for private elements
+        self.protected_format = "{}protected:\n{}\n"       #formated string for protected elements
+        self.public_format = "{}public:\n{}\n"             #formated string for public elements
+        
+        self.mtd_declaration_format = "{} {}({});\n"                #string for method declaration
+        self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}\n}}\n" #string for method definition
+        
+        self.your_code_here_str = "\n// YOUR CODE HERE\n"
         
         self.cls = None                 #current class
         self.cls_string = ""            #filled with wrapUpClass()
         
-        self.private_attr_string = ""       #for private attributes
-        self.protected_attr_string = ""     #for protected attrbitues
-        self.public_attr_string = ""        #for public attributes
+        self.private_attr_string = ""      #for private attributes
+        self.protected_attr_string = ""    #for protected attrbitues
+        self.public_attr_string = ""       #for public attributes
         
         self.private_mtd_string = ""       #for private methods
         self.protected_mtd_string = ""     #for protected methods
         self.public_mtd_string = ""        #for public methods
+        
+        self.definitions = ""              #definitions of methods with empty body
 
         
         
@@ -45,7 +52,7 @@ class TextBank:
         self.protected_mtd_string = ""
         self.public_mtd_string = ""
         
-
+        self.definitions = ""
             
         return
 
@@ -85,6 +92,55 @@ class TextBank:
 
 
 
+    def addMethod(self,mtd):
+            """Using attributes of given method, generates two strings: declaration of
+            the method which will be added under the proper access modifier
+            and the definition of the method with empty body, each stored
+            in their respective "group string".
+            
+            Args:
+                mtd (cls_method.Method): Method instance to parse into text.
+            """
+            
+            #first we generate string with all parameters
+            param_str = ""
+            
+            for param in mtd.param_list:
+                s = "{} {},".format(param.d_type,param.name)
+                param_str = "{}{}".format(param_str,s)
+            
+            #removing comma if needed
+            if not param_str == "":
+                param_str = param_str[:-1]
+            
+            
+            #DECLARATION STRING
+            s = self.mtd_declaration_format.format(mtd.d_type,mtd.name,param_str)
+            
+            #adds 2x indent
+            s = "{}{}{}".format(self.indent,self.indent,s)
+            
+            #and put it under the right access modifier
+            #NOTE: So far "Implementation" variant fall under "Public"
+            if mtd.visibility == "private":
+                self.private_mtd_string = "{}{}".format(self.private_mtd_string,s)
+                
+            elif mtd.visibility == "protected":
+                self.protected_mtd_string = "{}{}".format(self.protected_mtd_string,s)
+                
+            else:
+                self.public_mtd_string = "{}{}".format(self.public_mtd_string,s)
+                
+                
+            #DEFINITION STRING
+            s = self.mtd_definition_format.format(mtd.d_type,self.cls.name,mtd.name,param_str,
+                                                  self.your_code_here_str)
+            
+            self.definitions = "{}{}".format(self.definitions,s)
+            
+
+
+
     def wrapUpClass(self):
         """Puts together all stored strings to create a complete class declaration.
         Saves the string in self.table_string and returns it.
@@ -100,7 +156,7 @@ class TextBank:
         
         declarations = "{}{}{}".format(private,protected,public)
         
-        self.cls_string = self.class_format.format(self.cls.name,declarations)
+        self.cls_string = self.class_format.format(self.cls.name,declarations,self.definitions)
         
         return self.cls_string
     
