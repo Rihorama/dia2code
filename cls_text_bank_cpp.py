@@ -12,7 +12,7 @@ class TextBank:
         self.public_format = "{}public:\n{}\n"             #formated string for public elements
         
         self.mtd_declaration_format = "{} {}({});\n"                #string for method declaration
-        self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}\n}}\n" #string for method definition
+        self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}\n}}\n\n" #string for method definition
         
         self.your_code_here_str = "\n// YOUR CODE HERE\n"
         

@@ -47,19 +47,6 @@ class umlParser:
                 
             elif child.attrib['type'] == "UML - Realizes":
                 self.add_connection(child,"realizes")
-
-        
-        ###TEMPORARY PRINT 
-        for class_id in self.class_dict:
-            cls = self.class_dict[class_id]
-
-            #print("Class name: {}, id: {}, stereotype: {}, inherits: {}, from: {}, depends: {}, on: {}, realizes: {}, what: {} ".format(cls.name,cls.id,cls.stereotype,cls.inherits_flag,cls.inherits,cls.depends_flag,cls.depends_on_list, cls.realizes_flag, cls.realizes))
-            cls.print_me()
-            #for attr in cls.attr_list:
-            #    attr.print_me()
-                
-            #for method in cls.method_list:
-            #    method.print_me()
                 
         return
       
@@ -368,9 +355,11 @@ def run():
     parser.parse()
     
     cls_type = "cpp"
-    saving_type = 0
+    saving_type = 2
+    file_name = "pokus"
+    dest_path = "./pokus/"
     
-    generator = cls_generator.ClassGenerator(cls_type,saving_type)
+    generator = cls_generator.ClassGenerator(dest_path,file_name,cls_type,saving_type)
     generator.generate(parser.class_dict)
 
     

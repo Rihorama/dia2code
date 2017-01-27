@@ -208,9 +208,13 @@ def run():
     parser.parse()
 
     db_type = "mysql"
-    generator = db_generator.DatabaseGenerator(db_type)
-    generator.generate(parser.table_dict)
+    saving_type = 1
+    file_name = "dump"
+    dest_path = "./pokus/"
     
+    generator = db_generator.DatabaseGenerator(dest_path,file_name,db_type,saving_type)
+    generator.generate(parser.table_dict)
+
     
     
 if __name__ == "__main__":
