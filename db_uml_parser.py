@@ -6,7 +6,7 @@ import db_table
 import error_handler
 import db_generator
 
-class umlParser:
+class UmlParser:
     
     def __init__(self, xml_path):
         
@@ -204,7 +204,7 @@ class umlParser:
             
 def run():    
     
-    parser = umlParser('./Diagram_firma.dia')
+    parser = UmlParser('./Diagram_firma.dia')
     parser.parse()
 
     db_type = "mysql"

@@ -4,9 +4,11 @@ import cls_text_bank_cpp
 
 class ClassGenerator:
     
-    saving_options_dict = { 0 : "on_terminal",
-                            1 : "in_one_file",
-                            2 : "one_class_per_file"}
+    supported_language_dict = { "c++" : "cls_text_bank_cpp"}
+    
+    saving_options_dict = { "t"  : "on_terminal",
+                            "f"  : "in_one_file",
+                            "ff" : "one_class_per_file"}
 
     def __init__(self,dest_path,file_name,cls_type,saving_type):
         

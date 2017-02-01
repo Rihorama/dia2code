@@ -8,13 +8,16 @@ import cls_association
 import cls_generator
 import error_handler
 
-class umlParser:
+class UmlParser:
     
     def __init__(self, xml_path):
         
-        self.xml_tree = ET.parse(xml_path)
         self.class_dict = {}
         self.error_handler = error_handler.ErrorHandler()
+        
+        self.xml_tree = ET.parse(xml_path) 
+            
+            
         
         
     
@@ -351,7 +354,7 @@ class umlParser:
             
 def run():    
     
-    parser = umlParser('./Class1.dia')
+    parser = UmlParser('./Class1.dia')
     parser.parse()
     
     cls_type = "cpp"

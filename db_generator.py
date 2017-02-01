@@ -4,8 +4,11 @@ import db_text_bank_mysql
 
 class DatabaseGenerator:
     
-    saving_options_dict = { 0 : "on_terminal",
-                            1 : "in_file"}
+    supported_language_dict = { "mysql" : "db_text_bank_mysql"}
+    
+    saving_options_dict = { "t"  : "on_terminal",
+                            "f"  : "in_file",
+                            "ff" : "in_file"}
 
     def __init__(self,dest_path,file_name,db_type,saving_type):
         self.dest_path = dest_path
