@@ -97,6 +97,9 @@ liking.
     
         err.print_error_onevar("parameter:bad_destination",dst)        
         return err.exit_code["parameter"]
+    
+    if not dst[-1] == "/":
+        dst = "{}/".format(dst)
         
     
     #LANGUAGE
@@ -108,11 +111,11 @@ liking.
     
     #default database target language
     if language == None and mode == "database":
-        language = "c++"        
+        language = "mysql"        
         
     #default class target language  
     elif language == None and mode == "class":        
-        language = "mysql"        
+        language = "c++"        
         
     #language given but not supported
     elif (mode == "database" and flag_db) or (mode == "class" and flag_cls):        

@@ -6,9 +6,9 @@ class TextBank:
     def __init__(self):
         
         self.indent = "    " #four spaces
-        self.table_format = "CREATE TABLE {} (\n{}\n)\n"
+        self.table_format = "CREATE TABLE {} (\n{}\n);\n"
         self.primary_format = self.indent + "PRIMARY KEY ({})"
-        self.constraint_format = self.indent + "CREATE CONSTRAINT {} {} ({})"
+        self.constraint_format = self.indent + "CONSTRAINT {} {} ({})"
         self.foreign_format = self.indent + "FOREIGN KEY {} ({}) REFERENCES {}({})"
         
         self.table = None

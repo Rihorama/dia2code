@@ -6,6 +6,8 @@ class ClassGenerator:
     
     supported_language_dict = { "c++" : "cls_text_bank_cpp"}
     
+    extension_dict = {"c++" : "cpp"}
+    
     saving_options_dict = { "t"  : "on_terminal",
                             "f"  : "in_one_file",
                             "ff" : "one_class_per_file"}
@@ -16,6 +18,7 @@ class ClassGenerator:
         self.file_name = file_name
         self.txt = cls_text_bank_cpp.TextBank()
         self.cls_type = cls_type  #file extension - equals to programming language used
+        self.cls_extension = self.extension_dict[cls_type]
         self.saving_type = self.saving_options_dict[saving_type]
         
         
@@ -40,7 +43,7 @@ class ClassGenerator:
                 
                 cls = class_dict[i]
                 file_name = "{}{}_{}.{}".format(self.dest_path,self.file_name,
-                                                cls.name,self.cls_type)
+                                                cls.name,self.cls_extension)
                 
                 #creates the file
                 f = open(file_name, 'w')
@@ -68,7 +71,7 @@ class ClassGenerator:
         #ALL IN ONE FILE
         elif self.saving_type == "in_one_file":  
             
-            file_name = "{}{}.{}".format(self.dest_path,self.file_name,self.cls_type)
+            file_name = "{}{}.{}".format(self.dest_path,self.file_name,self.cls_extension)
             
             #creates the file
             f = open(file_name, 'w')
