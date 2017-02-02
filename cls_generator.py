@@ -54,6 +54,10 @@ class ClassGenerator:
                 #generates attributes
                 for attr in cls.attr_list:
                     self.txt.addAttribute(attr)
+                    
+                #generates attributes from associations
+                for assoc in cls.association_list:
+                    self.txt.addAssociation(assoc)
                 
                 #generates methods
                 for mtd in cls.method_list:
@@ -86,6 +90,11 @@ class ClassGenerator:
                 #attributes
                 for attr in cls.attr_list:
                     self.txt.addAttribute(attr)
+                    
+                #generates attributes from associations
+                for assoc in cls.association_list:
+                    assoc.fillDictionaries()
+                    self.txt.addAssociation(assoc)
                 
                 #methods
                 for mtd in cls.method_list:

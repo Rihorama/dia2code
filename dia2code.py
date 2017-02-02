@@ -78,7 +78,9 @@ liking.
         
     else:
         err.print_error_onevar("parameter:wrong_mode",args.mode)
-        return err.exit_code["parameter"]
+        e_code = err.exit_code["parameter"]
+        
+        exit(e_code)
     
     
     #SOURCE PATH
@@ -87,7 +89,9 @@ liking.
     if not os.path.exists(src):
     
         err.print_error_onevar("parameter:bad_source",src)        
-        return err.exit_code["parameter"]
+        e_code = err.exit_code["parameter"]
+        
+        exit(e_code)
     
     
     #DESTINATION FOLDER
@@ -96,7 +100,7 @@ liking.
     if not os.path.isdir(dst):
     
         err.print_error_onevar("parameter:bad_destination",dst)        
-        return err.exit_code["parameter"]
+        exit(err.exit_code["parameter"])
     
     if not dst[-1] == "/":
         dst = "{}/".format(dst)
@@ -120,7 +124,9 @@ liking.
     #language given but not supported
     elif (mode == "database" and flag_db) or (mode == "class" and flag_cls):        
         err.print_error_twovar("parameter:unsupported_language",language,mode)
-        return err.exit_code["parameter"]
+        e_code = err.exit_code["parameter"]
+        
+        exit(e_code)
     
     
     #RESULT FILE NAME (if not given, uses source file name)
@@ -143,7 +149,9 @@ liking.
         
     else:
         err.print_error_onevar("parameter:wrong_print",args.print)
-        return err.exit_code["parameter"]
+        e_code = err.exit_code["parameter"]
+        
+        exit(e_code)
         
     
     
@@ -167,17 +175,6 @@ liking.
         generator = cls_generator.ClassGenerator(dst,file_name,language,print_option)
         generator.generate(parser.class_dict)
         
-        
-
-        
-    
-    
-    
-    
-        
-        
-
-    
         
 
 if __name__ == "__main__":

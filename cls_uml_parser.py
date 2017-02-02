@@ -295,7 +295,7 @@ class UmlParser:
             elif name == "role_a":
                 new_assoc.A_role = self.stripHashtags(child[0].text)
                 
-            elif name == "multiplicity_a":
+            elif name == "multipicity_a":
                 new_assoc.A_multiplicity = self.stripHashtags(child[0].text)
                 
             elif name == "visibility_a":
@@ -306,7 +306,7 @@ class UmlParser:
             elif name == "role_b":
                 new_assoc.B_role = self.stripHashtags(child[0].text)
                 
-            elif name == "multiplicity_b":
+            elif name == "multipicity_b":
                 new_assoc.B_multiplicity = self.stripHashtags(child[0].text)
                 
             elif name == "visibility_b":

@@ -10,6 +10,7 @@ class ErrorHandler:
         self.exit_code["parameter"] = 1
         self.exit_code["diagram"] = 2
         self.exit_code["xml"] = 3
+        self.exit_code["generator"] = 4
         
         
         #dictionary for error print quotes
@@ -25,6 +26,10 @@ class ErrorHandler:
         self.err_dict["dia:ref_not_closed"] = "In dia xml file: reference not connected on one or both sides. \nCheck your diagram for connections not properly connected to their tables."
         self.err_dict["dia:table_name_missing"] = "In dia xml file: incomplete table element. Name attribute missing."
         self.err_dict["dia:class_name_missing"] = "In dia xml file: incomplete class element. Name attribute missing."
+        
+        self.err_dict["generator:wrong_multiplicity"] = "In cls_association.py: Encountered invalid association multiplicity ({}) for class {}. Allowed format: \"x\", \"x..y\" or \"*\" where x is decimal, y is decimal or *."
+        
+        self.err_dict["generator:runtime"] = "In cls_association.py: Runtime error. Blame cls_generator.py."
         
         
         

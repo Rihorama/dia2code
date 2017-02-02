@@ -7,13 +7,15 @@ class TextBank:
         
         self.indent = "    " #four spaces
         self.class_format = "class {} {{\n{}}};\n{}\n"
+        self.subclass_format = "class {}({}) {{\n{}}};\n{}\n"
         self.private_format = "{}private:\n{}\n"           #formated string for private elements
         self.protected_format = "{}protected:\n{}\n"       #formated string for protected elements
-        self.public_format = "{}public:\n{}\n"             #formated string for public elements
+        self.public_format = "{}public:\n{}\n"             #formated string for public elements  
         
         self.mtd_declaration_format = "{} {}({});\n"                #string for method declaration
         self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}\n}}\n\n" #string for method definition
         
+        self.vector_format = "std::vector<{}> {}"              #string for c++ list        
         self.your_code_here_str = "\n// YOUR CODE HERE\n"
         
         self.cls = None                 #current class
@@ -138,7 +140,68 @@ class TextBank:
             
             self.definitions = "{}{}".format(self.definitions,s)
             
+            
+            
+    def addAssociation(self,assoc):
+        """Gets an instance of Association and turns it into a proper
+        attribute (single value if multiplicity is 1, vector/list for
+        variable count of values). Adds the attribute to other private
+        attributes.
+        
+        Args:
+            assoc (cls_association.Association) - Association to parse.
+        """
+        
+        #first we determine which member of the association is this class
+        #and which member is the other class
+        member = assoc.whichMemberIs(self.cls)
+        member_dict = None
+        
+        other = None
+        other_dict = None
+        
+        if member == "A":
+            member_dict = assoc.A_dict
+            other_dict = assoc.B_dict
+            other = "B"
+            
+        else:
+            member_dict = assoc.B_dict
+            other_dict = assoc.A_dict
+            other = "A"
+            
+        
+        #determining the new attribute name        
+        name = None
 
+        if not other_dict["role"] == "": #format: "rolename_othername_association"
+            
+            role = other_dict["role"]
+            role = role.replace(" ","_") #precaution in cae white spaces present, replaces with _
+            
+            name = "{}_{}_association".format(role,other_dict["class"].name)
+            
+        else: #we must manage with format: "othername_association"
+            name = "{}_association".format(other_dict["class"].name)
+            
+        
+        #this class is "member" and it will have attribute referencing the "other" class
+        #thus the multiplicity of the other class matters
+        s = ""
+        
+        if assoc.isSingleMultiplicity(other):
+            s = "{} {}".format(other_dict["class"].name, name)
+            
+        else: #multiple or variable amount of values => vector
+            s = self.vector_format.format(other_dict["class"].name, name)
+            
+        #adds 2x indent, semicolon and newline
+        s = "{}{}{};\n".format(self.indent,self.indent,s)
+        
+        self.private_attr_string = "{}{}".format(self.private_attr_string,s)
+        
+        #TODO: potentially add these in a separated string and divide by extra \n 
+        #      so it looks better in the code
 
 
     def wrapUpClass(self):
@@ -156,7 +219,14 @@ class TextBank:
         
         declarations = "{}{}{}".format(private,protected,public)
         
-        self.cls_string = self.class_format.format(self.cls.name,declarations,self.definitions)
+        #class is a sublass
+        if self.cls.inherits_flag:
+            self.cls_string = self.subclass_format.format(self.cls.name,self.cls.inherits.name,
+                                                          declarations,self.definitions)
+        
+        #normal class
+        else:
+            self.cls_string = self.class_format.format(self.cls.name,declarations,self.definitions)
         
         return self.cls_string
     
