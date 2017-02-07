@@ -793,7 +793,7 @@
         <dia:string>#bugged_association#</dia:string>
       </dia:attribute>
       <dia:attribute name="direction">
-        <dia:enum val="1"/>
+        <dia:enum val="0"/>
       </dia:attribute>
       <dia:attribute name="show_direction">
         <dia:boolean val="true"/>

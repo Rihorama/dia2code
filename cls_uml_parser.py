@@ -323,7 +323,7 @@ class UmlParser:
         #no direction means that both sides know about each other
         if direction == "none":
             A_class.association_list.append(new_assoc)
-            B_class.assoctiation_list.append(new_assoc)
+            B_class.association_list.append(new_assoc)
         
         #A knows about B
         elif direction == "A to B":

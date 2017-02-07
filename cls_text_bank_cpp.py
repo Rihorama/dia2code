@@ -7,7 +7,9 @@ class TextBank:
         
         self.indent = "    " #four spaces
         self.class_format = "class {} {{\n{}}};\n{}\n"
-        self.subclass_format = "class {}({}) {{\n{}}};\n{}\n"
+
+        self.derived_format = "class {}: public {} {{\n{}}};\n{}\n" #inherits or uses interface
+        
         self.private_format = "{}private:\n{}\n"           #formated string for private elements
         self.protected_format = "{}protected:\n{}\n"       #formated string for protected elements
         self.public_format = "{}public:\n{}\n"             #formated string for public elements  
@@ -219,9 +221,13 @@ class TextBank:
         
         declarations = "{}{}{}".format(private,protected,public)
         
-        #class is a sublass
+        #class inherits from another class
         if self.cls.inherits_flag:
-            self.cls_string = self.subclass_format.format(self.cls.name,self.cls.inherits.name,
+            self.cls_string = self.derived_format.format(self.cls.name,self.cls.inherits.name,
+                                                          declarations,self.definitions)
+        #class realizes an interface
+        elif self.cls.realizes_flag:
+            self.cls_string = self.derived_format.format(self.cls.name,self.cls.realizes.name,
                                                           declarations,self.definitions)
         
         #normal class
