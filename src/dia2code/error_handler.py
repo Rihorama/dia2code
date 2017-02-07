@@ -8,8 +8,8 @@ class ErrorHandler:
         self.exit_code = {}
         
         self.exit_code["parameter"] = 1
-        self.exit_code["diagram"] = 2
-        self.exit_code["xml"] = 3
+        self.exit_code["xml"] = 2
+        self.exit_code["parser"] = 3
         self.exit_code["generator"] = 4
         
         
@@ -27,8 +27,10 @@ class ErrorHandler:
         self.err_dict["dia:table_name_missing"] = "In dia xml file: incomplete table element. Name attribute missing."
         self.err_dict["dia:class_name_missing"] = "In dia xml file: incomplete class element. Name attribute missing."
         
-        self.err_dict["generator:wrong_multiplicity"] = "In cls_association.py: Encountered invalid association multiplicity ({}) for class {}. Allowed format: \"x\", \"x..y\" or \"*\" where x is decimal, y is decimal or *."
+        self.err_dict["parser:class_wrong_dia"] = "In class diagram parser: Your dia xml file does not contain elements required for dia2code to work in the class mode (\"UML - Class\"). Did you perhaps mean to work in the database mode? Type -h, --help for help."
+        self.err_dict["parser:database_wrong_dia"] = "In ER diagram parser: Your dia xml file does not contain elements required for dia2code to work in the database mode (\"Database - Table\"). Did you perhaps mean to work in the class mode? Type -h, --help for help."
         
+        self.err_dict["generator:wrong_multiplicity"] = "In cls_association.py: Encountered invalid association multiplicity ({}) for class {}. Allowed format: \"x\", \"x..y\" or \"*\" where x is decimal, y is decimal or *."        
         self.err_dict["generator:runtime"] = "In cls_association.py: Runtime error. Blame cls_generator.py."
         
         

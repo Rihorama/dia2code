@@ -37,6 +37,13 @@ class UmlParser:
             if child.attrib['type'] == "UML - Class":
                 self.add_class(child)
                 
+        #if class_dict empty -> wrong type of dia diagram
+        if self.class_dict == {}:
+            self.error_handler.print_error("parser:class_wrong_dia")    ###
+            e_code = self.error_handler.exit_code["parser"]                ###
+                                                                        ###
+            exit(e_code)
+                
         #run for creating connections
         for child in root[1]:
             if child.attrib['type'] == "UML - Association":

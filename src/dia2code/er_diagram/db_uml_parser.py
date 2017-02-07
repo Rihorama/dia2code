@@ -32,7 +32,16 @@ class UmlParser:
         for child in root[1]:
             if child.attrib['type'] == 'Database - Table':
                 self.add_table(child)
-                
+        
+        
+        #if table_dict empty -> wrong type of dia diagram
+        if self.table_dict == {}:
+            self.error_handler.print_error("parser:database_wrong_dia")    ###
+            e_code = self.error_handler.exit_code["parser"]                ###
+                                                                        ###
+            exit(e_code)
+         
+         
         #run for adding references
         for child in root[1]:
             if child.attrib['type'] == 'Database - Reference':
