@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 import xml.etree.ElementTree as ET
-import tempfile
-import db_attribute
-import db_table
+
+import er_diagram.db_attribute  as db_attribute
+import er_diagram.db_table      as db_table
+import er_diagram.db_generator  as db_generator
+
 import error_handler
-import db_generator
 
 class UmlParser:
     

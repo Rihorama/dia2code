@@ -6,11 +6,11 @@ from argparse import RawTextHelpFormatter
 import error_handler
 import os.path
 
-import db_uml_parser
-import db_generator
+import er_diagram.db_uml_parser      as db_uml_parser
+import er_diagram.db_generator       as db_generator
 
-import cls_uml_parser
-import cls_generator
+import class_diagram.cls_uml_parser  as cls_uml_parser
+import class_diagram.cls_generator   as cls_generator
 
 
 

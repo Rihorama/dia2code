@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import cls_text_bank_cpp
+import class_diagram.cls_text_bank_cpp as cls_text_bank_cpp
 
 class ClassGenerator:
     
@@ -93,7 +93,6 @@ class ClassGenerator:
                     
                 #generates attributes from associations
                 for assoc in cls.association_list:
-                    assoc.fillDictionaries()
                     self.txt.addAssociation(assoc)
                 
                 #methods

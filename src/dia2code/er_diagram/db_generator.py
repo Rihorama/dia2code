@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import db_text_bank_mysql
+import er_diagram.db_text_bank_mysql as  db_text_bank_mysql
 
 class DatabaseGenerator:
     

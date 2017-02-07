@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-import db_attribute
+
+import er_diagram.db_attribute
 
 
 class Table:

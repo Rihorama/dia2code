@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 import xml.etree.ElementTree as ET
-import cls_class
-import cls_attribute
-import cls_method
-import cls_parameter
-import cls_association
-import cls_generator
+import class_diagram.cls_class        as cls_class
+import class_diagram.cls_attribute    as cls_attribute
+import class_diagram.cls_method       as cls_method
+import class_diagram.cls_parameter    as cls_parameter
+import class_diagram.cls_association  as cls_association
+import class_diagram.cls_generator    as cls_generator
 import error_handler
 
 class UmlParser:

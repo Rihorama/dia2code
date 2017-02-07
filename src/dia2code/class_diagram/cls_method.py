@@ -13,7 +13,7 @@ class Method:
         self.my_class = cls       
         self.name = attr_dict["name"]
         self.d_type = attr_dict["type"]        
-        self.visibility = attr_dict["visibility"]  
+        self.visibility = self.visibility_dict[attr_dict["visibility"]]  
         
         self.param_list = attr_dict["parameters"]
         

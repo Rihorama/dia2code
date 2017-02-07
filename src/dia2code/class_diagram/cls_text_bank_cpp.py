@@ -162,6 +162,10 @@ class TextBank:
         other = None
         other_dict = None
         
+        #if A and B dictionaries haven|t been initialized yet, we do so
+        if len(assoc.A_dict.keys()) == 0:
+            assoc.fillDictionaries()
+        
         if member == "A":
             member_dict = assoc.A_dict
             other_dict = assoc.B_dict
