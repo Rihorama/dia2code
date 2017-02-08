@@ -12,6 +12,7 @@ class TextBank:
         self.foreign_format = self.indent + "FOREIGN KEY {} ({}) REFERENCES {}({})"
         
         self.table = None
+        self.fk_cnt = 0                 #counter of foreign keys to ensure unique fk name
         self.table_string = ""          #filled with wrapUpTable()
         
         self.attr_string = ""           #to accumulate attribute definitions
@@ -32,6 +33,7 @@ class TextBank:
             table (db_table.Table): Table instance to work with.
         """
         self.table = table
+        self.fk_cnt = 0
         
         self.attr_string = ""           
         self.constraint_string = ""     
@@ -47,7 +49,9 @@ class TextBank:
             
         #foreign keys
         for f_key_list in table.f_key_attr_list:  #if there is any
-            here_names = ""       #string for all foreign collumn names to be put together for one FK
+            
+            self.fk_cnt += 1     #increments the counter
+            here_names = ""      #string for all foreign collumn names to be put together for one FK
             foreign_names = ""   #string for names of attributes that are referenced by this FK
             reffed_table_name = f_key_list[0].my_table.name                
             
@@ -190,7 +194,13 @@ class TextBank:
             Formated string.
         """
         
-        name = "fk_{}".format(for_table) #the foreign key will be named "fk_FKTableName"
+        #my previous variant
+        #name = "fk_{}".format(for_table) #the foreign key will be named "fk_FKTableName"
+        
+        #new variant as suggested by diploma thesis leader
+        #the foreign key will be named "fk{unique number}__{ThisTableName}_{FKTableName}"
+        name = "fk{}__{}_{}".format(self.fk_cnt,self.table.name,for_table)
+        
         s = self.foreign_format.format(name,here_attr,for_table,for_attr)
         
         return s

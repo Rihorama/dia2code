@@ -42,39 +42,44 @@ class DatabaseGenerator:
             
             
             #Cycles over tables and adds them to the file
-            for table in table_list:
-                
-                self.txt.startTable(table)
-                
-                #adding individual rows
-                for attr in table.attr_list: 
-                    
-                    self.txt.addAttribute(attr)
-                    
-                s = self.txt.wrapUpTable()
-        
+            for table in table_list:                
+                s = self.generateTable(table)        
                 f.write(s)
                 
-            f.close()
-            
+            f.close()            
             
         #ON TERMINAL
         else:
             #Cycles over tables and adds them to the file
-            for table in table_list:
-                
-                self.txt.startTable(table)
-                
-                #adding individual rows
-                for attr in table.attr_list: 
-                    
-                    self.txt.addAttribute(attr)
-                    
-                s = self.txt.wrapUpTable()
-        
+            for table in table_list:                
+                s = self.generateTable(table)        
                 print(s)
                 
         return
+    
+    
+    
+    def generateTable(self,table):
+        """Calls all text_bank methods needed for proper generating
+        of one table.
+        
+        Args:
+            table (db_table.Table) - Instance of Table to be generated into code string.
+        
+        Returns:
+            s (String) - Generated code string representing the given table in chosen language.
+        """
+        
+        self.txt.startTable(table)
+                
+        #adding individual rows
+        for attr in table.attr_list: 
+            
+            self.txt.addAttribute(attr)
+            
+        s = self.txt.wrapUpTable()
+        
+        return s
     
     
     

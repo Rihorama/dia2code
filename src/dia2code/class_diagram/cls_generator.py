@@ -43,28 +43,11 @@ class ClassGenerator:
                 
                 cls = class_dict[i]
                 file_name = "{}{}_{}.{}".format(self.dest_path,self.file_name,
-                                                cls.name,self.cls_extension)
-                
+                                                cls.name,self.cls_extension)                
                 #creates the file
                 f = open(file_name, 'w')
-                
-                #initiates string generating
-                self.txt.startClass(cls)
-                
-                #generates attributes
-                for attr in cls.attr_list:
-                    self.txt.addAttribute(attr)
-                    
-                #generates attributes from associations
-                for assoc in cls.association_list:
-                    self.txt.addAssociation(assoc)
-                
-                #generates methods
-                for mtd in cls.method_list:
-                    self.txt.addMethod(mtd)
-                
-                #gets the final string
-                s = self.txt.wrapUpClass()
+                               
+                s = self.generateClass(cls)
                 
                 f.write(s)
                 f.close()
@@ -84,48 +67,53 @@ class ClassGenerator:
             for i in sorted(class_dict):
                 
                 cls = class_dict[i]
+                s = self.generateClass(cls)
                 
-                self.txt.startClass(cls)
-                
-                #attributes
-                for attr in cls.attr_list:
-                    self.txt.addAttribute(attr)
-                    
-                #generates attributes from associations
-                for assoc in cls.association_list:
-                    self.txt.addAssociation(assoc)
-                
-                #methods
-                for mtd in cls.method_list:
-                    self.txt.addMethod(mtd)
-                    
-                s = self.txt.wrapUpClass()                
                 f.write(s)
-                
-                #print(s)
-                
+ 
             f.close()
          
         #PRINT ON TERMINAL
-        else:
-             
+        else:             
             #Cycles over tables and prints them in the terminal
             for i in sorted(class_dict):
                 
-                cls = class_dict[i]
-                
-                self.txt.startClass(cls)
-                
-                #attributes
-                for attr in cls.attr_list:
-                    self.txt.addAttribute(attr)
-                
-                #methods
-                for mtd in cls.method_list:
-                    self.txt.addMethod(mtd)
-                    
-                s = self.txt.wrapUpClass()
+                cls = class_dict[i]                
+                s = self.generateClass(cls)
 
                 print(s)
                 
+                
+                
+    def generateClass(self,cls):
+        """Calls all text_bank methods needed for proper generating
+        of one class.
+        
+        Args:
+            cls (cls_class.Class) - Instance of Class to be generated into code string.
+        
+        Returns:
+            s (String) - Generated code string representing the given class in chosen language.
+        """
+        
+        #initiates string generating
+        self.txt.startClass(cls)
+        
+        #generates attributes
+        for attr in cls.attr_list:
+            self.txt.addAttribute(attr)
+            
+        #generates attributes from associations
+        for assoc in cls.association_list:
+            self.txt.addAssociation(assoc)
+        
+        #generates methods
+        for mtd in cls.method_list:
+            self.txt.addMethod(mtd)
+        
+        #gets the final string
+        s = self.txt.wrapUpClass()
+        
+        
+        return s
                 
