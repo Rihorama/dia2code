@@ -5,21 +5,6 @@ class TextBank:
     
     def __init__(self):
         
-        self.indent = "    " #four spaces
-        self.class_format = "class {} {{\n{}}};\n{}\n"
-
-        self.derived_format = "class {}: public {} {{\n{}}};\n{}\n" #inherits or uses interface
-        
-        self.private_format = "{}private:\n{}\n"           #formated string for private elements
-        self.protected_format = "{}protected:\n{}\n"       #formated string for protected elements
-        self.public_format = "{}public:\n{}\n"             #formated string for public elements  
-        
-        self.mtd_declaration_format = "{} {}({});\n"                #string for method declaration
-        self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}\n}}\n\n" #string for method definition
-        
-        self.vector_format = "std::vector<{}> {}"              #string for c++ list        
-        self.your_code_here_str = "\n// YOUR CODE HERE\n"
-        
         self.cls = None                 #current class
         self.cls_string = ""            #filled with wrapUpClass()
         
@@ -31,11 +16,43 @@ class TextBank:
         self.protected_mtd_string = ""     #for protected methods
         self.public_mtd_string = ""        #for public methods
         
-        self.definitions = ""              #definitions of methods with empty body
+        self.definitions = ""              #definitions of methods with empty body        
+         
+        
+        #--------- FORMAT STRING PATTERNS -----------
+        
+        # INDENT - set indent for this bank is four spaces
+        self.indent = "    "
+        
+        # CLASS PATTERN - main pattern to wrap up the whole class definition
+        self.class_format = "class {} {{\n{}}};\n{}\n"
+
+        # DERIVED CLASS PATTERN -pattern to wrap up derived classes (inherits or implements an interface)
+        self.derived_format = "class {}: public {} {{\n{}}};\n{}\n"
+        
+        # PRIVATE PATTERN - for private access modifier
+        self.private_format = "{}private:\n{}\n"
+        
+        # PROTECTED PATTERN - for protected access modifier
+        self.protected_format = "{}protected:\n{}\n"
+        
+        # PUBLIC PATTERN - for public access modifier
+        self.public_format = "{}public:\n{}\n"  
+        
+        # METHOD DECLARATION PATTERN - for declaring methods withing a c++ class body
+        self.mtd_declaration_format = "{} {}({});\n"
+        
+        # METHOD DEFINITION PATTERN - for defining the declared class outside the class body
+        self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}\n}}\n\n"
+        
+        # STD::VECTOR PATTERN - for defining vector variables
+        self.vector_format = "std::vector<{}> {}"
+        
+        # INSERT CODE COMMENT - to be put inside empty method definition body
+        self.your_code_here_str = "\n// YOUR CODE HERE\n"
 
         
-        
-        
+                
     def startClass(self,cls):
         """
         Method that prepares the instance attributes to work on a new
@@ -161,10 +178,7 @@ class TextBank:
         
         other = None
         other_dict = None
-        
-        #if A and B dictionaries haven|t been initialized yet, we do so
-        if len(assoc.A_dict.keys()) == 0:
-            assoc.fillDictionaries()
+
         
         if member == "A":
             member_dict = assoc.A_dict

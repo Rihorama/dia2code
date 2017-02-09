@@ -17,44 +17,82 @@ class Association:
     def __init__(self):
         
         self.assoc_type = None
+        self.direction = None            #taken from direction_dict
         
         self.A_class = None              #connection was initialized by clicking on this class        
         self.A_role = None               #role name . if not present -> empty string
         self.A_multiplicity = None       #multiplicity of association on A side
         self.A_visibility = None         #public/private/protected/implementation
+        self.A_arrow_visible = False     #arrow displayed pointing to member A?
         
         self.B_class = None              #connection was finished by clicking on this class
         self.B_role = None
         self.B_multiplicity = None
         self.B_visibility = None
+        self.B_arrow_visible = False     #arrow displayed pointing to member B?
         
         self.err = error_handler.ErrorHandler()
         
-        self.A_dict = {}
+        self.A_dict = {"class"        : None,
+                       "role"         : None,
+                       "multiplicity" : None,
+                       "visibility"   : None,
+                       "arrow_visible": None}
         
-        self.B_dict = {}
+        self.B_dict = {"class"        : None,
+                       "role"         : None,
+                       "multiplicity" : None,
+                       "visibility"   : None,
+                       "arrow_visible": None}
         
-        #TODO: If I ever eel suicide enough, I might remove the single attributes
+        #TODO: If I ever feel suicide enough, I might remove the single attributes
         #      and fill the dictionaries right away. And correct everything that
         #      works with it, yay...
-
-        
+   
     
-    def fillDictionaries(self):
-        """For the purpose of correctly turning this association into code
-        we need to fill self.A_dict and self.B_dict with the already filled
-        vallues of both roles. This method does just that.
+    
+    def correctDirection(self):
+        """This method compares the given direction (self.direction)
+        with individually set arrow visibility (as these two elements
+        are not linked). This action needs to be taken because
+        of a bug found in the way direction displays in Dia. This bug
+        might lead the user to enter invalid direction info to
+        achieve the correct visual appearance. 
+        
+        This method usage doesn't entirely eliminate the chance
+        of undesired data coming through. It only works in a directed
+        association if the user uses both direction and individual arrows.
+        
+        If the user uses only direction and leaves both arrows set to No,
+        there is no way to determine if the data coming correspond to
+        user's intentions or not.
+        
+        Returns:
+            bool - True if direction and arrows correspond, False otherwise.
         """
         
-        self.A_dict = {"class"        : self.A_class,
-                       "role"         : self.A_role,
-                       "multiplicity" : self.A_multiplicity,
-                       "visibility"   : self.A_visibility}
+        #arrow only points to A
+        directed_flag_A = self.A_dict["arrow_visible"] and not self.B_dict["arrow_visible"]
+        #arrow only points to B
+        directed_flag_B = self.B_dict["arrow_visible"] and not self.A_dict["arrow_visible"]
+        #both arrows visible
+        directed_flag_both = self.B_dict["arrow_visible"] and self.A_dict["arrow_visible"]
         
-        self.B_dict = {"class"        : self.B_class,
-                       "role"         : self.B_role,
-                       "multiplicity" : self.B_multiplicity,
-                       "visibility"   : self.B_visibility}
+        #arrow points to A, direction says we point to B
+        collision_A = directed_flag_A and self.direction == "A to B"
+        #arrow points to B, direction says we point to A
+        collision_B = directed_flag_B and self.direction == "B to A"
+        #arrow points to both A and B but direction suggests one-sided association
+        collision_both = directed_flag_both and not self.direction == "none"
+        
+        #if either collission happened => return False
+        if (collision_A or collision_B or collision_both):
+            return False
+        
+        else:
+            return True
+        
+        
     
     
     
@@ -81,7 +119,8 @@ class Association:
         """ First conducts a test if the given multiplicity
         is valid ("1", "1..15", "1..*" etc) and if yes, returns
         True for single value ("1") and false for variable with
-        multiple possible values ("3", "1..15" etc.).
+        multiple possible values ("3", "1..15" etc.). No multiplicity
+        counts as single value.
         
         Used to decide whether the representing attribute should
         be single-value or multi-value (list,vector...)
@@ -100,12 +139,12 @@ class Association:
         
         
         if member == "A":
-            m = self.A_multiplicity
-            m_class = self.A_class
+            m = self.A_dict["multiplicity"]
+            m_class = self.A_dict["class"]
             
         elif member == "B":
-            m = self.B_multiplicity
-            m_class = self.B_class
+            m = self.B_dict["multiplicity"]
+            m_class = self.B_dict["class"]
             
         else:
             err.print_error("generator:runtime")
@@ -120,24 +159,27 @@ class Association:
         if m.isdigit() and int(m) == 1: #single
             return True
         
+        elif m == "":                   #none counts as single
+            return True
+        
         elif m.isdigit() or m == "*":  #variable
             return False
         
         else:           #either variable or wrong -> error      
             x = m.split("..") #if correct, we get list of two
             
-            if not len(x) == 2: #not a list of two, it's wrong
-                err.print_error_twovar("generator:wrong_multiplicity",m,m_class.name)
-                e_code = err.exit_code["generator"]
-                
-                exit(e_code)
+            if not len(x) == 2: #not a list of two, it's wrong                                  #
+                self.err.print_error_twovar("generator:wrong_multiplicity",m,m_class.name)      #
+                e_code = self.err.exit_code["generator"]                                        #
+                                                                                                #
+                exit(e_code)                                                                    #
                 #TODO: Solve these errors earlier, this is dirty, does not close file in code
             
-            elif not (x[0].isdigit and (x[1].isdigit or x[1] == "*")):
-                err.print_error_twovar("generator:wrong_multiplicity",m,m_class.name)
-                e_code = err.exit_code["generator"]
-                
-                exit(e_code)
+            elif not (x[0].isdigit and (x[1].isdigit or x[1] == "*")):                          #
+                self.err.print_error_twovar("generator:wrong_multiplicity",m,m_class.name)      #
+                e_code = self.err.exit_code["generator"]                                        #
+                                                                                                #
+                exit(e_code)                                                                    #
                 #TODO: Solve these errors earlier, this is dirty, does not close file in code
                 
             else: #either both are decimal or first is decimal, second is * => that's correct

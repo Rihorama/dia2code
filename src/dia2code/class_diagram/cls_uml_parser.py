@@ -270,11 +270,9 @@ class UmlParser:
             B_class      (Class):       Class on the B side of the connection.
         """
 
-        direction = None
-        
         new_assoc = cls_association.Association()  #new Association instance
-        new_assoc.A_class = A_class
-        new_assoc.B_class = B_class
+        new_assoc.A_dict["class"] = A_class
+        new_assoc.B_dict["class"] = B_class
         
         
         #filling the attributes
@@ -291,7 +289,7 @@ class UmlParser:
             
             elif name == "direction":
                 i = int(child[0].attrib["val"])          #direction index
-                direction = new_assoc.direction_dict[i]
+                new_assoc.direction = new_assoc.direction_dict[i]
                 
             elif name == "assoc_type":
                 i = int(child[0].attrib["val"])          #type index
@@ -300,46 +298,58 @@ class UmlParser:
             
             #A CLASS
             elif name == "role_a":
-                new_assoc.A_role = self.stripHashtags(child[0].text)
+                new_assoc.A_dict["role"] = self.stripHashtags(child[0].text)
                 
             elif name == "multipicity_a":
-                new_assoc.A_multiplicity = self.stripHashtags(child[0].text)
+                new_assoc.A_dict["multiplicity"] = self.stripHashtags(child[0].text)
                 
             elif name == "visibility_a":
-                new_assoc.A_visibility = int(child[0].attrib["val"])
+                new_assoc.A_dict["visibility"] = int(child[0].attrib["val"])
+                
+            elif name == "show_arrow_a" and child[0].attrib["val"] == "true":
+                new_assoc.A_dict["arrow_visible"] = True
             
             
             #B CLASS
             elif name == "role_b":
-                new_assoc.B_role = self.stripHashtags(child[0].text)
+                new_assoc.B_dict["role"] = self.stripHashtags(child[0].text)
                 
             elif name == "multipicity_b":
-                new_assoc.B_multiplicity = self.stripHashtags(child[0].text)
+                new_assoc.B_dict["multiplicity"] = self.stripHashtags(child[0].text)
                 
             elif name == "visibility_b":
-                new_assoc.B_visibility = int(child[0].attrib["val"])
+                new_assoc.B_dict["visibility"] = child[0].attrib["val"]
+                
+            elif name == "show_arrow_b" and child[0].attrib["val"] == "true":
+                new_assoc.B_dict["arrow_visible"] = True
+            
+            
+            #last but not least, analyzes if given direction and displayed arrows don't
+            #collide:
+            flag = new_assoc.correctDirection()
+            
+            #if yes, we rather print error than choose either variant
+            if not flag:
+                self.error_handler.print_error_twovar("dia:direction_collision",A_class.name,B_class.name)   ###
+                e_code = self.error_handler.exit_code["diagram"]                                             ###
+                                                                                                             ###
+                exit(e_code)                                                                                 ###
                 
         
-        #NOTE: Dia 0.97.2 arrows are probably bugged because they always initially
-        #      point from left to right with default direction set to "A to B"
-        #      but this happens even if the A table is on the right and B on the left.
-        #      If the user swaps arrows to make it visually right, the XML structure
-        #      might actually say exactly the opposite, leading to the opposite
-        #      outcome than intended (class X knows about class Y instead of the opposite).
-        
         #no direction means that both sides know about each other
-        if direction == "none":
+        if new_assoc.direction == "none":
             A_class.association_list.append(new_assoc)
             B_class.association_list.append(new_assoc)
         
         #A knows about B
-        elif direction == "A to B":
+        elif new_assoc.direction == "A to B":
             A_class.association_list.append(new_assoc)
         
         #B knows about A
-        elif direction == "B to A":
+        elif new_assoc.direction == "B to A":
             B_class.association_list.append(new_assoc)            
-                
+        
+        
         return
     
     

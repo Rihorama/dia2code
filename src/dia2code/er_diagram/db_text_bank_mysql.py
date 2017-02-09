@@ -4,13 +4,7 @@ class TextBank:
     #TODO: deal with possibility of wrong parameter coming...?
     
     def __init__(self):
-        
-        self.indent = "    " #four spaces
-        self.table_format = "CREATE TABLE {} (\n{}\n);\n"
-        self.primary_format = self.indent + "PRIMARY KEY ({})"
-        self.constraint_format = self.indent + "CONSTRAINT {} {} ({})"
-        self.foreign_format = self.indent + "FOREIGN KEY {} ({}) REFERENCES {}({})"
-        
+                
         self.table = None
         self.fk_cnt = 0                 #counter of foreign keys to ensure unique fk name
         self.table_string = ""          #filled with wrapUpTable()
@@ -20,6 +14,25 @@ class TextBank:
         self.foreign_string = ""        #for foreign keys
         self.primary_string = ""        #for primary key
         self.fk_attributes = ""         #attributes to accomodate foreign key connection
+        
+        
+        #--------- FORMAT STRING PATTERNS -----------
+        
+        # INDENT - set indent for this bank is four spaces
+        self.indent = "    " #four spaces
+        
+        # TABLE PATTERN - main pattern to wrap up the whole table
+        self.table_format = "CREATE TABLE {} (\n{}\n);\n"
+        
+        # PRIMARY KEY PATTERN - for the primary key defining
+        self.primary_format = self.indent + "PRIMARY KEY ({})"
+        
+        # CONSTRAINT FORMAT - for constraints defining
+        self.constraint_format = self.indent + "CONSTRAINT {} {} ({})"
+        
+        # FOREIGN KEY PATTERN - for foreign key defining
+        self.foreign_format = self.indent + "FOREIGN KEY {} ({}) REFERENCES {}({})"
+        
         
         
         
