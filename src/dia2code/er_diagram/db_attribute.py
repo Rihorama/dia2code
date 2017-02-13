@@ -11,6 +11,6 @@ class DbAttribute:
         self.nullable = attr_dict['nullable']    #bool
         self.unique = attr_dict['unique']        #bool
         
-        self.comment = attr_dict['comment']        
+        self.comment = attr_dict['comment']
         
         self.p_key_flag = attr_dict['primary_key']    #primary key flag

@@ -61,6 +61,7 @@ class UmlParser:
         
         attr_list = []
         name = None
+        comment = ""
         new_table = None
         t_id = table.attrib['id']
         
@@ -71,11 +72,16 @@ class UmlParser:
             #table name
             if child.attrib['name'] == 'name':
                 name = self.stripHashtags(child[0].text)
-                new_table = db_table.Table(name,t_id)
                 
+            elif child.attrib['name'] == 'comment':
+                comment = self.stripHashtags(child[0].text)
+                                
         
         #check if table name found and table created
-        if new_table == None:                                           ###
+        if not name == None:
+            new_table = db_table.Table(name,t_id,comment)
+            
+        else:                                                           ###
             self.error_handler.print_error("dia:table_name_missing")    ###
             e_code = self.error_handler.exit_code["xml"]                ###
                                                                         ###

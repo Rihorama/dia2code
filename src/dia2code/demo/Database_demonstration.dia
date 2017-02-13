@@ -98,7 +98,7 @@
         <dia:string>#Pobocka#</dia:string>
       </dia:attribute>
       <dia:attribute name="comment">
-        <dia:string>##</dia:string>
+        <dia:string>#This is table Pobocka#</dia:string>
       </dia:attribute>
       <dia:attribute name="visible_comment">
         <dia:boolean val="false"/>
@@ -139,7 +139,7 @@
             <dia:string>#INT#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#attribute id#</dia:string>
           </dia:attribute>
           <dia:attribute name="primary_key">
             <dia:boolean val="true"/>
@@ -159,7 +159,7 @@
             <dia:string>#VARCHAR(20)#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#attribute nazev#</dia:string>
           </dia:attribute>
           <dia:attribute name="primary_key">
             <dia:boolean val="true"/>
@@ -179,7 +179,7 @@
             <dia:string>#INT#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#attribute poc_zamestnancu#</dia:string>
           </dia:attribute>
           <dia:attribute name="primary_key">
             <dia:boolean val="false"/>
@@ -228,7 +228,7 @@
         <dia:string>#Zamestnanec#</dia:string>
       </dia:attribute>
       <dia:attribute name="comment">
-        <dia:string>##</dia:string>
+        <dia:string>#This is table Zamestnanec#</dia:string>
       </dia:attribute>
       <dia:attribute name="visible_comment">
         <dia:boolean val="false"/>
@@ -269,7 +269,7 @@
             <dia:string>#INT#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#attribute id#</dia:string>
           </dia:attribute>
           <dia:attribute name="primary_key">
             <dia:boolean val="true"/>
@@ -289,7 +289,7 @@
             <dia:string>#VARCHAR(20)#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#attribute jmeno#</dia:string>
           </dia:attribute>
           <dia:attribute name="primary_key">
             <dia:boolean val="false"/>
@@ -309,7 +309,7 @@
             <dia:string>#VARCHAR(20)#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#attribute prijmeni#</dia:string>
           </dia:attribute>
           <dia:attribute name="primary_key">
             <dia:boolean val="false"/>
@@ -329,7 +329,7 @@
             <dia:string>#VARCHAR(20)#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#attribute titul#</dia:string>
           </dia:attribute>
           <dia:attribute name="primary_key">
             <dia:boolean val="false"/>
@@ -444,7 +444,7 @@
         <dia:string>#Pozice#</dia:string>
       </dia:attribute>
       <dia:attribute name="comment">
-        <dia:string>##</dia:string>
+        <dia:string>#This is table Pozice#</dia:string>
       </dia:attribute>
       <dia:attribute name="visible_comment">
         <dia:boolean val="false"/>
@@ -485,7 +485,7 @@
             <dia:string>#INT#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#attribute id#</dia:string>
           </dia:attribute>
           <dia:attribute name="primary_key">
             <dia:boolean val="true"/>
@@ -505,7 +505,7 @@
             <dia:string>#VARCHAR(20)#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#attribute nazev#</dia:string>
           </dia:attribute>
           <dia:attribute name="primary_key">
             <dia:boolean val="false"/>
@@ -620,7 +620,7 @@
         <dia:string>#Budova#</dia:string>
       </dia:attribute>
       <dia:attribute name="comment">
-        <dia:string>##</dia:string>
+        <dia:string>#This is table Budova#</dia:string>
       </dia:attribute>
       <dia:attribute name="visible_comment">
         <dia:boolean val="false"/>
@@ -661,7 +661,7 @@
             <dia:string>#INT#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#attribute id#</dia:string>
           </dia:attribute>
           <dia:attribute name="primary_key">
             <dia:boolean val="true"/>
@@ -681,7 +681,7 @@
             <dia:string>#VARCHAR(20)#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#attribute nazev#</dia:string>
           </dia:attribute>
           <dia:attribute name="primary_key">
             <dia:boolean val="false"/>
@@ -701,7 +701,7 @@
             <dia:string>#INT#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#attribute kapacita#</dia:string>
           </dia:attribute>
           <dia:attribute name="primary_key">
             <dia:boolean val="false"/>

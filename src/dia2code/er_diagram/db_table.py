@@ -5,10 +5,12 @@ import er_diagram.db_attribute
 
 class Table:
     #aList = attributeList
-    def __init__(self, table_name, table_id):
+    def __init__(self, table_name, table_id, comment):
                         
         self.name = table_name  
         self.id = table_id
+        self.comment = comment
+        
         self.p_key = []                 #primary key attribute
         
         self.is_f_key_cnt = 0           #is foreign key flag (cnt)

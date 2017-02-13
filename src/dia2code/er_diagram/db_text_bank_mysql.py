@@ -21,17 +21,44 @@ class TextBank:
         # INDENT - set indent for this bank is four spaces
         self.indent = "    " #four spaces
         
+        
         # TABLE PATTERN - main pattern to wrap up the whole table
-        self.table_format = "CREATE TABLE {} (\n{}\n);\n"
+        #               - "CREATE TABLE {name} (\n{comment}{body}\n);\n"
+        self.table_format = "CREATE TABLE {} (\n{}{}\n);\n"
+        
+        
+        # ATTRIBUTE - not_null and comment might not be present -> ""
+        #           - "{name} {data_type} {not_null} {comment}"
+        self.attribute_format = "{} {} {} {}"
+        
         
         # PRIMARY KEY PATTERN - for the primary key defining
-        self.primary_format = self.indent + "PRIMARY KEY ({})"
+        #                     - "PRIMARY KEY ({name})"
+        self.primary_format = "PRIMARY KEY ({})"
+        
         
         # CONSTRAINT FORMAT - for constraints defining
-        self.constraint_format = self.indent + "CONSTRAINT {} {} ({})"
+        #                   - "CONSTRAINT {constraint_name} {constraint_type} ({constrained_attribute_name})"           - 
+        self.constraint_format = "CONSTRAINT {} {} ({})"
+        
         
         # FOREIGN KEY PATTERN - for foreign key defining
-        self.foreign_format = self.indent + "FOREIGN KEY {} ({}) REFERENCES {}({})"
+        #                     - "FOREIGN KEY {unique_fk_name} ({attr_that_is_fk}) REFERENCES {referenced_table}({referenced_attr})"
+        self.foreign_format = "FOREIGN KEY {} ({}) REFERENCES {}({})"
+        
+        
+        # NOT NULL
+        self.not_null = "NOT NULL"
+        
+        
+        # ATTRIBUTE COMMENT - built in attribute comment
+        #                   - "COMMENT '{comment}'"
+        self.attr_comment_format = "COMMENT '{}'"
+        
+        
+        # MULTILINE COMMENT - for comments of tables
+        #                   - "/*\n{comment}\n*/\n"
+        self.multiline_comment_format = "/*\n{}\n*/\n"
         
         
         
@@ -78,8 +105,8 @@ class TextBank:
                 here_names = "{},{}".format(here_names,new_name)          #attributes in child table
                 foreign_names = "{},{}".format(foreign_names,f_key.name) #referenced attributes
                 
-                #we use the new name we created and data type and nullable flag from the reffed one
-                s = self.getAttributeString(new_name,f_key.d_type,f_key.nullable)
+                #we use the new name we created and data type and nullable flag from the reffed one + empty comment
+                s = self.getAttributeString(new_name,f_key.d_type,f_key.nullable,"")
                 self.fk_attributes = "{}{},\n".format(self.fk_attributes,s)  
             
             #now we'll also add the FOREIGN KEY statement, add it to foreign_string
@@ -104,7 +131,7 @@ class TextBank:
         """
         
         #ROW DECLARATION (name, data type, not null if neccessary - provided by getAttributeString)
-        s = self.getAttributeString(attr.name,attr.d_type,attr.nullable)
+        s = self.getAttributeString(attr.name,attr.d_type,attr.nullable,attr.comment)
         self.attr_string = "{}{},\n".format(self.attr_string,s)
         
         
@@ -122,16 +149,24 @@ class TextBank:
         Returns:
             Final CREATE TABLE string.
         """
+        
+        comment = ""
+        
+        #COMMENT
+        if not self.table.comment == "":
+            comment = self.multiline_comment_format.format(self.table.comment)
+        
+        #ALL TOGETHER
         self.attr_string = "{}{}".format(self.attr_string,self.fk_attributes)
         s = "{}{}{}{}".format(self.attr_string,self.constraint_string,self. \
                               foreign_string,self.primary_string)
-        self.table_string = self.table_format.format(self.table.name,s)
+        self.table_string = self.table_format.format(self.table.name,comment,s)
         
         return self.table_string
 
     
     
-    def getAttributeString(self,name,d_type,nullable):
+    def getAttributeString(self,name,d_type,nullable,comment):
         """Uses elements stored in attribute dictionary to create
         a string defining one column of the table.
         
@@ -142,15 +177,28 @@ class TextBank:
             name     (String):  Attribute name.
             d_type   (String):  Attribute data type.
             nullable (Boolean): Can-be-null flag.
+            comment  (String): Comment of the given attribute
             
         Returns:
             Formated string.
         """
-  
-        s = self.indent + name + " " + d_type
         
+        not_null = ""
+        new_comment = ""
+        
+        #NOT NULL
         if not nullable:
-            s = s + " " + "NOT NULL"
+            not_null = self.not_null            
+            
+        #COMMENT
+        if not comment == "":
+            new_comment = self.attr_comment_format.format(comment)    
+            
+        
+        
+        s = self.attribute_format.format(name,d_type,not_null,new_comment)
+        s = "{}{}".format(self.indent,s)
+
             
         return s
     
@@ -172,24 +220,28 @@ class TextBank:
         for i in p_key[1:]:
             names = "{},{}".format(names,i.name)
         
-        s = self.indent + "PRIMARY KEY ({})".format(names)
+        s = self.primary_format.format(names)
+        s = "{}{}".format(self.indent,s)
         
         return s
     
     
-    def getConstraintString(self,constraint,name):
+    def getConstraintString(self,constraint_type,attr_name):
         """Creates a constraint string for row of the given name.
         
         Args:
-            constraint (String): Constraint type.
-            name       (String): Name of the constrained attribute.
+            constraint_type (String): Constraint type.
+            attr_name       (String): Name of the constrained attribute.
             
         Returns:
             Formated string.
         """
         
-        constraint_name = "{}_{}".format(name,constraint.lower())
-        s = self.constraint_format.format(constraint_name,constraint,name)
+        constraint_name = "{}_{}".format(attr_name,constraint_type.lower())
+        s = self.constraint_format.format(constraint_name,constraint_type,attr_name)
+        
+        #adding indent
+        s = "{}{}".format(self.indent,s)
         
         return s
     
@@ -215,6 +267,10 @@ class TextBank:
         name = "fk{}__{}_{}".format(self.fk_cnt,self.table.name,for_table)
         
         s = self.foreign_format.format(name,here_attr,for_table,for_attr)
+        
+        #adding indent
+        s = "{}{}".format(self.indent,s)
+        
         
         return s
             
