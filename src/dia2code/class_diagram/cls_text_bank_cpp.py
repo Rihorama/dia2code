@@ -24,32 +24,65 @@ class TextBank:
         # INDENT - set indent for this bank is four spaces
         self.indent = "    "
         
+        
         # CLASS PATTERN - main pattern to wrap up the whole class definition
-        self.class_format = "class {} {{\n{}}};\n{}\n"
+        #               - "class {class_name} {{\n{class_body}}};\n{comment}{method_definitions}\n"
+        self.class_format = "class {} {{\n{}{}}};\n{}\n"
+        
 
         # DERIVED CLASS PATTERN -pattern to wrap up derived classes (inherits or implements an interface)
-        self.derived_format = "class {}: public {} {{\n{}}};\n{}\n"
+        #                       - "class {class_name}: public {parent_name} {{\n{comment}{class_body}}};\n{method_definitions}\n"
+        self.derived_format = "class {}: public {} {{\n{}{}}};\n{}\n"
+        
         
         # PRIVATE PATTERN - for private access modifier
-        self.private_format = "{}private:\n{}\n"
+        self.private_format = "private:\n{}\n"
+        
         
         # PROTECTED PATTERN - for protected access modifier
-        self.protected_format = "{}protected:\n{}\n"
+        self.protected_format = "protected:\n{}\n"
+        
         
         # PUBLIC PATTERN - for public access modifier
-        self.public_format = "{}public:\n{}\n"  
+        self.public_format = "public:\n{}\n" 
+        
+        
+        # ATTRIBUTE PATTERN - for attributes without default value
+        #                   - "{data_type} {attr_name};{line_comment}\n"
+        self.attribute_format = "{} {};{}\n"
+        
+        
+        # ATTRIBUTE PATTERN WITH DEFAULT VALUE - attributes with default value
+        #                   - "{data_type} {attr_name} = {default_value};{line_comment}\n"
+        self.attribute_with_default_format = "{} {} = {};{}\n"
+        
         
         # METHOD DECLARATION PATTERN - for declaring methods withing a c++ class body
-        self.mtd_declaration_format = "{} {}({});\n"
+        #                            - "{data_type} {method_name}({parameters});\n"
+        self.mtd_declaration_format = "{} {} ({});\n"
         
         # METHOD DEFINITION PATTERN - for defining the declared class outside the class body
-        self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}\n}}\n\n"
+        #                           - "{data_type} {class_name}::{method_name}({parameters}){{\n{comment}{body}\n}}"
+        self.mtd_definition_format = "\n{} {}::{} ({}) {{\n{}{}\n}}\n\n"
+        
         
         # STD::VECTOR PATTERN - for defining vector variables
+        #                     - "std::vector<{data_type}> {name}"
         self.vector_format = "std::vector<{}> {}"
+        
         
         # INSERT CODE COMMENT - to be put inside empty method definition body
         self.your_code_here_str = "\n// YOUR CODE HERE\n"
+        
+        
+        #LINE COMMENT - two indents, then two slashes and the text
+        #                - "// {comment}"
+        self.line_comment = "// {}"
+        
+        
+        #MULTI-LINE COMMENT - for class comments, possibly method comments if used in definition part
+        #                   - "/* {comment} */\n"
+        self.multiline_comment = "/* {} */\n\n"
 
         
                 
@@ -75,6 +108,7 @@ class TextBank:
         
         self.definitions = ""
             
+            
         return
 
 
@@ -89,17 +123,32 @@ class TextBank:
             attr (cls_attribute.Attribute): Attribute instance to parse into text.
         """
         
-        # "data_type name"
-        s = "{} {}".format(attr.d_type, attr.name)
+        #COMMENT
+        #formating comment if present and adding two indents
+        if not attr.comment == "":
+            comment = self.line_comment.format(attr.comment)
+            comment = "{}{}{}".format(self.indent,self.indent,comment)
+        
+        else:
+            comment = ""
+            
+            
+        
+        #ATTRIBUTE ITSELF
+        if attr.value == None:
+            s = self.attribute_format.format(attr.d_type, attr.name, comment)
         
         #assigning a value if present: "data_type name = value"
-        if not attr.value == None:
-            s = "{} = {}".format(s, attr.value)
+        else:
+            s = self.attribute_with_default_format.format(attr.d_type, attr.name, attr.value, comment)
+        
         
         #adds 2x indent, semicolon and newline
-        s = "{}{}{};\n".format(self.indent,self.indent,s)
+        s = "{}{}{}".format(self.indent,self.indent,s)
         
         
+        
+        #ACCESS MODIFIER
         #picking the right access modifier string
         #NOTE: So far "Implementation" variant fall under "Public"
         if attr.visibility == "private":
@@ -110,6 +159,9 @@ class TextBank:
             
         else:
             self.public_attr_string = "{}{}".format(self.public_attr_string,s)
+            
+        
+        return
 
 
 
@@ -123,6 +175,7 @@ class TextBank:
                 mtd (cls_method.Method): Method instance to parse into text.
             """
             
+            #PARAMETERS
             #first we generate string with all parameters
             param_str = ""
             
@@ -133,6 +186,17 @@ class TextBank:
             #removing comma if needed
             if not param_str == "":
                 param_str = param_str[:-1]
+            
+            
+            
+            #COMMENT
+            #formating comment if present and adding two indents
+            if not mtd.comment == "":
+                comment = self.multiline_comment.format(mtd.comment)
+            
+            else:
+                comment = ""
+            
             
             
             #DECLARATION STRING
@@ -155,9 +219,12 @@ class TextBank:
                 
             #DEFINITION STRING
             s = self.mtd_definition_format.format(mtd.d_type,self.cls.name,mtd.name,param_str,
-                                                  self.your_code_here_str)
+                                                  comment,self.your_code_here_str)
             
             self.definitions = "{}{}".format(self.definitions,s)
+            
+            
+            return
             
             
             
@@ -232,25 +299,33 @@ class TextBank:
             Final Class string.
         """
         
-        #private, protected and public access modifiers and their content
+        #ACCESS MODIFIERS AND THEIR CONTENT
         private = self.wrapUpPrivate()
         protected = self.wrapUpProtected()
         public = self.wrapUpPublic()
         
         declarations = "{}{}{}".format(private,protected,public)
         
+        
+        #COMMENT (no indent)
+        if not self.cls.comment == "":
+            comment = self.multiline_comment.format(self.cls.comment)
+        
+        else:
+            comment = ""
+        
         #class inherits from another class
         if self.cls.inherits_flag:
             self.cls_string = self.derived_format.format(self.cls.name,self.cls.inherits.name,
-                                                          declarations,self.definitions)
+                                                          comment,declarations,self.definitions)
         #class realizes an interface
         elif self.cls.realizes_flag:
             self.cls_string = self.derived_format.format(self.cls.name,self.cls.realizes.name,
-                                                          declarations,self.definitions)
+                                                          comment,declarations,self.definitions)
         
         #normal class
         else:
-            self.cls_string = self.class_format.format(self.cls.name,declarations,self.definitions)
+            self.cls_string = self.class_format.format(self.cls.name,comment,declarations,self.definitions)
         
         return self.cls_string
     
@@ -271,8 +346,13 @@ class TextBank:
         if private == "":
             return ""
         
-        #formates with the format string, adds indent and returns it
-        return self.private_format.format(self.indent,private)
+        
+        #adds indent, formates with the pattern string and returns it
+        s = self.private_format.format(private)
+        s = "{}{}".format(self.indent,s)
+        
+        
+        return s
     
     
     
@@ -291,8 +371,13 @@ class TextBank:
         if protected == "":
             return ""
         
-        #formates with the format string, adds indent and returns it
-        return self.protected_format.format(self.indent,protected)
+        
+        #adds indent, formates with the pattern string and returns it
+        s = self.protected_format.format(protected)
+        s = "{}{}".format(self.indent,s)
+        
+        
+        return s
     
     
     
@@ -311,8 +396,13 @@ class TextBank:
         if public == "":
             return ""
         
-        ##formates with the format string, adds indent and returns it
-        return self.public_format.format(self.indent,public)
+        
+        #adds indent, formates with the pattern string and returns it
+        s = self.public_format.format(public)
+        s = "{}{}".format(self.indent,s)
+        
+        
+        return s
 
     
     

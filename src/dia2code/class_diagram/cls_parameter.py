@@ -6,8 +6,7 @@ class Parameter:
                 
         #self.my_method = method       #must be added manualy, if decided that it's neccessary
         self.name = attr_dict["name"]
-        self.d_type = attr_dict["type"]        
-        
+        self.d_type = attr_dict["type"]
         self.comment = attr_dict["comment"]
         self.value = None               #NOTE: Value not really taken in account
         

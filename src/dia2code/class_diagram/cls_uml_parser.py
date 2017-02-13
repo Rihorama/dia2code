@@ -73,7 +73,8 @@ class UmlParser:
         attr_list = []
         method_list = []
         name = None
-        stereotype = None
+        stereotype = ""
+        comment = ""
         new_class = None
         class_id = cls.attrib['id']
         
@@ -87,12 +88,17 @@ class UmlParser:
             
             elif child.attrib['name'] == 'stereotype':
                 stereotype = self.stripHashtags(child[0].text)
-                new_class = cls_class.Class(name,class_id,stereotype)
-        
+                
+            elif child.attrib['name'] == 'comment':
+                comment = self.stripHashtags(child[0].text)
+                        
                 
         
-        #check if table name found and table created
-        if new_class == None:                                           ###
+        #check if class name found, if yes, we create a class instance
+        if not name == None:
+            new_class = cls_class.Class(name,class_id,stereotype,comment)
+            
+        else:                                                           ###
             self.error_handler.print_error("dia:class_name_missing")    ###
             e_code = self.error_handler.exit_code["xml"]                ###
                                                                         ###
@@ -105,13 +111,16 @@ class UmlParser:
             if child.attrib['name'] == 'attributes':                
                 new_root = child
                 
+                #parses new attribute and appends it to the list of this class's attributes
                 for child in new_root:
                     new_attr = self.parse_child(child,new_class,"attribute")
                     new_class.attr_list.append(new_attr)
-                    
+            
+            
             elif child.attrib['name'] == 'operations':                
                 new_root = child
                 
+                #parses new method and appends it to the list of this class's methods
                 for child in new_root:
                     new_method = self.parse_child(child,new_class,"method")
                     new_class.method_list.append(new_method)
@@ -173,7 +182,7 @@ class UmlParser:
                     
                 attr_dict[name] = x
                 
-            #else it's string stroed as text
+            #else it's string stored as text (for data type, comments etc)
             else:
                 attr_dict[name] = self.stripHashtags(sub[0].text)
         

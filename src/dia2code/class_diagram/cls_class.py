@@ -3,11 +3,14 @@
 
 class Class:
     #aList = attributeList
-    def __init__(self, class_name, class_id, stereotype):
+    def __init__(self, class_name, class_id, stereotype, comment):
                         
         self.name = class_name  
         self.id = class_id
-        self.stereotype = stereotype                 #empty if no stereotype
+        self.stereotype = stereotype           #"" if no stereotype
+        
+        self.comments_enabled = True
+        self.comment = comment                 #"" if no comment
         
         self.attr_list = []
         self.method_list = []

@@ -19,7 +19,6 @@ class Method:
         
         self.comment = attr_dict["comment"]
         
-        
 
             
     def print_me(self):

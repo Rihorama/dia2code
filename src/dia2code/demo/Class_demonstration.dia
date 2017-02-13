@@ -86,7 +86,7 @@
         <dia:string>##</dia:string>
       </dia:attribute>
       <dia:attribute name="comment">
-        <dia:string>##</dia:string>
+        <dia:string>#this is class MainClass#</dia:string>
       </dia:attribute>
       <dia:attribute name="abstract">
         <dia:boolean val="false"/>
@@ -178,7 +178,7 @@
             <dia:string>#"ahoj"#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is attribute x#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="0"/>
@@ -201,7 +201,7 @@
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is attribute y#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="1"/>
@@ -224,7 +224,7 @@
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is attribute z#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="2"/>
@@ -247,7 +247,7 @@
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is attribute a#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="3"/>
@@ -275,7 +275,7 @@
             <dia:enum val="0"/>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is method 1#</dia:string>
           </dia:attribute>
           <dia:attribute name="abstract">
             <dia:boolean val="false"/>
@@ -301,7 +301,7 @@
                 <dia:string>##</dia:string>
               </dia:attribute>
               <dia:attribute name="comment">
-                <dia:string>##</dia:string>
+                <dia:string>#this is param_1#</dia:string>
               </dia:attribute>
               <dia:attribute name="kind">
                 <dia:enum val="0"/>
@@ -323,7 +323,7 @@
             <dia:enum val="1"/>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is method 2#</dia:string>
           </dia:attribute>
           <dia:attribute name="abstract">
             <dia:boolean val="false"/>
@@ -349,7 +349,7 @@
                 <dia:string>#5#</dia:string>
               </dia:attribute>
               <dia:attribute name="comment">
-                <dia:string>##</dia:string>
+                <dia:string>#this is param_2_1#</dia:string>
               </dia:attribute>
               <dia:attribute name="kind">
                 <dia:enum val="0"/>
@@ -366,7 +366,7 @@
                 <dia:string>##</dia:string>
               </dia:attribute>
               <dia:attribute name="comment">
-                <dia:string>##</dia:string>
+                <dia:string>#this is param 3_1#</dia:string>
               </dia:attribute>
               <dia:attribute name="kind">
                 <dia:enum val="1"/>
@@ -388,7 +388,7 @@
             <dia:enum val="2"/>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is method 3#</dia:string>
           </dia:attribute>
           <dia:attribute name="abstract">
             <dia:boolean val="false"/>
@@ -418,7 +418,7 @@
             <dia:enum val="3"/>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is method 4#</dia:string>
           </dia:attribute>
           <dia:attribute name="abstract">
             <dia:boolean val="true"/>
@@ -444,7 +444,7 @@
                 <dia:string>##</dia:string>
               </dia:attribute>
               <dia:attribute name="comment">
-                <dia:string>##</dia:string>
+                <dia:string>#this is param 4_1#</dia:string>
               </dia:attribute>
               <dia:attribute name="kind">
                 <dia:enum val="2"/>
@@ -481,7 +481,7 @@
         <dia:string>##</dia:string>
       </dia:attribute>
       <dia:attribute name="comment">
-        <dia:string>##</dia:string>
+        <dia:string>#this is class ChildOfMainClass#</dia:string>
       </dia:attribute>
       <dia:attribute name="abstract">
         <dia:boolean val="false"/>
@@ -573,7 +573,7 @@
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is attribute id#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="0"/>
@@ -654,7 +654,7 @@
         <dia:string>##</dia:string>
       </dia:attribute>
       <dia:attribute name="comment">
-        <dia:string>##</dia:string>
+        <dia:string>#this is class AssociatedClass#</dia:string>
       </dia:attribute>
       <dia:attribute name="abstract">
         <dia:boolean val="false"/>
@@ -746,7 +746,7 @@
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is attribute s#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="0"/>
@@ -769,7 +769,7 @@
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is attribute t#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="0"/>
@@ -882,7 +882,7 @@
         <dia:string>##</dia:string>
       </dia:attribute>
       <dia:attribute name="comment">
-        <dia:string>##</dia:string>
+        <dia:string>#this is class FancyName#</dia:string>
       </dia:attribute>
       <dia:attribute name="abstract">
         <dia:boolean val="false"/>
@@ -974,7 +974,7 @@
             <dia:string>#"Diploma"#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is attribute variable#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="1"/>
@@ -1091,7 +1091,7 @@
         <dia:string>##</dia:string>
       </dia:attribute>
       <dia:attribute name="comment">
-        <dia:string>##</dia:string>
+        <dia:string>#this is class DependingClass#</dia:string>
       </dia:attribute>
       <dia:attribute name="abstract">
         <dia:boolean val="false"/>
@@ -1183,7 +1183,7 @@
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is attribute d#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="0"/>
@@ -1211,7 +1211,7 @@
             <dia:enum val="0"/>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is method depending_method#</dia:string>
           </dia:attribute>
           <dia:attribute name="abstract">
             <dia:boolean val="false"/>
@@ -1237,7 +1237,7 @@
                 <dia:string>##</dia:string>
               </dia:attribute>
               <dia:attribute name="comment">
-                <dia:string>##</dia:string>
+                <dia:string>#this is attibute index#</dia:string>
               </dia:attribute>
               <dia:attribute name="kind">
                 <dia:enum val="0"/>
@@ -1254,7 +1254,7 @@
                 <dia:string>##</dia:string>
               </dia:attribute>
               <dia:attribute name="comment">
-                <dia:string>##</dia:string>
+                <dia:string>#this is attribute type#</dia:string>
               </dia:attribute>
               <dia:attribute name="kind">
                 <dia:enum val="0"/>
@@ -1335,7 +1335,7 @@
         <dia:string>##</dia:string>
       </dia:attribute>
       <dia:attribute name="comment">
-        <dia:string>##</dia:string>
+        <dia:string>#this is class realizing class#</dia:string>
       </dia:attribute>
       <dia:attribute name="abstract">
         <dia:boolean val="false"/>
@@ -1427,7 +1427,7 @@
             <dia:string>##</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
-            <dia:string>##</dia:string>
+            <dia:string>#this is attribute c#</dia:string>
           </dia:attribute>
           <dia:attribute name="visibility">
             <dia:enum val="0"/>
