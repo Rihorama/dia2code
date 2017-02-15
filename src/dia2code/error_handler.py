@@ -1,4 +1,5 @@
 import sys
+import textwrap
 
 class ErrorHandler:
     
@@ -21,7 +22,7 @@ class ErrorHandler:
 
         # WRONG MODE
         self.err_dict["parameter:wrong_mode"] = "Wrong \"mode\" parameter (\"{}\"). Accepted parameters: \"d\" for Database,\
-        \"c\" for Class. Type -h,--help for help."
+\"c\" for Class. Type -h,--help for help."
         
         # BAD SOURCE
         self.err_dict["parameter:bad_source"] = "Given source file (\"{}\") does not exist."
@@ -34,15 +35,15 @@ class ErrorHandler:
         
         # WRONG PRINT
         self.err_dict["parameter:wrong_print"] = "Given printing option (\"{}\") not recognized. Accepted options: \"t\" for Terminal,\
-        \"f\" for File, \"ff\" for one file per class.\ Type -h,--help for help."
+\"f\" for File, \"ff\" for one file per class.\ Type -h,--help for help."
       
         
         
         #------- DIAGRAM ERRORS --------
         
         # REFERENCE NOT CLOSED
-        self.err_dict["dia:ref_not_closed"] = "In dia xml file: reference not connected on one or both sides.\n\
-        \nCheck your diagram for connections not properly connected to their tables."
+        self.err_dict["dia:ref_not_closed"] = "In dia xml file: reference not connected on one or both sides.\
+Check your diagram for connections not properly connected to their tables."
         
         # TABLE NAME MISSING
         self.err_dict["dia:table_name_missing"] = "In dia xml file: incomplete table element. Name attribute missing."
@@ -51,11 +52,11 @@ class ErrorHandler:
         self.err_dict["dia:class_name_missing"] = "In dia xml file: incomplete class element. Name attribute missing."
         
         # DIRECTION COLLISION
-        self.err_dict["dia:direction_collision"] = "Association between classes \"{}\" and \"{}\" contains colliding direction data.\n\
-        Displayed arrows do not correspond with the set direction. Synchronization of the two is mandatory due to an existing\n\
-        direction bug in Dia UML XML. For this program to generate a correct code, we reccomend setting Direction to None and leaving\n\
-        only the arrows. For undirected association (= both sides know about the other) set Direction to None and both arrow\n\
-        visibility to No."
+        self.err_dict["dia:direction_collision"] = "Association between classes \"{}\" and \"{}\" contains colliding direction data.\
+Displayed arrows do not correspond with the set direction. Synchronization of the two is mandatory due to an existing\
+direction bug in Dia UML XML. For this program to generate a correct code, we reccomend setting Direction to None and leaving\
+only the arrows. For undirected association (= both sides know about the other) set Direction to None and both arrow\
+visibility to No."
         
         
         
@@ -63,13 +64,13 @@ class ErrorHandler:
         
         # WRONG DIA FILE FOR CLASS PARSER
         self.err_dict["parser:class_wrong_dia"] = "In class diagram parser: Your dia xml file does not contain\
-        elements required for dia2code to work in the class mode (\"UML - Class\").\
-        Did you perhaps mean to work in the database mode? Type -h, --help for help."
+elements required for dia2code to work in the class mode (\"UML - Class\").\
+Did you perhaps mean to work in the database mode? Type -h, --help for help."
         
         # WRONG DIA FOR DATABASE PARSER
         self.err_dict["parser:database_wrong_dia"] = "In ER diagram parser: Your dia xml file does not contain\
-        elements required for dia2code to work in the database mode (\"Database - Table\"). Did you perhaps mean\
-        to work in the class mode? Type -h, --help for help."
+elements required for dia2code to work in the database mode (\"Database - Table\"). Did you perhaps mean\
+to work in the class mode? Type -h, --help for help."
         
         
         
@@ -77,7 +78,7 @@ class ErrorHandler:
         
         # WRONG MULTIPLICITY
         self.err_dict["generator:wrong_multiplicity"] = "In cls_association.py: Encountered invalid association\
-        multiplicity (\"{}\") for class \"{}\". Allowed format: \"x\", \"x..y\" or \"*\" where x is decimal, y is decimal or *."
+multiplicity (\"{}\") for class \"{}\". Allowed format: \"x\", \"x..y\" or \"*\" where x is decimal, y is decimal or *."
         
         # RUNTIME ERROR
         self.err_dict["generator:runtime"] = "In cls_association.py: Runtime error. Blame cls_generator.py."
@@ -85,25 +86,30 @@ class ErrorHandler:
         
         #---------------------------------
         
-        
+    
+    #PRINTERS - empty print is there to add one extra line, textwrap has problems with that
         
     def print_error(self,index):
         
-        string = "ERROR - " + self.err_dict[index]
-        print(string, file=sys.stderr)
+        string = "\nERROR - {}".format(self.err_dict[index]) 
+        
+        print(textwrap.fill(string, width = 80, replace_whitespace = False), file=sys.stderr)
+        print("")
         
     
     def print_error_onevar(self,index,var1):
         
         s = self.err_dict[index].format(var1)
-        string = "ERROR - {}".format(s)
+        string = "\nERROR - {}".format(s)
         
-        print(string, file=sys.stderr)
+        print(textwrap.fill(string, width = 80, replace_whitespace = False), file=sys.stderr)
+        print("")
         
     
     def print_error_twovar(self,index,var1,var2):
         
         s = self.err_dict[index].format(var1,var2)
-        string = "ERROR - {}".format(s)
+        string = "\nERROR - {}".format(s)
         
-        print(string, file=sys.stderr)
+        print(textwrap.fill(string, width = 80, replace_whitespace = False), file=sys.stderr)
+        print("")

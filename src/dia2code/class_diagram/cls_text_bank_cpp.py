@@ -31,8 +31,8 @@ class TextBank:
         
 
         # DERIVED CLASS PATTERN -pattern to wrap up derived classes (inherits or implements an interface)
-        #                       - "class {class_name}: public {parent_name} {{\n{comment}{class_body}}};\n{method_definitions}\n"
-        self.derived_format = "class {}: public {} {{\n{}{}}};\n{}\n"
+        #                       - "class {class_name}: {parent_names} {{\n{comment}{class_body}}};\n{method_definitions}\n"
+        self.derived_format = "class {}:{} {{\n{}{}}};\n{}\n"
         
         
         # PRIVATE PATTERN - for private access modifier
@@ -58,12 +58,13 @@ class TextBank:
         
         
         # METHOD DECLARATION PATTERN - for declaring methods withing a c++ class body
-        #                            - "{data_type} {method_name}({parameters});\n"
-        self.mtd_declaration_format = "{} {} ({});\n"
+        #                            - "{data_type} {method_name}({parameters});{line_comment}\n"
+        self.mtd_declaration_format = "{} {} ({});{}\n"
+        
         
         # METHOD DEFINITION PATTERN - for defining the declared class outside the class body
-        #                           - "{data_type} {class_name}::{method_name}({parameters}){{\n{comment}{body}\n}}"
-        self.mtd_definition_format = "\n{} {}::{} ({}) {{\n{}{}\n}}\n\n"
+        #                           - "{data_type} {class_name}::{method_name}({parameters}){{\n{body}\n}}"
+        self.mtd_definition_format = "\n{} {}::{} ({}) {{\n{}\n}}\n\n"
         
         
         # STD::VECTOR PATTERN - for defining vector variables
@@ -190,9 +191,10 @@ class TextBank:
             
             
             #COMMENT
-            #formating comment if present and adding two indents
+            #formating comment if present and adding two indents, uses line comment format
             if not mtd.comment == "":
-                comment = self.multiline_comment.format(mtd.comment)
+                comment = self.line_comment.format(mtd.comment)
+                comment = "{}{}".format(self.indent,comment)  #adds one indentation
             
             else:
                 comment = ""
@@ -200,7 +202,7 @@ class TextBank:
             
             
             #DECLARATION STRING
-            s = self.mtd_declaration_format.format(mtd.d_type,mtd.name,param_str)
+            s = self.mtd_declaration_format.format(mtd.d_type,mtd.name,param_str,comment)
             
             #adds 2x indent
             s = "{}{}{}".format(self.indent,self.indent,s)
@@ -219,7 +221,7 @@ class TextBank:
                 
             #DEFINITION STRING
             s = self.mtd_definition_format.format(mtd.d_type,self.cls.name,mtd.name,param_str,
-                                                  comment,self.your_code_here_str)
+                                                  self.your_code_here_str)
             
             self.definitions = "{}{}".format(self.definitions,s)
             
@@ -289,6 +291,35 @@ class TextBank:
         
         #TODO: potentially add these in a separated string and divide by extra \n 
         #      so it looks better in the code
+        
+        
+        
+    def getParentString(self,cls):
+        """Goes through all classes this class inherits from and puts them
+        in one string that is to be inserted in the class header.
+        
+        Returns:
+            String with all parents and their access modifiers.
+        """
+        
+        parent_string = ""
+        
+        #first going through classic inheritance
+        for i in cls.inherits_list:
+            new_parent = " public {},".format(i.name)
+            parent_string = "{}{}".format(parent_string,new_parent)
+        
+        #then the same for interfaces that are realized by this class
+        for i in cls.realizes_list:
+            new_parent = " public {},".format(i.name)
+            parent_string = "{}{}".format(parent_string,new_parent)
+        
+        #removing the last comma
+        parent_string = parent_string[:-1] 
+        
+        
+        return parent_string
+    
 
 
     def wrapUpClass(self):
@@ -314,13 +345,11 @@ class TextBank:
         else:
             comment = ""
         
-        #class inherits from another class
-        if self.cls.inherits_flag:
-            self.cls_string = self.derived_format.format(self.cls.name,self.cls.inherits.name,
-                                                          comment,declarations,self.definitions)
-        #class realizes an interface
-        elif self.cls.realizes_flag:
-            self.cls_string = self.derived_format.format(self.cls.name,self.cls.realizes.name,
+        #class inherits / realizes
+        if self.cls.inherits_flag or self.cls.realizes_flag:
+            
+            parent_string = self.getParentString(self.cls)   #string of classes the current class inherits from/realizes an interface
+            self.cls_string = self.derived_format.format(self.cls.name,parent_string,
                                                           comment,declarations,self.definitions)
         
         #normal class

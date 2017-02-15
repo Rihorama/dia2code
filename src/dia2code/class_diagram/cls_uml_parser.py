@@ -252,7 +252,7 @@ class UmlParser:
         
         elif name == "generalization":
             slave.inherits_flag = True
-            slave.inherits =  master    #NOTE> We suppose a 1:1 relation
+            slave.inherits_list.append(master)
             
         elif name == "dependency":
             slave.depends_flag = True
@@ -260,7 +260,7 @@ class UmlParser:
             
         elif name == "realizes":
             slave.realizes_flag = True
-            slave.realizes = master     #NOTE> We suppose a 1:1 relation
+            slave.realizes_list.append(master)
         
         
         return

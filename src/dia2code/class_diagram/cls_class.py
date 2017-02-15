@@ -19,7 +19,7 @@ class Class:
         
         #inherits from another class
         self.inherits_flag = False
-        self.inherits = None
+        self.inherits_list = []
         
         #depends on another class/classes
         self.depends_flag = False
@@ -27,7 +27,7 @@ class Class:
         
         #realizes an interface
         self.realizes_flag = False
-        self.realizes = None
+        self.realizes_list = []
         
         
     def print_me(self):
