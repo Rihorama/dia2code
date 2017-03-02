@@ -1,6 +1,7 @@
 #!/usr/bin/python3
+from parents.cls_textbank import ClassTextBank
 
-class TextBank:  
+class TextBankCpp(ClassTextBank):  
     #TODO: deal with possibility of wrong parameter coming...?
     
     def __init__(self):

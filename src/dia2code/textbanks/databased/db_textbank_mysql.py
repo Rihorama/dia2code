@@ -1,6 +1,7 @@
 #!/usr/bin/python3
+from parents.db_textbank import DatabaseTextBank
 
-class TextBank:  
+class TextBankMysql(DatabaseTextBank):  
     #TODO: deal with possibility of wrong parameter coming...?
     
     def __init__(self):
@@ -67,7 +68,7 @@ class TextBank:
         """
         Method that prepares the instance attributes to work on a new
         table and begins the process. Sets variable strings to empty
-        strings again, then parses primary key and foreign keys.
+        strings again, then also parses primary key.
         
         Args:
             table (db_table.Table): Table instance to work with.
@@ -86,37 +87,8 @@ class TextBank:
         if (len(table.p_key) != 0): #TODO: deal with primary key absence, either error or fix
             self.primary_string = self.getPrimaryString(table.p_key)
             
-            
-        #foreign keys
-        for f_key_list in table.f_key_attr_list:  #if there is any
-            
-            self.fk_cnt += 1     #increments the counter
-            here_names = ""      #string for all foreign collumn names to be put together for one FK
-            foreign_names = ""   #string for names of attributes that are referenced by this FK
-            reffed_table_name = f_key_list[0].my_table.name                
-            
-            #referenced table can have a multiple-column primary keys
-            #f_key_list is now a list of them, we loop over it
-            for f_key in f_key_list:
-                
-                #first we add a new attribute that will serve as the foreign key
-                #based on the name of the referenced table and its primary key
-                new_name = "{}_{}".format(f_key.my_table.name,f_key.name)
-                here_names = "{},{}".format(here_names,new_name)          #attributes in child table
-                foreign_names = "{},{}".format(foreign_names,f_key.name) #referenced attributes
-                
-                #we use the new name we created and data type and nullable flag from the reffed one + empty comment
-                s = self.getAttributeString(new_name,f_key.d_type,f_key.nullable,"")
-                self.fk_attributes = "{}{},\n".format(self.fk_attributes,s)  
-            
-            #now we'll also add the FOREIGN KEY statement, add it to foreign_string
-            #to be printed later
-            here_names = here_names[1:]    #it always starts with a comma, we cut it off
-            foreign_names = foreign_names[1:] #same story
-            s = self.getForeignString(here_names,reffed_table_name,foreign_names)
-            self.foreign_string = "{}{},\n".format(self.foreign_string,s)
-            
-        return
+        
+        return        
 
 
 
@@ -139,6 +111,52 @@ class TextBank:
         if attr.unique and not attr.p_key_flag:
             s = self.getConstraintString("UNIQUE",attr.name)
             self.constraint_string = "{}{},\n".format(self.constraint_string,s)
+            
+            
+            
+    def addForeignKey(self,f_key_list):
+        """Takes the given list that contains one or more foreign attributes that are the primary
+        key of the referenced table. Creates the requested number of new attributes to hold
+        the reference and adds them to already parsed attributes. Generates an in-class unique name
+        for the new foreign key and then uses it to generate the foreign key definition string.
+        Adds it to other fk strings we have so far concatenated in self.foreign_string. 
+        
+        Args:
+            f_key_list (List): List of db_attribute.Attribute instances that are to be referenced.
+        """
+        
+        self.fk_cnt += 1     #increments the counter
+        here_names = ""      #string for all foreign collumn names to be put together for one FK
+        foreign_names = ""   #string for names of attributes that are referenced by this FK
+        reffed_table_name = f_key_list[0].my_table.name                
+        
+        
+        #referenced table can have a multiple-column primary keys
+        #f_key_list is now a list of them, we loop over it
+        for f_key in f_key_list:
+            
+            
+            #first we add a new attribute that will serve as the foreign key
+            #based on the name of the referenced table and its primary key
+            new_name = "{}_{}".format(f_key.my_table.name,f_key.name)
+            here_names = "{},{}".format(here_names,new_name)          #attributes in child table
+            foreign_names = "{},{}".format(foreign_names,f_key.name) #referenced attributes
+            
+            
+            #we use the new name we created and data type and nullable flag from the reffed one + empty comment
+            s = self.getAttributeString(new_name,f_key.d_type,f_key.nullable,"")
+            self.fk_attributes = "{}{},\n".format(self.fk_attributes,s)  
+        
+        
+        #now we'll also add the FOREIGN KEY statement, add it to foreign_string
+        #to be printed later
+        here_names = here_names[1:]    #it always starts with a comma, we cut it off
+        foreign_names = foreign_names[1:] #same story
+        s = self.getForeignString(here_names,reffed_table_name,foreign_names)
+        self.foreign_string = "{}{},\n".format(self.foreign_string,s)
+        
+        
+        return
 
 
 
@@ -259,10 +277,6 @@ class TextBank:
             Formated string.
         """
         
-        #my previous variant
-        #name = "fk_{}".format(for_table) #the foreign key will be named "fk_FKTableName"
-        
-        #new variant as suggested by diploma thesis leader
         #the foreign key will be named "fk{unique number}__{ThisTableName}_{FKTableName}"
         name = "fk{}__{}_{}".format(self.fk_cnt,self.table.name,for_table)
         

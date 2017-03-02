@@ -1,24 +1,26 @@
 #!/usr/bin/python3
 
 import argparse
-from argparse import RawTextHelpFormatter
+#from argparse import RawTextHelpFormatter
 
 import error_handler
 import os.path
 
-import er_diagram.db_uml_parser      as db_uml_parser
-import er_diagram.db_generator       as db_generator
+import databased.db_uml_parser        as db_uml_parser
+import databased.db_generator         as db_generator
 
-import class_diagram.cls_uml_parser  as cls_uml_parser
-import class_diagram.cls_generator   as cls_generator
+import classd.cls_uml_parser          as cls_uml_parser
+import classd.cls_generator   as cls_generator
 
 
 
 
 def main():
     
-
+    #setting argparse and parsing arguments
     args = parseArguments()
+    
+    #initializing error handler
     err = error_handler.ErrorHandler()
     
     mode = None
@@ -55,15 +57,21 @@ def main():
     
     
     #DESTINATION FOLDER
-    dst = args.dst
+    dst = args.destination
     
-    if not os.path.isdir(dst):
-    
-        err.print_error_onevar("parameter:bad_destination",dst)        
-        exit(err.exit_code["parameter"])
+    #Default: current folder "./"
+    if dst == None:
+        dst = "./"
     
     if not dst[-1] == "/":
         dst = "{}/".format(dst)
+        
+    if not os.path.exists(dst):
+    
+        err.print_error_onevar("parameter:bad_destination",dst)        
+        e_code = err.exit_code["parameter"]
+        
+        exit(e_code)
         
     
     #LANGUAGE
@@ -120,7 +128,7 @@ def main():
     #------------------------
     if mode == "database":
         
-        parser = db_uml_parser.UmlParser(src)
+        parser = db_uml_parser.DatabaseUmlParser(src)
         parser.parse()
         
         generator = db_generator.DatabaseGenerator(dst,file_name,language,print_option)
@@ -129,7 +137,7 @@ def main():
         
     elif mode == "class":
         
-        parser = cls_uml_parser.UmlParser(src)
+        parser = cls_uml_parser.ClassUmlParser(src)
         parser.parse()
         
         generator = cls_generator.ClassGenerator(dst,file_name,language,print_option)
@@ -172,10 +180,10 @@ liking.
 ...         ''') 
     
     arg_parser.add_argument("mode", help="\"d\" - UML to database | \"c\" - UML to classes.")
-    arg_parser.add_argument("src", help="Source DIA xml file path. Note: The Dia diagram must be saved without compression.")
-    arg_parser.add_argument("dst", help="Destination folder path.")
+    arg_parser.add_argument("src", help="Source DIA xml file path.")
+    #arg_parser.add_argument("dst", help="Destination folder path.")
     
-       
+    arg_parser.add_argument("-dst", "--destination", help="Destination folder path [DEFAULT: current folder.]\n")   
     arg_parser.add_argument("-l", "--language", help="Language of the final code [DEFAULT: mysql|c++].\n")    
     arg_parser.add_argument("-n", "--name", help="Result file name (without extension) [DEFAULT: source file name].") 
     arg_parser.add_argument("-p", "--print", help="\"t\" - terminal | \"f\" - file [DEFAULT] | \"ff\" - one class per file [classes only]\
