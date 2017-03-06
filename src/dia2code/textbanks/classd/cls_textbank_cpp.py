@@ -61,12 +61,17 @@ class TextBankCpp(ClassTextBank):
         
         # METHOD DECLARATION PATTERN - for declaring methods withing a c++ class body
         #                            - "{[static]}{data_type} {method_name}({parameters}){[const]};{line_comment}\n"
-        self.mtd_declaration_format = "{}{} {} ({}){};{}\n"
+        self.mtd_declaration_format = "{}{} {}({}){};{}\n"
         
         
         # METHOD DEFINITION PATTERN - for defining the declared class outside the class body
         #                           - "{data_type} {class_name}::{method_name}({parameters}){{\n{body}\n}}"
-        self.mtd_definition_format = "\n{} {}::{} ({}) {{\n{}\n}}\n\n"
+        self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}\n}}\n\n"
+        
+        
+        # VIRTUAL METHOD DECLARATION PATTERN - for declaring pure virtual methods
+        #                            - "{[virtual]}{data_type} {method_name}({parameters}){[const]} = 0;{line_comment}\n"
+        self.virtual_mtd_declaration_format = "{}{} {}({}){} = 0;{}\n"
         
         
         # STD::VECTOR PATTERN - for defining vector variables
@@ -153,21 +158,12 @@ class TextBankCpp(ClassTextBank):
         
         
         #adds 2x indent, semicolon and newline
-        s = "{}{}{}".format(self.indent,self.indent,s)
-        
+        s = "{}{}{}".format(self.indent,self.indent,s)        
         
         
         #ACCESS MODIFIER
-        #picking the right access modifier string
-        #NOTE: So far "Implementation" variant fall under "Public"
-        if attr.visibility == "private":
-            self.private_attr_string = "{}{}".format(self.private_attr_string,s)
-            
-        elif attr.visibility == "protected":
-            self.protected_attr_string = "{}{}".format(self.protected_attr_string,s)
-            
-        else:
-            self.public_attr_string = "{}{}".format(self.public_attr_string,s)
+        #and put it under the right access modifier with "attr" = attribute switch
+        self.sortUnderAccessModifier(attr.visibility,"attr",s)
             
         
         return
@@ -186,16 +182,8 @@ class TextBankCpp(ClassTextBank):
         
         #PARAMETERS
         #first we generate string with all parameters
-        param_str = ""
-        
-        for param in mtd.param_list:
-            s = "{} {},".format(param.d_type,param.name)
-            param_str = "{}{}".format(param_str,s)
-        
-        #removing comma if needed
-        if not param_str == "":
-            param_str = param_str[:-1]
-  
+        param_str = self.getParameters(mtd)
+       
         
         
         #COMMENT
@@ -213,37 +201,43 @@ class TextBankCpp(ClassTextBank):
         
         if mtd.static_flag:
             static = "static "
-            
+             
         const = ""
         
         if mtd.const_flag:
             const = " const"
+            
         
-  
+        #DECLARATION STRING  
+        s = ""             #for the final string
         
-        #DECLARATION STRING
-        s = self.mtd_declaration_format.format(static,mtd.d_type,mtd.name,param_str,const,comment)
+            #VIRTUAL (if present together with static, virtual has priority)
+        if mtd.abstract_flag:
+            virtual = "virtual "
+            s = self.virtual_mtd_declaration_format.format(virtual,mtd.d_type,mtd.name,
+                                                           param_str,const,comment)
+            
+            #OR NOT
+        else:
+            s = self.mtd_declaration_format.format(static,mtd.d_type,mtd.name,
+                                                   param_str,const,comment)
+        
         
         #adds 2x indent
         s = "{}{}{}".format(self.indent,self.indent,s)
         
-        #and put it under the right access modifier
-        #NOTE: So far "Implementation" variant fall under "Public"
-        if mtd.visibility == "private":
-            self.private_mtd_string = "{}{}".format(self.private_mtd_string,s)
-            
-        elif mtd.visibility == "protected":
-            self.protected_mtd_string = "{}{}".format(self.protected_mtd_string,s)
-            
-        else:
-            self.public_mtd_string = "{}{}".format(self.public_mtd_string,s)
-            
-            
-        #DEFINITION STRING
-        s = self.mtd_definition_format.format(mtd.d_type,self.cls.name,mtd.name,param_str,
-                                                self.your_code_here_str)
         
-        self.definitions = "{}{}".format(self.definitions,s)
+        #ACCESS MODIFIER
+        #and put it under the right access modifier with "mtd" = method switch
+        self.sortUnderAccessModifier(mtd.visibility,"mtd",s)
+            
+            
+        #DEFINITION STRING (only for non virtual methods)
+        if not mtd.abstract_flag:
+            
+            s = self.mtd_definition_format.format(mtd.d_type,self.cls.name,mtd.name,param_str,
+                                                    self.your_code_here_str)            
+            self.definitions = "{}{}".format(self.definitions,s)
         
         
         return
@@ -280,9 +274,10 @@ class TextBankCpp(ClassTextBank):
             other = "A"
             
         
-        #determining the new attribute name        
+        #NEW ATTRIBUTE NAME        
         name = None
-
+        
+        #using the other table's role if it was named in the association
         if not other_dict["role"] == "": #format: "rolename_othername_association"
             
             role = other_dict["role"]
@@ -294,7 +289,8 @@ class TextBankCpp(ClassTextBank):
             name = "{}_association".format(other_dict["class"].name)
             
         
-        #this class is "member" and it will have attribute referencing the "other" class
+        
+        #this class is the "member" class and it will have attribute referencing the "other" class
         #thus the multiplicity of the other class matters
         s = ""
         
@@ -303,11 +299,17 @@ class TextBankCpp(ClassTextBank):
             
         else: #multiple or variable amount of values => vector
             s = self.vector_format.format(other_dict["class"].name, name)
-            
-        #adds 2x indent, semicolon and newline
-        s = "{}{}{};\n".format(self.indent,self.indent,s)
         
+        
+        
+        #adds 2x indent, semicolon and newline
+        s = "{}{}{};\n".format(self.indent,self.indent,s)        
+        
+        
+        #these go under private access modifier byy default
         self.private_attr_string = "{}{}".format(self.private_attr_string,s)
+        
+        
         
         #TODO: potentially add these in a separated string and divide by extra \n 
         #      so it looks better in the code
@@ -340,6 +342,79 @@ class TextBankCpp(ClassTextBank):
         
         return parent_string
     
+    
+    
+    def getParameters(self,mtd):
+        """Generates a string of all parameters of method mtd and their
+        data types so they can be used in that method's signature.
+        
+        Args:
+            mtd (cls_method.Method) - method whose parameters should be parsed here.
+            
+        Returns:
+            A string containing all parameters of the given method and their data types,
+            separated with comma.
+        """
+        
+        param_str = ""
+        
+        for param in mtd.param_list:
+            s = "{} {},".format(param.d_type,param.name)
+            param_str = "{}{}".format(param_str,s)
+        
+        #if no parameters, we insert void
+        if param_str == "":
+            param_str = "void"
+        
+        #else removing the final comma
+        else:
+            param_str = param_str[:-1]
+            
+            
+        return param_str
+    
+    
+    
+    def sortUnderAccessModifier(self,visibility,str_type,s):
+        """Takes the given string "s" (can represent either attribute
+        or method) and based on "visibility" concatenates
+        this string with the right access modifier string of the right type
+        (either for attributes or methods, based on "str_type").
+        
+        Args:
+            visibility (String) - "private","protected" or "public"
+            str_type (String) - "attr" or "mtd" - which string we concatenate to.
+            s (String) - string of attribute or method definition
+        """
+        
+        #ATTRIBUTES
+        if str_type == "attr":
+            if visibility == "private":
+                self.private_attr_string = "{}{}".format(self.private_attr_string,s)
+                
+            elif visibility == "protected":
+                self.protected_attr_string = "{}{}".format(self.protected_attr_string,s)
+                
+            else:
+                self.public_attr_string = "{}{}".format(self.public_attr_string,s)
+        
+        #METHODS
+        else:
+            if visibility == "private":
+                self.private_mtd_string = "{}{}".format(self.private_mtd_string,s)
+                
+            elif visibility == "protected":
+                self.protected_mtd_string = "{}{}".format(self.protected_mtd_string,s)
+                
+            else:
+                self.public_mtd_string = "{}{}".format(self.public_mtd_string,s)
+            
+        #NOTE: Implementation variant not dealed with so it falls under
+        #      public by default. 
+         
+         
+        return
+
 
 
     def wrapUpClass(self):
