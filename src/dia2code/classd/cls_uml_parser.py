@@ -114,6 +114,7 @@ class ClassUmlParser(UmlParser):
         method_list = []
         name = None
         stereotype = ""
+        abstract_flag = False  #default false, se to to true if flag found
         comment = ""
         new_class = None
         class_id = cls.attrib['id']
@@ -129,6 +130,9 @@ class ClassUmlParser(UmlParser):
             elif child.attrib['name'] == 'stereotype':
                 stereotype = self.stripHashtags(child[0].text)
                 
+            elif child.attrib['name'] == 'abstract' and child[0].attrib["val"] == "true":
+                abstract_flag = True
+                
             elif child.attrib['name'] == 'comment':
                 comment = self.stripHashtags(child[0].text)
                         
@@ -136,7 +140,7 @@ class ClassUmlParser(UmlParser):
         
         #check if class name found, if yes, we create a class instance
         if not name == None:
-            new_class = cls_class.Class(name,class_id,stereotype,comment)
+            new_class = cls_class.Class(name,class_id,stereotype,abstract_flag,comment)
             
         else:                                                           ###
             self.error_handler.print_error("dia:class_name_missing")    ###
@@ -201,7 +205,7 @@ class ClassUmlParser(UmlParser):
                 param_list = []
                 
                 for param in new_root:
-                    #sending None 
+                    #sending None because in cls.parameter this value is ignored anyway
                     new_param = self.parse_child(param,None,"parameter")
                     param_list.append(new_param)
                     
@@ -221,6 +225,7 @@ class ClassUmlParser(UmlParser):
                     x = int(val)
                     
                 attr_dict[name] = x
+
                 
             #else it's string stored as text (for data type, comments etc)
             else:

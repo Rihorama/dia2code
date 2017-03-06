@@ -17,7 +17,8 @@ class TextBankCpp(ClassTextBank):
         self.protected_mtd_string = ""     #for protected methods
         self.public_mtd_string = ""        #for public methods
         
-        self.definitions = ""              #definitions of methods with empty body        
+        self.definitions = ""              #definitions of methods with empty body
+
          
         
         #--------- FORMAT STRING PATTERNS -----------
@@ -49,18 +50,18 @@ class TextBankCpp(ClassTextBank):
         
         
         # ATTRIBUTE PATTERN - for attributes without default value
-        #                   - "{data_type} {attr_name};{line_comment}\n"
-        self.attribute_format = "{} {};{}\n"
+        #                   - "{[static]}{data_type} {attr_name};{line_comment}\n"
+        self.attribute_format = "{}{} {};{}\n"
         
         
         # ATTRIBUTE PATTERN WITH DEFAULT VALUE - attributes with default value
-        #                   - "{data_type} {attr_name} = {default_value};{line_comment}\n"
-        self.attribute_with_default_format = "{} {} = {};{}\n"
+        #                   - "{[static]}{data_type} {attr_name} = {default_value};{line_comment}\n"
+        self.attribute_with_default_format = "{}{} {} = {};{}\n"
         
         
         # METHOD DECLARATION PATTERN - for declaring methods withing a c++ class body
-        #                            - "{data_type} {method_name}({parameters});{line_comment}\n"
-        self.mtd_declaration_format = "{} {} ({});{}\n"
+        #                            - "{[static]}{data_type} {method_name}({parameters}){[const]};{line_comment}\n"
+        self.mtd_declaration_format = "{}{} {} ({}){};{}\n"
         
         
         # METHOD DEFINITION PATTERN - for defining the declared class outside the class body
@@ -134,15 +135,21 @@ class TextBankCpp(ClassTextBank):
         else:
             comment = ""
             
+        
+        #STATIC prefix
+        static = ""
             
+        if attr.static_flag:
+            static = "static "
+        
         
         #ATTRIBUTE ITSELF
         if attr.value == None:
-            s = self.attribute_format.format(attr.d_type, attr.name, comment)
+            s = self.attribute_format.format(static,attr.d_type, attr.name, comment)
         
         #assigning a value if present: "data_type name = value"
         else:
-            s = self.attribute_with_default_format.format(attr.d_type, attr.name, attr.value, comment)
+            s = self.attribute_with_default_format.format(static,attr.d_type, attr.name, attr.value, comment)
         
         
         #adds 2x indent, semicolon and newline
@@ -168,66 +175,78 @@ class TextBankCpp(ClassTextBank):
 
 
     def addMethod(self,mtd):
-            """Using attributes of given method, generates two strings: declaration of
-            the method which will be added under the proper access modifier
-            and the definition of the method with empty body, each stored
-            in their respective "group string".
+        """Using attributes of given method, generates two strings: declaration of
+        the method which will be added under the proper access modifier
+        and the definition of the method with empty body, each stored
+        in their respective "group string".
+        
+        Args:
+            mtd (cls_method.Method): Method instance to parse into text.
+        """
+        
+        #PARAMETERS
+        #first we generate string with all parameters
+        param_str = ""
+        
+        for param in mtd.param_list:
+            s = "{} {},".format(param.d_type,param.name)
+            param_str = "{}{}".format(param_str,s)
+        
+        #removing comma if needed
+        if not param_str == "":
+            param_str = param_str[:-1]
+  
+        
+        
+        #COMMENT
+        #formating comment if present and adding two indents, uses line comment format
+        if not mtd.comment == "":
+            comment = self.line_comment.format(mtd.comment)
+            comment = "{}{}".format(self.indent,comment)  #adds one indentation
+        
+        else:
+            comment = ""
+        
+  
+        #STATIC and CONST
+        static = ""
+        
+        if mtd.static_flag:
+            static = "static "
             
-            Args:
-                mtd (cls_method.Method): Method instance to parse into text.
-            """
+        const = ""
+        
+        if mtd.const_flag:
+            const = " const"
+        
+  
+        
+        #DECLARATION STRING
+        s = self.mtd_declaration_format.format(static,mtd.d_type,mtd.name,param_str,const,comment)
+        
+        #adds 2x indent
+        s = "{}{}{}".format(self.indent,self.indent,s)
+        
+        #and put it under the right access modifier
+        #NOTE: So far "Implementation" variant fall under "Public"
+        if mtd.visibility == "private":
+            self.private_mtd_string = "{}{}".format(self.private_mtd_string,s)
             
-            #PARAMETERS
-            #first we generate string with all parameters
-            param_str = ""
+        elif mtd.visibility == "protected":
+            self.protected_mtd_string = "{}{}".format(self.protected_mtd_string,s)
             
-            for param in mtd.param_list:
-                s = "{} {},".format(param.d_type,param.name)
-                param_str = "{}{}".format(param_str,s)
-            
-            #removing comma if needed
-            if not param_str == "":
-                param_str = param_str[:-1]
-            
-            
-            
-            #COMMENT
-            #formating comment if present and adding two indents, uses line comment format
-            if not mtd.comment == "":
-                comment = self.line_comment.format(mtd.comment)
-                comment = "{}{}".format(self.indent,comment)  #adds one indentation
-            
-            else:
-                comment = ""
+        else:
+            self.public_mtd_string = "{}{}".format(self.public_mtd_string,s)
             
             
-            
-            #DECLARATION STRING
-            s = self.mtd_declaration_format.format(mtd.d_type,mtd.name,param_str,comment)
-            
-            #adds 2x indent
-            s = "{}{}{}".format(self.indent,self.indent,s)
-            
-            #and put it under the right access modifier
-            #NOTE: So far "Implementation" variant fall under "Public"
-            if mtd.visibility == "private":
-                self.private_mtd_string = "{}{}".format(self.private_mtd_string,s)
-                
-            elif mtd.visibility == "protected":
-                self.protected_mtd_string = "{}{}".format(self.protected_mtd_string,s)
-                
-            else:
-                self.public_mtd_string = "{}{}".format(self.public_mtd_string,s)
-                
-                
-            #DEFINITION STRING
-            s = self.mtd_definition_format.format(mtd.d_type,self.cls.name,mtd.name,param_str,
-                                                  self.your_code_here_str)
-            
-            self.definitions = "{}{}".format(self.definitions,s)
-            
-            
-            return
+        #DEFINITION STRING
+        s = self.mtd_definition_format.format(mtd.d_type,self.cls.name,mtd.name,param_str,
+                                                self.your_code_here_str)
+        
+        self.definitions = "{}{}".format(self.definitions,s)
+        
+        
+        return
             
             
             

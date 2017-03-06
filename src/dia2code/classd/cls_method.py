@@ -14,11 +14,13 @@ class Method:
         self.name = attr_dict["name"]
         self.d_type = attr_dict["type"]        
         self.visibility = self.visibility_dict[attr_dict["visibility"]]  
+        self.abstract_flag = attr_dict["abstract"]
+        self.const_flag = attr_dict["query"]          #apparently "const" is marked as query in dia
+        self.static_flag = attr_dict["class_scope"]   #same story, long live logic and self-explanation
         
         self.param_list = attr_dict["parameters"]
         
         self.comment = attr_dict["comment"]
-        
 
             
     def print_me(self):

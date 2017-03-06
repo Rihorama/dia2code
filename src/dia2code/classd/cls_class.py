@@ -3,11 +3,12 @@
 
 class Class:
     #aList = attributeList
-    def __init__(self, class_name, class_id, stereotype, comment):
+    def __init__(self, class_name, class_id, stereotype, abstract_flag, comment):
                         
         self.name = class_name  
         self.id = class_id
         self.stereotype = stereotype           #"" if no stereotype
+        self.abstract_flag = abstract_flag
         
         self.comments_enabled = True
         self.comment = comment                 #"" if no comment
@@ -28,7 +29,8 @@ class Class:
         #realizes an interface
         self.realizes_flag = False
         self.realizes_list = []
-        
+
+
         
     def print_me(self):
         """A simple print method for debugging purposes.
