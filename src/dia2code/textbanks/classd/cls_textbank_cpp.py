@@ -18,6 +18,8 @@ class TextBankCpp(ClassTextBank):
         self.public_mtd_string = ""        #for public methods
         
         self.definitions = ""              #definitions of methods with empty body
+        
+        self.param_comments = ""           #help variable to store parameter comments
 
          
         
@@ -65,8 +67,8 @@ class TextBankCpp(ClassTextBank):
         
         
         # METHOD DEFINITION PATTERN - for defining the declared class outside the class body
-        #                           - "{data_type} {class_name}::{method_name}({parameters}){{\n{body}\n}}"
-        self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}\n}}\n\n"
+        #                           - "{data_type} {class_name}::{method_name}({parameters}){{\n{[multiline_comment]}\n{body}\n}}"
+        self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}\n{}\n}}\n\n"
         
         
         # VIRTUAL METHOD DECLARATION PATTERN - for declaring pure virtual methods
@@ -91,6 +93,10 @@ class TextBankCpp(ClassTextBank):
         #MULTI-LINE COMMENT - for class comments, possibly method comments if used in definition part
         #                   - "/* {comment} */\n"
         self.multiline_comment = "/* {} */\n\n"
+        
+        #PARAMETER COMMENT - for individual method parameter comments so they can be added in method description.
+        #                   - "{data_type} {name} - {comment}\n"
+        self.parameter_comment = "{} {} - {}\n"
 
         
                 
@@ -187,13 +193,18 @@ class TextBankCpp(ClassTextBank):
         
         #INDENT LEVEL
         indent_lvl = 2
-        indent_here = self.indent * indent_lvl
+        indent_here = self.indent * indent_lvl        
         
         
         #PARAMETERS
         #first we generate string with all parameters
         param_str = self.getParameters(mtd)
-       
+        
+        #were any parameter comments present?
+        if not self.param_comments == "":
+            #wrapping it with a multiline comment
+            self.param_comments = self.multiline_comment.format(self.param_comments)
+        
         
         
         #COMMENT
@@ -203,8 +214,8 @@ class TextBankCpp(ClassTextBank):
             comment = "{}{}".format(self.indent,comment)  #adds one indentation
         
         else:
-            comment = ""
-        
+            comment = ""        
+  
   
         #STATIC and CONST
         static = ""
@@ -246,7 +257,7 @@ class TextBankCpp(ClassTextBank):
         if not mtd.abstract_flag:
             
             s = self.mtd_definition_format.format(mtd.d_type,self.cls.name,mtd.name,param_str,
-                                                    self.your_code_here_str)            
+                                                    self.param_comments, self.your_code_here_str)            
             self.definitions = "{}{}".format(self.definitions,s)
         
         
@@ -361,7 +372,9 @@ class TextBankCpp(ClassTextBank):
     
     def getParameters(self,mtd):
         """Generates a string of all parameters of method mtd and their
-        data types so they can be used in that method's signature.
+        data types so they can be used in that method's signature. Also stores
+        comments of individual parameters in self.param_comments allowing those
+        to be later added in the method comment.
         
         Args:
             mtd (cls_method.Method) - method whose parameters should be parsed here.
@@ -372,10 +385,16 @@ class TextBankCpp(ClassTextBank):
         """
         
         param_str = ""
+        self.param_comments = ""
         
         for param in mtd.param_list:
             s = "{} {},".format(param.d_type,param.name)
             param_str = "{}{}".format(param_str,s)
+            
+            if not param.comment == "":
+                c = self.parameter_comment.format(param.d_type,param.name,param.comment)
+                self.param_comments = "{}{}".format(self.param_comments,c)
+                
         
         #if no parameters, we insert void
         if param_str == "":
