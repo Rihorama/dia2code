@@ -36,6 +36,13 @@ class ErrorHandler:
         # WRONG PRINT
         self.err_dict["parameter:wrong_print"] = ("Given printing option (\"{}\") not recognized. Accepted options: \"t\" for Terminal, "
                                                   "f\" for File, \"ff\" for one file per class.\ Type -h,--help for help.")
+        
+        # TROUBLE OPENING SOURCE FILE
+        self.err_dict["parameter:trouble_opening_file"] = ("Given source file \"{}\" couldn't be opened. Type -h,--help for help.")
+        
+        # NOT A XML FILE
+        self.err_dict["parameter:not_xml"] = ("Given source file \"{}\" cannot be parsed as XML. Check if the file contains XML or "
+                                             "is not corrupted. Type -h,--help for help.")
       
         
         

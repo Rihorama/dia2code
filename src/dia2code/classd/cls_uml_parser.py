@@ -19,13 +19,21 @@ class ClassUmlParser(UmlParser):
     def __init__(self, xml_path):
         
         self.class_dict = {}
-        self.error_handler = error_handler.ErrorHandler()
+        self.err = error_handler.ErrorHandler()
         self.xml_tree = None
         
         f = self.opener(xml_path)
         
         #PARSING XML
-        self.xml_tree = ET.parse(f) 
+        try:
+            self.xml_tree = ET.parse(f) 
+            
+        except ET.ParseError:                                                      ###
+            self.err.print_error_onevar("parameter:not_xml",xml_path)              ###
+            e_code = self.err.exit_code["parameter"]                               ###
+                                                                                   ###
+            exit(e_code)
+            
         
         f.close()
         
@@ -41,7 +49,15 @@ class ClassUmlParser(UmlParser):
             File object for the source Dia XML.
         """        
 
-        f = open(xml_path,'rb')
+        try:
+            f = open(xml_path,'rb')
+            
+        except (OSError, IOError):                                                 ###
+            self.err.print_error_onevar("parameter:trouble_opening_file",xml_path) ###
+            e_code = self.err.exit_code["parameter"]                               ###
+                                                                                   ###
+            exit(e_code)                                                           ###
+            
         
         #getting magical sequence to find out it gzipped
         magical = f.read(2)
@@ -78,10 +94,10 @@ class ClassUmlParser(UmlParser):
                 self.add_class(child)
                 
         #if class_dict empty -> wrong type of dia diagram
-        if self.class_dict == {}:
-            self.error_handler.print_error("parser:class_wrong_dia")    ###
-            e_code = self.error_handler.exit_code["parser"]             ###
-                                                                        ###
+        if self.class_dict == {}:                             ###
+            self.err.print_error("parser:class_wrong_dia")    ###
+            e_code = self.err.exit_code["parser"]             ###
+                                                              ###
             exit(e_code)
                 
         #run for creating connections
@@ -142,11 +158,11 @@ class ClassUmlParser(UmlParser):
         if not name == None:
             new_class = cls_class.Class(name,class_id,stereotype,abstract_flag,comment)
             
-        else:                                                           ###
-            self.error_handler.print_error("dia:class_name_missing")    ###
-            e_code = self.error_handler.exit_code["xml"]                ###
-                                                                        ###
-            exit(e_code)                                                ###
+        else:                                                 ###
+            self.err.print_error("dia:class_name_missing")    ###
+            e_code = self.err.exit_code["xml"]                ###
+                                                              ###
+            exit(e_code)                                      ###
             
         
         #then cycles again to find the other relevant child elements
@@ -264,11 +280,11 @@ class ClassUmlParser(UmlParser):
         
         #new_root == None means the connection exists but is not properly
         #connected to either class in the diagram
-        if new_root == None:
-            self.error_handler.print_error("dia:ref_not_closed")   ###
-            e_code = self.error_handler.exit_code["diagram"]       ###
-                                                                   ###
-            exit(e_code)                                           ###
+        if new_root == None:                             ###
+            self.err.print_error("dia:ref_not_closed")   ###
+            e_code = self.err.exit_code["diagram"]       ###
+                                                         ###
+            exit(e_code)                                 ###
             
                 
         for child in new_root: 
@@ -284,11 +300,11 @@ class ClassUmlParser(UmlParser):
                 
                 
         #error check if either table not found
-        if master == None or slave == None:                        ###
-            self.error_handler.print_error("dia:ref_not_closed")   ###
-            e_code = self.error_handler.exit_code["diagram"]       ###
-                                                                   ###
-            exit(e_code)                                           ###
+        if master == None or slave == None:              ###
+            self.err.print_error("dia:ref_not_closed")   ###
+            e_code = self.err.exit_code["diagram"]       ###
+                                                         ###
+            exit(e_code)                                 ###
         
         
         #updating what's neccessary
@@ -383,11 +399,11 @@ class ClassUmlParser(UmlParser):
             flag = new_assoc.correctDirection()
             
             #if yes, we rather print error than choose either variant
-            if not flag:
-                self.error_handler.print_error_twovar("dia:direction_collision",A_class.name,B_class.name)   ###
-                e_code = self.error_handler.exit_code["diagram"]                                             ###
-                                                                                                             ###
-                exit(e_code)                                                                                 ###
+            if not flag:                                                                           ###
+                self.err.print_error_twovar("dia:direction_collision",A_class.name,B_class.name)   ###
+                e_code = self.err.exit_code["diagram"]                                             ###
+                                                                                                   ###
+                exit(e_code)                                                                       ###
                 
         
         #no direction means that both sides know about each other

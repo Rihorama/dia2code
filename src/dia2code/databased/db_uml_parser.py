@@ -15,13 +15,21 @@ class DatabaseUmlParser(UmlParser):
     def __init__(self, xml_path):
         
         self.table_dict = {}
-        self.error_handler = error_handler.ErrorHandler()
+        self.err = error_handler.ErrorHandler()
         self.xml_tree = None
         
         f = self.opener(xml_path)
         
         #PARSING XML
-        self.xml_tree = ET.parse(f) 
+        try:
+            self.xml_tree = ET.parse(f) 
+            
+        except ET.ParseError:                                                      ###
+            self.err.print_error_onevar("parameter:not_xml",xml_path)              ###
+            e_code = self.err.exit_code["parameter"]                               ###
+                                                                                   ###
+            exit(e_code)
+            
         
         f.close()
         
@@ -37,7 +45,15 @@ class DatabaseUmlParser(UmlParser):
             File object for the source Dia XML.
         """        
 
-        f = open(xml_path,'rb')
+        try:
+            f = open(xml_path,'rb')
+            
+        except (OSError, IOError):                                                 ###
+            self.err.print_error_onevar("parameter:trouble_opening_file",xml_path) ###
+            e_code = self.err.exit_code["parameter"]                               ###
+                                                                                   ###
+            exit(e_code)                                                           ###
+            
         
         #getting magical sequence to find out it gzipped
         magical = f.read(2)
@@ -75,11 +91,11 @@ class DatabaseUmlParser(UmlParser):
         
         
         #if table_dict empty -> wrong type of dia diagram
-        if self.table_dict == {}:
-            self.error_handler.print_error("parser:database_wrong_dia")    ###
-            e_code = self.error_handler.exit_code["parser"]                ###
-                                                                        ###
-            exit(e_code)
+        if self.table_dict == {}:                                ###
+            self.err.print_error("parser:database_wrong_dia")    ###
+            e_code = self.err.exit_code["parser"]                ###
+                                                                 ###
+            exit(e_code)                                         ###
          
          
         #run for adding references
@@ -121,11 +137,11 @@ class DatabaseUmlParser(UmlParser):
         if not name == None:
             new_table = db_table.Table(name,t_id,comment)
             
-        else:                                                           ###
-            self.error_handler.print_error("dia:table_name_missing")    ###
-            e_code = self.error_handler.exit_code["xml"]                ###
-                                                                        ###
-            exit(e_code)                                                ###
+        else:                                                 ###
+            self.err.print_error("dia:table_name_missing")    ###
+            e_code = self.err.exit_code["xml"]                ###
+                                                              ###
+            exit(e_code)                                      ###
                 
         
         #then cycles again to find the other relevant child elements
@@ -207,12 +223,12 @@ class DatabaseUmlParser(UmlParser):
                 break
         
         #new_root == None means the connection exists but is not properly
-        #connected to either table in the diagram
-        if new_root == None:
-            self.error_handler.print_error("dia:ref_not_closed")   ###
-            e_code = self.error_handler.exit_code["diagram"]       ###
-                                                                   ###
-            exit(e_code)                                           ###
+        #connected to any table in the diagram
+        if new_root == None:                             ###
+            self.err.print_error("dia:ref_not_closed")   ###
+            e_code = self.err.exit_code["diagram"]       ###
+                                                         ###
+            exit(e_code)                                 ###
             
                 
         for child in new_root: 
@@ -228,11 +244,11 @@ class DatabaseUmlParser(UmlParser):
                 
                 
         #error check if either table not found
-        if master == None or slave == None:                        ###
-            self.error_handler.print_error("dia:ref_not_closed")   ###
-            e_code = self.error_handler.exit_code["diagram"]       ###
-                                                                   ###
-            exit(e_code)                                           ###
+        if master == None or slave == None:              ###
+            self.err.print_error("dia:ref_not_closed")   ###
+            e_code = self.err.exit_code["diagram"]       ###
+                                                         ###
+            exit(e_code)                                 ###
         
         
         #updating both tables

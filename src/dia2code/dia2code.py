@@ -38,22 +38,21 @@ def main():
     elif args.mode == "c":
         mode = "class"
         
-    else:
-        err.print_error_onevar("parameter:wrong_mode",args.mode)
-        e_code = err.exit_code["parameter"]
-        
-        exit(e_code)
+    else:                                                           ###
+        err.print_error_onevar("parameter:wrong_mode",args.mode)    ###
+        e_code = err.exit_code["parameter"]                         ###
+                                                                    ###
+        exit(e_code)                                                ###
     
     
     #SOURCE PATH
     src = args.src
     
-    if not os.path.exists(src):
-    
-        err.print_error_onevar("parameter:bad_source",src)        
-        e_code = err.exit_code["parameter"]
-        
-        exit(e_code)
+    if not os.path.exists(src):                                     ###    
+        err.print_error_onevar("parameter:bad_source",src)          ###
+        e_code = err.exit_code["parameter"]                         ###
+                                                                    ###
+        exit(e_code)                                                ###
     
     
     #DESTINATION FOLDER
@@ -66,12 +65,11 @@ def main():
     if not dst[-1] == "/":
         dst = "{}/".format(dst)
         
-    if not os.path.exists(dst):
-    
-        err.print_error_onevar("parameter:bad_destination",dst)        
-        e_code = err.exit_code["parameter"]
-        
-        exit(e_code)
+    if not os.path.exists(dst):                                     ###    
+        err.print_error_onevar("parameter:bad_destination",dst)     ###
+        e_code = err.exit_code["parameter"]                         ###
+                                                                    ###
+        exit(e_code)                                                ###
         
     
     #LANGUAGE
@@ -90,11 +88,11 @@ def main():
         language = "c++"        
         
     #language given but not supported
-    elif (mode == "database" and flag_db) or (mode == "class" and flag_cls):        
-        err.print_error_twovar("parameter:unsupported_language",language,mode)
-        e_code = err.exit_code["parameter"]
-        
-        exit(e_code)
+    elif (mode == "database" and flag_db) or (mode == "class" and flag_cls):    ###        
+        err.print_error_twovar("parameter:unsupported_language",language,mode)  ###
+        e_code = err.exit_code["parameter"]                                     ###
+                                                                                ###
+        exit(e_code)                                                            ###
     
     
     #RESULT FILE NAME (if not given, uses source file name)
@@ -115,11 +113,11 @@ def main():
     elif not args.print == None and args.print in valid_options:
         print_option = args.print
         
-    else:
-        err.print_error_onevar("parameter:wrong_print",args.print)
-        e_code = err.exit_code["parameter"]
-        
-        exit(e_code)
+    else:                                                               ###
+        err.print_error_onevar("parameter:wrong_print",args.print)      ###
+        e_code = err.exit_code["parameter"]                             ###
+                                                                        ###
+        exit(e_code)                                                    ###
         
     
     

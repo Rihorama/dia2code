@@ -18,19 +18,6 @@ class Association:
         
         self.assoc_type = None
         self.direction = None            #taken from direction_dict
-        
-        self.A_class = None              #connection was initialized by clicking on this class        
-        self.A_role = None               #role name . if not present -> empty string
-        self.A_multiplicity = None       #multiplicity of association on A side
-        self.A_visibility = None         #public/private/protected/implementation
-        self.A_arrow_visible = False     #arrow displayed pointing to member A?
-        
-        self.B_class = None              #connection was finished by clicking on this class
-        self.B_role = None
-        self.B_multiplicity = None
-        self.B_visibility = None
-        self.B_arrow_visible = False     #arrow displayed pointing to member B?
-        
         self.err = error_handler.ErrorHandler()
         
         self.A_dict = {"class"        : None,
@@ -44,11 +31,7 @@ class Association:
                        "multiplicity" : None,
                        "visibility"   : None,
                        "arrow_visible": None}
-        
-        #TODO: If I ever feel suicide enough, I might remove the single attributes
-        #      and fill the dictionaries right away. And correct everything that
-        #      works with it, yay...
-   
+
     
     
     def correctDirection(self):
@@ -107,7 +90,7 @@ class Association:
             String "A" for A-member, "B" for B-member
         """
         
-        if cls == self.A_class:
+        if cls == self.A_dict["class"]:
             return "A"
         
         else: #B_class

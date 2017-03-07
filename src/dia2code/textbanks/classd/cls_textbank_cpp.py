@@ -131,11 +131,16 @@ class TextBankCpp(ClassTextBank):
             attr (cls_attribute.Attribute): Attribute instance to parse into text.
         """
         
+        indent_lvl = 2
+        indent_here = self.indent * indent_lvl
+         
+        
+        
         #COMMENT
         #formating comment if present and adding two indents
         if not attr.comment == "":
             comment = self.line_comment.format(attr.comment)
-            comment = "{}{}{}".format(self.indent,self.indent,comment)
+            comment = "{}{}".format(indent_here,comment)
         
         else:
             comment = ""
@@ -158,7 +163,7 @@ class TextBankCpp(ClassTextBank):
         
         
         #adds 2x indent, semicolon and newline
-        s = "{}{}{}".format(self.indent,self.indent,s)        
+        s = "{}{}".format(indent_here,s)        
         
         
         #ACCESS MODIFIER
@@ -179,6 +184,11 @@ class TextBankCpp(ClassTextBank):
         Args:
             mtd (cls_method.Method): Method instance to parse into text.
         """
+        
+        #INDENT LEVEL
+        indent_lvl = 2
+        indent_here = self.indent * indent_lvl
+        
         
         #PARAMETERS
         #first we generate string with all parameters
@@ -224,7 +234,7 @@ class TextBankCpp(ClassTextBank):
         
         
         #adds 2x indent
-        s = "{}{}{}".format(self.indent,self.indent,s)
+        s = "{}{}".format(indent_here,s)
         
         
         #ACCESS MODIFIER
@@ -253,6 +263,11 @@ class TextBankCpp(ClassTextBank):
         Args:
             assoc (cls_association.Association) - Association to parse.
         """
+        
+        #INDENT LEVEL
+        indent_lvl = 2
+        indent_here = self.indent * indent_lvl
+        
         
         #first we determine which member of the association is this class
         #and which member is the other class
@@ -303,7 +318,7 @@ class TextBankCpp(ClassTextBank):
         
         
         #adds 2x indent, semicolon and newline
-        s = "{}{}{};\n".format(self.indent,self.indent,s)        
+        s = "{}{};\n".format(indent_here,s)        
         
         
         #these go under private access modifier byy default
