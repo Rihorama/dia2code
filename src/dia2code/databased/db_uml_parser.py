@@ -6,71 +6,21 @@ import databased.db_attribute  as db_attribute
 import databased.db_table      as db_table
 import databased.db_generator  as db_generator
 
-from parents.uml_parser import UmlParser
-
+from parents.xml_uml_parser import XmlUmlParser
 import error_handler
 
-class DatabaseUmlParser(UmlParser):
+
+class DatabaseUmlParser(XmlUmlParser):
     
     def __init__(self, xml_path):
         
         self.table_dict = {}
         self.err = error_handler.ErrorHandler()
-        self.xml_tree = None
         
-        f = self.opener(xml_path)
+        #using parent class method to check, open and parse the dia xml
+        self.xml_tree = super(DatabaseUmlParser,self).parse_into_etree(xml_path)
         
-        #PARSING XML
-        try:
-            self.xml_tree = ET.parse(f) 
-            
-        except ET.ParseError:                                                      ###
-            self.err.print_error_onevar("parameter:not_xml",xml_path)              ###
-            e_code = self.err.exit_code["parameter"]                               ###
-                                                                                   ###
-            exit(e_code)
-            
-        
-        f.close()
-        
-        
-    def opener(self,xml_path):
-        """Provides opening the source file, deals with gzip compression
-        if needed since Dia uses gzip to compress its XML.
-        
-        Args:
-            xml_path (String) - Path to the source Dia XML.
-            
-        Returns:
-            File object for the source Dia XML.
-        """        
-
-        try:
-            f = open(xml_path,'rb')
-            
-        except (OSError, IOError):                                                 ###
-            self.err.print_error_onevar("parameter:trouble_opening_file",xml_path) ###
-            e_code = self.err.exit_code["parameter"]                               ###
-                                                                                   ###
-            exit(e_code)                                                           ###
-            
-        
-        #getting magical sequence to find out it gzipped
-        magical = f.read(2)
-
-        
-        #if magical sequence equals to what gzip should have
-        if (magical == b'\x1f\x8b'):
-            f.seek(0)            
-            f = gzip.GzipFile(xml_path)    #goes through gzip
-            
-        else:
-            f.seek(0)
-            
-            
-            
-        return f
-                
+        return
         
     
     def parse(self):
@@ -127,10 +77,10 @@ class DatabaseUmlParser(UmlParser):
         for child in table:
             #table name
             if child.attrib['name'] == 'name':
-                name = self.stripHashtags(child[0].text)
+                name = super(DatabaseUmlParser,self).stripHashtags(child[0].text)
                 
             elif child.attrib['name'] == 'comment':
-                comment = self.stripHashtags(child[0].text)
+                comment = super(DatabaseUmlParser,self).stripHashtags(child[0].text)
                                 
         
         #check if table name found and table created
@@ -196,7 +146,7 @@ class DatabaseUmlParser(UmlParser):
                 
             #else it's string stroed as text
             else:
-                attr_dict[name] = self.stripHashtags(child[0].text)
+                attr_dict[name] = super(DatabaseUmlParser,self).stripHashtags(child[0].text)
         
         attr = db_attribute.DbAttribute(table,attr_dict)
         
@@ -256,22 +206,6 @@ class DatabaseUmlParser(UmlParser):
         slave.add_foreign_key(master)
         
         return
-        
-    
-    
-    def stripHashtags(self,string):
-        """A simple method that strips the and last character
-        of the given string. Used to strip hashtags from Dia strings.
-        
-        Example: "#I'm a nice string#" to "I'm a nice string".
-        
-        Args:
-            string (String): The string to be parsed.
-            
-        Returns:
-            The parsed string, stripped of the hashtags, if used properly.
-        """
-        return string[1:-1]
         
             
 def run():    

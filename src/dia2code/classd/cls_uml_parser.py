@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import xml.etree.ElementTree as ET
-import gzip
 
 import classd.cls_class        as cls_class
 import classd.cls_attribute    as cls_attribute
@@ -9,72 +8,21 @@ import classd.cls_parameter    as cls_parameter
 import classd.cls_association  as cls_association
 import classd.cls_generator    as cls_generator
 
-from parents.uml_parser import UmlParser
-
+from parents.xml_uml_parser import XmlUmlParser
 import error_handler
 
 
-class ClassUmlParser(UmlParser):
+class ClassUmlParser(XmlUmlParser):
     
     def __init__(self, xml_path):
         
         self.class_dict = {}
         self.err = error_handler.ErrorHandler()
-        self.xml_tree = None
         
-        f = self.opener(xml_path)
+        #using parent class method to check, open and parse the dia xml
+        self.xml_tree = super(ClassUmlParser,self).parse_into_etree(xml_path)
         
-        #PARSING XML
-        try:
-            self.xml_tree = ET.parse(f) 
-            
-        except ET.ParseError:                                                      ###
-            self.err.print_error_onevar("parameter:not_xml",xml_path)              ###
-            e_code = self.err.exit_code["parameter"]                               ###
-                                                                                   ###
-            exit(e_code)
-            
-        
-        f.close()
-        
-        
-    def opener(self,xml_path):
-        """Provides opening the source file, deals with gzip compression
-        if needed since Dia uses gzip to compress its XML.
-        
-        Args:
-            xml_path (String) - Path to the source Dia XML.
-            
-        Returns:
-            File object for the source Dia XML.
-        """        
-
-        try:
-            f = open(xml_path,'rb')
-            
-        except (OSError, IOError):                                                 ###
-            self.err.print_error_onevar("parameter:trouble_opening_file",xml_path) ###
-            e_code = self.err.exit_code["parameter"]                               ###
-                                                                                   ###
-            exit(e_code)                                                           ###
-            
-        
-        #getting magical sequence to find out it gzipped
-        magical = f.read(2)
-
-        
-        #if magical sequence equals to what gzip should have
-        if (magical == b'\x1f\x8b'):
-            f.seek(0)            
-            f = gzip.GzipFile(xml_path)    #goes through gzip
-            
-        else:
-            f.seek(0)
-            
-            
-            
-        return f
-                
+        return
         
     
     def parse(self):
@@ -141,16 +89,16 @@ class ClassUmlParser(UmlParser):
         for child in cls:
             #table name
             if child.attrib['name'] == 'name':
-                name = self.stripHashtags(child[0].text)
+                name = super(ClassUmlParser,self).stripHashtags(child[0].text)
             
             elif child.attrib['name'] == 'stereotype':
-                stereotype = self.stripHashtags(child[0].text)
+                stereotype = super(ClassUmlParser,self).stripHashtags(child[0].text)
                 
             elif child.attrib['name'] == 'abstract' and child[0].attrib["val"] == "true":
                 abstract_flag = True
                 
             elif child.attrib['name'] == 'comment':
-                comment = self.stripHashtags(child[0].text)
+                comment = super(ClassUmlParser,self).stripHashtags(child[0].text)
                         
                 
         
@@ -245,7 +193,7 @@ class ClassUmlParser(UmlParser):
                 
             #else it's string stored as text (for data type, comments etc)
             else:
-                attr_dict[name] = self.stripHashtags(sub[0].text)
+                attr_dict[name] = super(ClassUmlParser,self).stripHashtags(child[0].text)
         
         #now initializing instance of the chosen class
         if child_type == "attribute":
@@ -354,8 +302,8 @@ class ClassUmlParser(UmlParser):
                 continue
             
             
-            if name == "name":
-                new_assoc.name = self.stripHashtags(child[0].text) #getting the name, can be empty
+            if name == "name":  #getting the name, can be empty
+                new_assoc.name = super(ClassUmlParser,self).stripHashtags(child[0].text)
             
             elif name == "direction":
                 i = int(child[0].attrib["val"])          #direction index
@@ -368,10 +316,10 @@ class ClassUmlParser(UmlParser):
             
             #A CLASS
             elif name == "role_a":
-                new_assoc.A_dict["role"] = self.stripHashtags(child[0].text)
+                new_assoc.A_dict["role"] = super(ClassUmlParser,self).stripHashtags(child[0].text)
                 
             elif name == "multipicity_a":
-                new_assoc.A_dict["multiplicity"] = self.stripHashtags(child[0].text)
+                new_assoc.A_dict["multiplicity"] = super(ClassUmlParser,self).stripHashtags(child[0].text)
                 
             elif name == "visibility_a":
                 new_assoc.A_dict["visibility"] = int(child[0].attrib["val"])
@@ -382,10 +330,10 @@ class ClassUmlParser(UmlParser):
             
             #B CLASS
             elif name == "role_b":
-                new_assoc.B_dict["role"] = self.stripHashtags(child[0].text)
+                new_assoc.B_dict["role"] = super(ClassUmlParser,self).stripHashtags(child[0].text)
                 
             elif name == "multipicity_b":
-                new_assoc.B_dict["multiplicity"] = self.stripHashtags(child[0].text)
+                new_assoc.B_dict["multiplicity"] = super(ClassUmlParser,self).stripHashtags(child[0].text)
                 
             elif name == "visibility_b":
                 new_assoc.B_dict["visibility"] = child[0].attrib["val"]
@@ -422,23 +370,7 @@ class ClassUmlParser(UmlParser):
         
         return
     
-    
-    
-    def stripHashtags(self,string):
-        """A simple method that strips the and last character
-        of the given string. Used to strip hashtags from Dia strings.
-        
-        Example: "#I'm a nice string#" to "I'm a nice string".
-        
-        Args:
-            string (String): The string to be parsed.
-            
-        Returns:
-            The parsed string, stripped of the hashtags, if used properly.
-        """
-        return string[1:-1]
-        
-            
+
 def run():    
     
     parser = UmlParser('./Class1.dia')

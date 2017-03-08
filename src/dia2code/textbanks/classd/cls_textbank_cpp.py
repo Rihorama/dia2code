@@ -68,7 +68,7 @@ class TextBankCpp(ClassTextBank):
         
         # METHOD DEFINITION PATTERN - for defining the declared class outside the class body
         #                           - "{data_type} {class_name}::{method_name}({parameters}){{\n{[multiline_comment]}\n{body}\n}}"
-        self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}\n{}\n}}\n\n"
+        self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}{}\n}}\n\n"
         
         
         # VIRTUAL METHOD DECLARATION PATTERN - for declaring pure virtual methods
@@ -82,7 +82,7 @@ class TextBankCpp(ClassTextBank):
         
         
         # INSERT CODE COMMENT - to be put inside empty method definition body
-        self.your_code_here_str = "\n// YOUR CODE HERE\n"
+        self.your_code_here_str = "\n// YOUR CODE HERE\n\n"
         
         
         #LINE COMMENT - two indents, then two slashes and the text

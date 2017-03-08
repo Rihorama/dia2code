@@ -4,10 +4,9 @@ from abc import ABCMeta, abstractmethod
 
 
 class UmlParser:
-    #Abstract class to be parent to both Databse and Class uml parsers
+    #Abstract class to be parent to all uml parsers
     
-    __metaclass__ = ABCMeta 
-    
+    __metaclass__ = ABCMeta     
     
     @abstractmethod
     def parse(self): pass
