@@ -9,7 +9,7 @@ from classd.cls_generator  import ClassGenerator
 
 class ParserFactory:
     
-    def pick(mode,src):
+    def pick(mode,src):        
         """Factory method for choosing the proper
         Uml Parser based on given mode.
         
@@ -26,8 +26,27 @@ class ParserFactory:
         
         else:    # mode == "class"
             return ClassUmlParser(src)
+    
+    
+    def get_dict_name(mode):
+        """Provides correct dictionary name based on given mode.
+        
+        Args:
+            mode (String) - To choose correct dictionary name.
+            
+        Returns:
+            Correct dictionary name.
+        """
+        
+        if mode == "database":
+            return "table_dict"
+        
+        else:    # mode == "class"
+            return "class_dict"
+        
         
     pick = staticmethod(pick)
+        
         
         
 class GeneratorFactory:

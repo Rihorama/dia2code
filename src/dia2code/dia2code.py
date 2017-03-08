@@ -26,10 +26,13 @@ def main():
     
     
     parser = ParserFactory.pick(mode,src)
+    dict_name = ParserFactory.get_dict_name(mode)
+    dict_full = "parser.{}".format(dict_name)
+    
     generator = GeneratorFactory.pick(mode,dst,file_name,language,print_option)
     
     parser.parse()
-    generator.generate(parser.table_dict)
+    generator.generate(eval(dict_full))
 
         
 
