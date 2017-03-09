@@ -22,6 +22,8 @@ class ClassUmlParser(XmlUmlParser):
         #using parent class method to check, open and parse the dia xml
         self.xml_tree = super(ClassUmlParser,self).parse_into_etree(xml_path)
         
+        #print(ET.tostring(self.xml_tree.getroot()).decode('ascii'))
+        
         return
         
     
@@ -161,7 +163,6 @@ class ClassUmlParser(XmlUmlParser):
         for sub in child:
             name = sub.attrib["name"]
             
-            
             #method parameters need to get special treatment
             #which uses this very method once again (lvl 1 recursion)
             if name == "parameters":
@@ -193,7 +194,7 @@ class ClassUmlParser(XmlUmlParser):
                 
             #else it's string stored as text (for data type, comments etc)
             else:
-                attr_dict[name] = super(ClassUmlParser,self).stripHashtags(child[0].text)
+                attr_dict[name] = super(ClassUmlParser,self).stripHashtags(sub[0].text)
         
         #now initializing instance of the chosen class
         if child_type == "attribute":

@@ -71,7 +71,7 @@ class DatabaseGenerator:
             s (String) - Generated code string representing the given table in chosen language.
         """
         
-        self.txt.startTable(table)
+        self.txt.startEntity(table)
                 
         #ATTRIBUTES / ROWS
         for attr in table.attr_list: 
@@ -85,7 +85,7 @@ class DatabaseGenerator:
             self.txt.addForeignKey(f_key_list)
         
         
-        s = self.txt.wrapUpTable()
+        s = self.txt.wrapUpEntity()
         
         return s
     

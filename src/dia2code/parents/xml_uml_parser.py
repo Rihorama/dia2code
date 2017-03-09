@@ -94,6 +94,8 @@ class XmlUmlParser(UmlParser):
         Returns:
             The parsed string, stripped of the hashtags, if used properly.
         """
+        #print("<hash>{}</hash>".format(string))
+        #print("<nohash>{}</nohash>".format(string[1:-1]))
         
         return string[1:-1]
     

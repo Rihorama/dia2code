@@ -97,7 +97,7 @@ class ClassGenerator:
         """
         
         #initiates string generating
-        self.txt.startClass(cls)
+        self.txt.startEntity(cls)
         
         #generates attributes
         for attr in cls.attr_list:
@@ -112,7 +112,7 @@ class ClassGenerator:
             self.txt.addMethod(mtd)
         
         #gets the final string
-        s = self.txt.wrapUpClass()
+        s = self.txt.wrapUpEntity()
         
         
         return s

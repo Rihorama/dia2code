@@ -1,12 +1,5 @@
 #!/usr/bin/python3
 
-
-import databased.db_uml_parser        as db_uml_parser
-import databased.db_generator         as db_generator
-
-import classd.cls_uml_parser  as cls_uml_parser
-import classd.cls_generator   as cls_generator
-
 from config.configure         import parse_arguments
 import config.args_checker    as checker
 from factory.factories        import ParserFactory,GeneratorFactory
@@ -32,8 +25,12 @@ def main():
     generator = GeneratorFactory.pick(mode,dst,file_name,language,print_option)
     
     parser.parse()
-    generator.generate(eval(dict_full))
-
+    
+    if mode == "database":
+        generator.generate(parser.table_dict)
+        
+    elif mode == "class":
+        generator.generate(parser.class_dict)
         
 
 if __name__ == "__main__":

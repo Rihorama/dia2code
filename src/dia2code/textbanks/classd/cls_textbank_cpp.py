@@ -100,11 +100,10 @@ class TextBankCpp(ClassTextBank):
 
         
                 
-    def startClass(self,cls):
+    def startEntity(self,cls):
         """
-        Method that prepares the instance attributes to work on a new
-        table and begins the process. Sets variable strings to empty
-        strings again, then parses primary key and foreign keys.
+        Method that prepares this instance attributes to work on a new
+        class. Sets variable strings to empty strings again.
         
         Args:
             cls (cls_class.Class): Class instance to work with.
@@ -451,9 +450,9 @@ class TextBankCpp(ClassTextBank):
 
 
 
-    def wrapUpClass(self):
+    def wrapUpEntity(self):
         """Puts together all stored strings to create a complete class declaration.
-        Saves the string in self.table_string and returns it.
+        Saves the string in self.class_string and returns it.
             
         Returns:
             Final Class string.

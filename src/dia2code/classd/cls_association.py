@@ -179,8 +179,11 @@ class Association:
         print("  CONNECTION {}".format(self))
         print("  Name: {}".format(self.name))
         print("  Type: {}".format(self.assoc_type))
-        print("  Participant A: name: {}, role: {}, multiplicity: {}, visibility: {}".format(self.A_class.name, self.A_role,
-                                                                                             self.A_multiplicity,self.A_visibility))
-        print("  Participant B: name: {}, role: {}, multiplicity: {}, visibility: {}".format(self.B_class.name, self.B_role,
-                                                                                             self.B_multiplicity,self.B_visibility))
+        print("  Participant A: name: {}, role: {}, multiplicity:" 
+              " {}, visibility: {}".format(self.A_dict["class"].name, self.A_dict["role"],
+                                           self.A_dict["multiplicity"],self.A_dict["visibility"]))
+              
+        print("  Participant B: name: {}, role: {}, multiplicity:"
+              " {}, visibility: {}".format(self.B_dict["class"].name, self.B_dict["role"],
+                                           self.B_dict["multiplicity"],self.B_dict["visibility"]))
         print("  ###############")

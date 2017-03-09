@@ -64,7 +64,7 @@ class TextBankMysql(DatabaseTextBank):
         
         
         
-    def startTable(self,table):
+    def startEntity(self,table):
         """
         Method that prepares the instance attributes to work on a new
         table and begins the process. Sets variable strings to empty
@@ -160,7 +160,7 @@ class TextBankMysql(DatabaseTextBank):
 
 
 
-    def wrapUpTable(self):
+    def wrapUpEntity(self):
         """Puts together all stored strings to create a CREATE statement for the whole
         table. Saves the string in self.table_string and returns it.
             
