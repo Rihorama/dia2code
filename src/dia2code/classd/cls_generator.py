@@ -1,25 +1,30 @@
 #!/usr/bin/python3
 
-from textbanks.classd.cls_textbank_cpp import TextBankCpp
+from textbanks.classd.cls_textbank_cpp    import TextBankCpp
+from textbanks.classd.cls_textbank_python import TextBankPython
 
 class ClassGenerator:
     
-    supported_language_dict = { "c++" : "cls_text_bank_cpp"}
+    supported_language_dict = {"c++"    : "TextBankCpp()",
+                               "python" : "TextBankPython()"}
     
-    extension_dict = {"c++" : "cpp"}
+    extension_dict = {"c++"    : "cpp",
+                      "python" : "py"}
     
     saving_options_dict = { "t"  : "on_terminal",
                             "f"  : "in_one_file",
                             "ff" : "one_class_per_file"}
 
-    def __init__(self,dest_path,file_name,cls_type,saving_type):
+    def __init__(self,dest_path,file_name,language,saving_type):
         
         self.dest_path = dest_path
         self.file_name = file_name
-        self.cls_type = cls_type  #file extension - equals to programming language used
-        self.cls_extension = self.extension_dict[cls_type]
+        self.language = language  #file extension - equals to programming language used
+        self.cls_extension = self.extension_dict[language]
         self.saving_type = self.saving_options_dict[saving_type]
-        self.txt = TextBankCpp()
+        
+        #instantiating the correct text bank
+        self.txt = eval(self.supported_language_dict[language])
         
         
         

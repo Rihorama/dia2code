@@ -7,7 +7,7 @@ class TextBankCpp(ClassTextBank):
     def __init__(self):
         
         self.cls = None                 #current class
-        self.cls_string = ""            #filled with wrapUpClass()
+        self.cls_string = ""            #filled with wrapUpEntity()
         
         self.private_attr_string = ""      #for private attributes
         self.protected_attr_string = ""    #for protected attrbitues
@@ -30,7 +30,7 @@ class TextBankCpp(ClassTextBank):
         
         
         # CLASS PATTERN - main pattern to wrap up the whole class definition
-        #               - "class {class_name} {{\n{class_body}}};\n{comment}{method_definitions}\n"
+        #               - "class {class_name} {{\n{comment}{class_body}}};\n{method_definitions}\n"
         self.class_format = "class {} {{\n{}{}}};\n{}\n"
         
 
@@ -77,8 +77,8 @@ class TextBankCpp(ClassTextBank):
         
         
         # STD::VECTOR PATTERN - for defining vector variables
-        #                     - "std::vector<{data_type}> {name}"
-        self.vector_format = "std::vector<{}> {}"
+        #                     - "std::vector<{data_type}> {name};\n"
+        self.vector_format = "std::vector<{}> {};\n"
         
         
         # INSERT CODE COMMENT - to be put inside empty method definition body
@@ -119,8 +119,7 @@ class TextBankCpp(ClassTextBank):
         self.protected_mtd_string = ""
         self.public_mtd_string = ""
         
-        self.definitions = ""
-            
+        self.definitions = ""            
             
         return
 
@@ -167,7 +166,7 @@ class TextBankCpp(ClassTextBank):
             s = self.attribute_with_default_format.format(static,attr.d_type, attr.name, attr.value, comment)
         
         
-        #adds 2x indent, semicolon and newline
+        #adds 2x indent
         s = "{}{}".format(indent_here,s)        
         
         
@@ -181,7 +180,7 @@ class TextBankCpp(ClassTextBank):
 
 
     def addMethod(self,mtd):
-        """Using attributes of given method, generates two strings: declaration of
+        """Using parameters of given method, generates two strings: declaration of
         the method which will be added under the proper access modifier
         and the definition of the method with empty body, each stored
         in their respective "group string".
@@ -319,8 +318,10 @@ class TextBankCpp(ClassTextBank):
         #thus the multiplicity of the other class matters
         s = ""
         
-        if assoc.isSingleMultiplicity(other):
-            s = "{} {}".format(other_dict["class"].name, name)
+        if assoc.isSingleMultiplicity(other): #new attribute with no static prefix and no comment
+            s = self.attribute_format.format("",other_dict["class"].name,
+                                             name,"")
+            #s = "{} {}".format(other_dict["class"].name, name)
             
         else: #multiple or variable amount of values => vector
             s = self.vector_format.format(other_dict["class"].name, name)
@@ -328,7 +329,7 @@ class TextBankCpp(ClassTextBank):
         
         
         #adds 2x indent, semicolon and newline
-        s = "{}{};\n".format(indent_here,s)        
+        s = "{}{}".format(indent_here,s)        
         
         
         #these go under private access modifier byy default
