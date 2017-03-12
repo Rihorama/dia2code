@@ -2,14 +2,17 @@
 
 from textbanks.classd.cls_textbank_cpp    import TextBankCpp
 from textbanks.classd.cls_textbank_python import TextBankPython
+from textbanks.classd.cls_textbank_java   import TextBankJava
 
 class ClassGenerator:
     
     supported_language_dict = {"c++"    : "TextBankCpp()",
-                               "python" : "TextBankPython()"}
+                               "python" : "TextBankPython()",
+                               "java"   : "TextBankJava()"}
     
     extension_dict = {"c++"    : "cpp",
-                      "python" : "py"}
+                      "python" : "py",
+                      "java"   : "java"}
     
     saving_options_dict = { "t"  : "on_terminal",
                             "f"  : "in_one_file",
