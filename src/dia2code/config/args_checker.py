@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 
 import os.path
-import databased.db_generator         as db_generator
-import classd.cls_generator           as cls_generator
+import databased.db_generator           as db_generator
+import classd.cls_generator             as cls_generator
 
-import error_handler                  as err
+from error_handler import ErrorHandler
+
+err = ErrorHandler()
 
 
 def check_mode(mode):

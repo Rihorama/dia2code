@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from parents.db_textbank import DatabaseTextBank
 
-class TextBankMysql(DatabaseTextBank):  
+class TextBankPostgresql(DatabaseTextBank):  
     #TODO: deal with possibility of wrong parameter coming...?
     
     def __init__(self):
@@ -29,8 +29,8 @@ class TextBankMysql(DatabaseTextBank):
         
         
         # ATTRIBUTE - not_null and comment might not be present -> ""
-        #           - "{name} {data_type}{not_null}{comment}"
-        self.attribute_format = "{} {}{}{},\n"
+        #           - "{name} {data_type} {not_null},{comment}"
+        self.attribute_format = "{} {} {},{}\n"
         
         
         # PRIMARY KEY PATTERN - for the primary key defining, comes last so no comma
@@ -45,21 +45,21 @@ class TextBankMysql(DatabaseTextBank):
         
         # FOREIGN KEY PATTERN - for foreign key defining
         #                     - "FOREIGN KEY {unique_fk_name} ({attr_that_is_fk}) REFERENCES {referenced_table}({referenced_attr})"
-        self.foreign_format = "FOREIGN KEY {} ({}) REFERENCES {}({}),\n"
+        self.foreign_format = "FOREIGN KEY ({}) REFERENCES {}({}),\n"
         
         
         # NOT NULL
-        self.not_null = " NOT NULL"
+        self.not_null = "NOT NULL"
         
         
-        # ATTRIBUTE COMMENT - built in attribute comment
-        #                   - "COMMENT '{comment}'"
-        self.attr_comment_format = " COMMENT '{}'"
+        # LINE COMMENT - built in attribute comment
+        #              - "{2* indent}-- {comment}"
+        self.line_comment_format = "{}-- {}"
         
         
         # MULTILINE COMMENT - for comments of tables
-        #                   - "/*\n{comment}\n*/\n"
-        self.multiline_comment_format = "/*\n{}\n*/\n"
+        #                   - "/*\n *{comment}\n */\n"
+        self.multiline_comment_format = "/*\n *{}\n */\n"
         
         
         
@@ -215,9 +215,7 @@ class TextBankMysql(DatabaseTextBank):
             
         #COMMENT
         if not comment == "":
-            new_comment = self.attr_comment_format.format(comment)    
-            
-        
+            new_comment = self.line_comment_format.format(self.indent * 2,comment)            
         
         s = self.attribute_format.format(name,d_type,not_null,new_comment)
         s = "{}{}".format(self.indent,s)
@@ -282,10 +280,7 @@ class TextBankMysql(DatabaseTextBank):
             Formated string.
         """
         
-        #the foreign key will be named "fk{unique number}__{ThisTableName}_{FKTableName}"
-        name = "fk{}__{}_{}".format(self.fk_cnt,self.table.name,for_table)
-        
-        s = self.foreign_format.format(name,here_attr,for_table,for_attr)
+        s = self.foreign_format.format(here_attr,for_table,for_attr)
         
         #adding indent
         s = "{}{}".format(self.indent,s)

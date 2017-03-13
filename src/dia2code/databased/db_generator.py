@@ -1,21 +1,25 @@
 #!/usr/bin/python3
 
 from textbanks.databased.db_textbank_mysql import TextBankMysql
+from textbanks.databased.db_textbank_postgresql import TextBankPostgresql
 
 class DatabaseGenerator:
     
-    supported_language_dict = { "mysql" : "db_text_bank_mysql"}
+    supported_language_dict = { "mysql"      : "TextBankMysql()",
+                                "postgresql" : "TextBankPostgresql()"}
     
     saving_options_dict = { "t"  : "on_terminal",
                             "f"  : "in_file",
                             "ff" : "in_file"}
 
-    def __init__(self,dest_path,file_name,db_type,saving_type):
+    def __init__(self,dest_path,file_name,language,saving_type):
         self.dest_path = dest_path
         self.file_name = file_name
-        self.db_type = db_type                   #MySQL etc.
+        self.language = language                   #mysql etc.
         self.saving_type = self.saving_options_dict[saving_type]
-        self.txt = TextBankMysql()
+        
+        #instantiating the correct text bank
+        self.txt = eval(self.supported_language_dict[language])
         
         
         
@@ -36,7 +40,7 @@ class DatabaseGenerator:
         if self.saving_type == "in_file":
             
             #puts together file path + name
-            file_name = "{}{}.{}".format(self.dest_path,self.file_name,self.db_type)
+            file_name = "{}{}.{}".format(self.dest_path,self.file_name,self.language)
             
             #Opens destination file
             f = open(file_name, 'w')
