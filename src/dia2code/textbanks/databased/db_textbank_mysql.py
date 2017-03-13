@@ -128,20 +128,19 @@ class TextBankMysql(DatabaseTextBank):
         self.fk_cnt += 1     #increments the counter
         here_names = ""      #string for all foreign collumn names to be put together for one FK
         foreign_names = ""   #string for names of attributes that are referenced by this FK
-        reffed_table_name = f_key_list[0].my_table.name                
+        reffed_table_name = f_key_list[0].my_table.name      #name of the referenced table   
         
         
         #referenced table can have a multiple-column primary keys
         #f_key_list is now a list of them, we loop over it
-        for f_key in f_key_list:
-            
+        for f_key in f_key_list:            
             
             #first we add a new attribute that will serve as the foreign key
             #based on the name of the referenced table and its primary key
-            new_name = "{}_{}".format(f_key.my_table.name,f_key.name)
+            #also adds the counter to ensure unique attributes
+            new_name = "{}_{}_fk{}".format(f_key.my_table.name,f_key.name,self.fk_cnt)
             here_names = "{},{}".format(here_names,new_name)          #attributes in child table
-            foreign_names = "{},{}".format(foreign_names,f_key.name) #referenced attributes
-            
+            foreign_names = "{},{}".format(foreign_names,f_key.name)  #referenced attributes            
             
             #we use the new name we created and data type and nullable flag from the reffed one + empty comment
             s = self.getAttributeString(new_name,f_key.d_type,f_key.nullable,"")
