@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 
-from textbanks.databased.db_textbank_mysql import TextBankMysql
+from textbanks.databased.db_textbank_mysql      import TextBankMysql
 from textbanks.databased.db_textbank_postgresql import TextBankPostgresql
 
-class DatabaseGenerator:
+from parents.generator                          import Generator
+
+class DatabaseGenerator(Generator):
     
     supported_language_dict = { "mysql"      : "TextBankMysql()",
                                 "postgresql" : "TextBankPostgresql()"}

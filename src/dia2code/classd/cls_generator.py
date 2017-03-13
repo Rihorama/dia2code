@@ -4,7 +4,9 @@ from textbanks.classd.cls_textbank_cpp    import TextBankCpp
 from textbanks.classd.cls_textbank_python import TextBankPython
 from textbanks.classd.cls_textbank_java   import TextBankJava
 
-class ClassGenerator:
+from parents.generator                    import Generator
+
+class ClassGenerator(Generator):
     
     supported_language_dict = {"c++"    : "TextBankCpp()",
                                "python" : "TextBankPython()",

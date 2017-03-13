@@ -4,7 +4,9 @@ from abc import ABCMeta, abstractmethod
 import xml.etree.ElementTree as ET
 import gzip
 from parents.uml_parser import UmlParser
-from error_handler import ErrorHandler as err
+from error_handler import ErrorHandler
+
+err = ErrorHandler()
 
 
 class XmlUmlParser(UmlParser):
