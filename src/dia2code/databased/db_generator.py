@@ -2,13 +2,15 @@
 
 from textbanks.databased.db_textbank_mysql      import TextBankMysql
 from textbanks.databased.db_textbank_postgresql import TextBankPostgresql
+from textbanks.databased.db_textbank_oracle     import TextBankOracle
 
 from parents.generator                          import Generator
 
 class DatabaseGenerator(Generator):
     
     supported_language_dict = { "mysql"      : "TextBankMysql()",
-                                "postgresql" : "TextBankPostgresql()"}
+                                "postgresql" : "TextBankPostgresql()",
+                                "oracle"     : "TextBankOracle()"}
     
     saving_options_dict = { "t"  : "on_terminal",
                             "f"  : "in_file",

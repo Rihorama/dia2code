@@ -84,7 +84,7 @@ class TextBankPostgresql(DatabaseTextBank):
         
         
         #primary key
-        if (len(table.p_key) != 0): #TODO: deal with primary key absence, either error or fix
+        if (len(table.p_key) != 0):
             self.primary_string = self.getPrimaryString(table.p_key)
             
         
@@ -192,9 +192,6 @@ class TextBankPostgresql(DatabaseTextBank):
     def getAttributeString(self,name,d_type,nullable,comment):
         """Uses elements stored in attribute dictionary to create
         a string defining one column of the table.
-        
-        NOTE: Does not include either comma or \n at the end. Must be added
-        manually if needed.
         
         Args:
             name     (String):  Attribute name.
