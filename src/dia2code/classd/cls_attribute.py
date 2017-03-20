@@ -5,7 +5,8 @@ class ClsAttribute:
     visibility_dict = {0 : "public",
                        1 : "private",
                        2 : "protected",
-                       3 : "implementation"}
+                       3 : "public"}  #3 stands for implementation which is not implemented
+                                      #so public is default here
     
     
     def __init__(self, cls, attr_dict):
