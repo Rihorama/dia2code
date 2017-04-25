@@ -62,18 +62,18 @@ class TextBankCpp(ClassTextBank):
         
         
         # METHOD DECLARATION PATTERN - for declaring methods withing a c++ class body
-        #                            - "{[static]}{data_type} {method_name}({parameters}){[const]};{line_comment}\n"
-        self.mtd_declaration_format = "{}{} {}({}){};{}\n"
+        #                            - "{[static]}{data_type }{method_name}({parameters}){[const]};{line_comment}\n"
+        self.mtd_declaration_format = "{}{}{}({}){};{}\n"
         
         
         # METHOD DEFINITION PATTERN - for defining the declared class outside the class body
-        #                           - "{data_type} {class_name}::{method_name}({parameters}){{\n{[multiline_comment]}\n{body}\n}}"
-        self.mtd_definition_format = "\n{} {}::{}({}) {{\n{}{}\n}}\n\n"
+        #                           - "{data_type }{class_name}::{method_name}({parameters}){{\n{[multiline_comment]}\n{body}\n}}"
+        self.mtd_definition_format = "\n{}{}::{}({}) {{\n{}{}\n}}\n\n"
         
         
         # VIRTUAL METHOD DECLARATION PATTERN - for declaring pure virtual methods
-        #                            - "{[virtual]}{data_type} {method_name}({parameters}){[const]} = 0;{line_comment}\n"
-        self.virtual_mtd_declaration_format = "{}{} {}({}){} = 0;{}\n"
+        #                            - "{[virtual]}{data_type }{method_name}({parameters}){[const]} = 0;{line_comment}\n"
+        self.virtual_mtd_declaration_format = "{}{}{}({}){} = 0;{}\n"
         
         
         # STD::VECTOR PATTERN - for defining vector variables
@@ -225,20 +225,26 @@ class TextBankCpp(ClassTextBank):
         
         if mtd.const_flag:
             const = " const"
+        
+        
+        #DATA TYPE - adding a space if present
+        d_type = ""
+        
+        if mtd.d_type:
+            d_type = mtd.d_type + " "
             
         
         #DECLARATION STRING  
         s = ""             #for the final string
         
-            #VIRTUAL (if present together with static, virtual has priority)
+        #VIRTUAL (if present together with static, virtual has priority)
         if mtd.abstract_flag:
             virtual = "virtual "
-            s = self.virtual_mtd_declaration_format.format(virtual,mtd.d_type,mtd.name,
-                                                           param_str,const,comment)
-            
-            #OR NOT
+            s = self.virtual_mtd_declaration_format.format(virtual,d_type,mtd.name,
+                                                           param_str,const,comment)            
+        #OR NOT
         else:
-            s = self.mtd_declaration_format.format(static,mtd.d_type,mtd.name,
+            s = self.mtd_declaration_format.format(static,d_type,mtd.name,
                                                    param_str,const,comment)
         
         
@@ -254,7 +260,7 @@ class TextBankCpp(ClassTextBank):
         #DEFINITION STRING (only for non virtual methods)
         if not mtd.abstract_flag:
             
-            s = self.mtd_definition_format.format(mtd.d_type,self.cls.name,mtd.name,param_str,
+            s = self.mtd_definition_format.format(d_type,self.cls.name,mtd.name,param_str,
                                                     self.param_comments, self.your_code_here_str)            
             self.definitions = "{}{}".format(self.definitions,s)
         

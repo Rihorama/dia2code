@@ -70,7 +70,7 @@ class ClassUmlParser(XmlUmlParser):
                 
     def add_class(self,cls):
         """Takes an element reprezenting a dia table
-        and creates a db_table object based on it.
+        and creates a cls_class.Class object based on it.
         
         Args:
             table (XML Element): XML structure holding info of one table.

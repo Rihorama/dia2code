@@ -12,6 +12,10 @@ class Association:
     direction_dict = {0 : "none",
                       1 : "A to B",
                       2 : "B to A"}
+    
+    ret_val_dict = {"single"  :  1,  #single multiplicity return value
+                    "variable":  0,  #variable multiplicity return value
+                    "error"   : -1}
 
   
     def __init__(self):
@@ -108,6 +112,9 @@ class Association:
         Used to decide whether the representing attribute should
         be single-value or multi-value (list,vector...)
         
+        NOTE: Notations such as 1..n or m..n are not supported. The only
+        non-digit character allowed is asterisk *.
+        
         Args:
             member (String) - A letter stating which member multiplicity we examine (A | B)
             
@@ -117,8 +124,7 @@ class Association:
         
         #setting the right member's multiplicity
         m = None
-        m_class = None
-        
+        m_class = None        
         
         
         if member == "A":
@@ -135,18 +141,17 @@ class Association:
                 
             exit(e_code)
             #This shouldn|t happen if the code is written properly
-            #will result in a dirty exit
-            
+            #will result in a dirty exit            
         
 
         if m.isdigit() and int(m) == 1: #single
-            return True
+            return self.ret_val_dict["single"]
         
         elif m == "":                   #none counts as single
-            return True
+            return self.ret_val_dict["single"]
         
         elif m.isdigit() or m == "*":  #variable
-            return False
+            return self.ret_val_dict["variable"]
         
         else:           #either variable or wrong -> error      
             x = m.split("..") #if correct, we get list of two
