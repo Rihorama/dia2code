@@ -5,7 +5,8 @@ class Method:
     visibility_dict = {0 : "public",
                        1 : "private",
                        2 : "protected",
-                       3 : "implementation"}
+                       3 : "public"}  #3 stands for implementation which is not implemented
+                                      #so public is default here
     
     
     def __init__(self, cls, attr_dict):
@@ -21,6 +22,9 @@ class Method:
         self.param_list = attr_dict["parameters"]
         
         self.comment = attr_dict["comment"]
+        
+        if self.abstract_flag:
+            self.my_class.abstract_flag = True
 
             
     def print_me(self):

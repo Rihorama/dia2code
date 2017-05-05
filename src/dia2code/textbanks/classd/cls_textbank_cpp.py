@@ -338,7 +338,7 @@ class TextBankCpp(ClassTextBank):
         s = "{}{}".format(indent_here,s)        
         
         
-        #these go under private access modifier byy default
+        #these go under private access modifier by default
         self.private_attr_string = "{}{}".format(self.private_attr_string,s)
         
         

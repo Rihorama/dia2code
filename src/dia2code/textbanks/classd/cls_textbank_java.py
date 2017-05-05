@@ -341,7 +341,7 @@ class TextBankJava(ClassTextBank):
 
         #ABSTRACT?
         abstract = ""
-        if self.abstract_flag:
+        if self.cls.abstract_flag:
             abstract = "abstract "
         
         

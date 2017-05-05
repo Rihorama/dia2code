@@ -95,6 +95,14 @@ class ErrorHandler:
         self.err_dict["generator:runtime"] = ("In cls_association.py: Runtime error. Blame cls_generator.py.")
         
         
+        # SortTable CYCLE LIMIT EXCEEDED
+        self.err_dict["generator:cycle_limit_exceeded"] = ("In db_generator.py: A set limit was exceeded when"
+                                                            "trying to sort tables by references. This either means,"
+                                                            "that there is a chain of reference in the source diagram,"
+                                                            "that is longer than 99, or there is a cyclic reference"
+                                                            "among tables which is not allowed in dia2code.")
+        
+        
         #---------------------------------
         
     

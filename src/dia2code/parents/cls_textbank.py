@@ -11,9 +11,9 @@ class ClassTextBank(BaseTextBank):
     
     #the following methods are called by cls_generator and thus MUST be
     #implemented in every textbank used for generating code from a class diagram.
-    
+
     @abstractmethod
-    def startClass(self,cls): pass
+    def startEntity(self, ent): pass
 
     @abstractmethod
     def addAttribute(self,attr): pass
@@ -23,6 +23,7 @@ class ClassTextBank(BaseTextBank):
 
     @abstractmethod
     def addAssociation(self,assoc): pass
-
+    
     @abstractmethod
-    def wrapUpClass(self): pass        #returns string
+    def wrapUpEntity(self): pass
+

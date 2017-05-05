@@ -9,6 +9,6 @@ class BaseTextBank:
     def startEntity(self, ent): pass
 
     @abstractmethod
-    def startEntity(self, ent): pass
+    def wrapUpEntity(self): pass
     
        

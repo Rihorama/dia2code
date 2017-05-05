@@ -5,6 +5,9 @@ from textbanks.databased.db_textbank_postgresql import TextBankPostgresql
 from textbanks.databased.db_textbank_oracle     import TextBankOracle
 
 from parents.generator                          import Generator
+from error_handler import ErrorHandler
+
+err = ErrorHandler()
 
 class DatabaseGenerator(Generator):
     
@@ -154,8 +157,13 @@ class DatabaseGenerator(Generator):
             
             #if the distionary has been emptied => all sorted in list, we finish
             if len(table_dict) == 0:
-                break
+                return table_list
             
-        return table_list
+        #if we get here, it means table_dict hasn't been emptied in 100 cycles
+        #which is an error, either too long chain reference or circular reference
+        err.print_error("generator:cycle_limit_exceeded")           ###
+        e_code = err.exit_code["generator"]                         ###
+                                                                    ###
+        exit(e_code)                                                ###
                     
             

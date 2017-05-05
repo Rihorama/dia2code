@@ -27,17 +27,17 @@ class Table:
         
         
         
-    def add_slave(self, by_table):
+    def add_slave(self, slave):
         """Adds info that this table is referenced by
         another table. Updates is_f_key_cnt and
         referenced_by attributes.
         
         Args:
-            by_table (Table): Table that references this table.
+            slave (Table): Table that references this table.
         """
         
         self.is_f_key_cnt =+ 1 
-        self.referenced_by.append(by_table)
+        self.referenced_by.append(slave)
         
         return
         
