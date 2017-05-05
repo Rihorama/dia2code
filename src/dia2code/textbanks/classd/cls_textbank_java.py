@@ -70,9 +70,13 @@ class TextBankJava(ClassTextBank):
         #                   - "{indent}/*\n{indent} *{comment}\n{indent} */\n"
         self.multiline_comment = "{}/**\n{} * {}{} */\n"
         
-        #PARAMETER COMMENT - for individual method parameter comments so they can be added in method description.
-        #                   - "{indent}{data_type} {name} - {comment}\n"
-        self.parameter_comment = "{} * {} {} - {}\n"
+        #PARAMETER COMMENT - for individual javadoc parameter comments so they can be added in method description.
+        #                   - "{indent} * @param {name} {comment}\n"
+        self.parameter_comment = "{} * @param {} {}\n"
+        
+        #JAVADOC RETURN VALUE - To be added in the method description if the function doesn|t return void.
+        #                   - "{indent} * @return {data_type}\n"
+        self.return_value_comment = "{} * @return {}\n"
 
         
                 
@@ -161,6 +165,11 @@ class TextBankJava(ClassTextBank):
         #were any parameter comments present?
         if not self.param_comments == "":
             comment = "{}{}".format(comment,self.param_comments)
+            
+        #is there a return value?
+        if not mtd.d_type == "void":
+            ret = self.return_value_comment.format(self.indent,mtd.d_type)
+            comment = "{}{}".format(comment,ret)
         
         #wrapping it with a multiline comment
         comment = self.multiline_comment.format(self.indent,self.indent,comment,self.indent)
@@ -228,7 +237,7 @@ class TextBankJava(ClassTextBank):
         if not other_dict["role"] == "": #format: "rolename_othername_association"
             
             role = other_dict["role"]
-            role = role.replace(" ","_") #precaution in cae white spaces present, replaces with _
+            role = role.replace(" ","_") #precaution in case white spaces present, replaces with _
             
             name = "{}_{}_association".format(role,other_dict["class"].name)
             
@@ -313,8 +322,7 @@ class TextBankJava(ClassTextBank):
             param_str = "{}{}".format(param_str,s)
             
             if not param.comment == "":
-                c = self.parameter_comment.format(self.indent,param.d_type,
-                                                  param.name, param.comment)
+                c = self.parameter_comment.format(self.indent, param.name, param.comment)
                 self.param_comments = "{}{}".format(self.param_comments,c)
                 
         #else removing the final comma

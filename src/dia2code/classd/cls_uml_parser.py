@@ -324,6 +324,7 @@ class ClassUmlParser(XmlUmlParser):
                 
             elif name == "visibility_a":
                 new_assoc.A_dict["visibility"] = int(child[0].attrib["val"])
+
                 
             elif name == "show_arrow_a" and child[0].attrib["val"] == "true":
                 new_assoc.A_dict["arrow_visible"] = True
@@ -355,6 +356,21 @@ class ClassUmlParser(XmlUmlParser):
                 exit(e_code)                                                                       ###
                 
         
+        #if direction says "none" but arrows are visible, we adjust the direction
+        if new_assoc.direction == "none":
+            new_direction = "none"
+            
+            if new_assoc.A_dict["arrow_visible"] and not new_assoc.B_dict["arrow_visible"]:
+                new_direction = "B to A"
+                
+            elif not new_assoc.A_dict["arrow_visible"] and new_assoc.B_dict["arrow_visible"]:
+                new_direction = "A to B"
+            
+            #updating the direction
+            new_assoc.direction = new_direction
+            
+        
+        #ADDING ASSOCIATION TO RESPECTIVE CLASSES
         #no direction means that both sides know about each other
         if new_assoc.direction == "none":
             A_class.association_list.append(new_assoc)
