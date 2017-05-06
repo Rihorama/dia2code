@@ -44,8 +44,8 @@ class TextBankPostgresql(DatabaseTextBank):
         
         
         # FOREIGN KEY PATTERN - for foreign key defining
-        #                     - "FOREIGN KEY {unique_fk_name} ({attr_that_is_fk}) REFERENCES {referenced_table}({referenced_attr})"
-        self.foreign_format = "FOREIGN KEY ({}) REFERENCES {}({}),\n"
+        #                     - "CONSTRAINT {unique_name} FOREIGN KEY ({attr_that_is_fk}) REFERENCES {referenced_table}({referenced_attr})"
+        self.foreign_format = "CONSTRAINT {} FOREIGN KEY ({}) REFERENCES {}({}),\n"
         
         
         # NOT NULL
@@ -276,8 +276,10 @@ class TextBankPostgresql(DatabaseTextBank):
         Returns:
             Formated string.
         """
+        #the foreign key will be named "fk{unique number}__{ThisTableName}_{FKTableName}"
+        name = "fk{}__{}_{}".format(self.fk_cnt,self.table.name,for_table)
         
-        s = self.foreign_format.format(here_attr,for_table,for_attr)
+        s = self.foreign_format.format(name,here_attr,for_table,for_attr)
         
         #adding indent
         s = "{}{}".format(self.indent,s)
