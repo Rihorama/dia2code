@@ -48,6 +48,16 @@ class TextBankMysql(DatabaseTextBank):
         self.foreign_format = "FOREIGN KEY {} ({}) REFERENCES {}({}),\n"
         
         
+        # UNIQUE PATTERN - for UNIQUE constraints
+        #                - "UNIQUE ({attr_that_is_fk})"
+        self.unique_format = "UNIQUE ({}),\n"
+        
+        
+        # FOREIGN KEY PATTERN - for foreign key defining
+        #                     - "FOREIGN KEY {unique_fk_name} ({attr_that_is_fk}) REFERENCES {referenced_table}({referenced_attr})"
+        self.foreign_format = "FOREIGN KEY {} ({}) REFERENCES {}({}),\n"
+        
+        
         # NOT NULL
         self.not_null = " NOT NULL"
         
@@ -109,7 +119,12 @@ class TextBankMysql(DatabaseTextBank):
         
         #UNIQUE CONSTRAINT if present and not for primary key (included in being primary key)
         if attr.unique and not attr.p_key_flag:
-            s = self.getConstraintString("UNIQUE",attr.name)
+            #s = self.getConstraintString("UNIQUE",attr.name)
+            #self.constraint_string = "{}{}".format(self.constraint_string,s)
+            
+            #rather using pure UNIQUE () format
+            s = self.unique_format.format(attr.name)
+            s = "{}{}".format(self.indent,s)
             self.constraint_string = "{}{}".format(self.constraint_string,s)
             
             
