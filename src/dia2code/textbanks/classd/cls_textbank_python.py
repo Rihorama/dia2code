@@ -15,6 +15,7 @@ class TextBankPython(ClassTextBank):
         self.param_comments = ""        #help variable to store parameter comments
         
         self.abstract_flag = False
+        self.init_present_flag = False  #is the __init__ method present in the diagram
 
          
         
@@ -48,7 +49,7 @@ class TextBankPython(ClassTextBank):
         
         # __init__ PATTERN - for defining a method inside class body
         #                           - "\n{indent}def __init__(self):\n\n{object_attributes}\n\n"
-        self.init_format = "\n{}def __init__(self):\n\n{}\n\n"
+        self.init_format = "{}def __init__(self):\n\n{}\n\n"
         
         
         # METHOD PATTERN - for defining a method inside class body
@@ -74,7 +75,7 @@ class TextBankPython(ClassTextBank):
         
         # ABSTRACT STATIC VARIABLE - needs to be present in abstract class as static variable
         #                         - "{indent}__metaclass__ = ABCMeta\n"
-        self.abstract_var = "{}__metaclass__ = ABCMeta\n"
+        self.abstract_var = "{}__metaclass__ = ABCMeta\n\n"
         
         
         # LIST PATTERN - for defining a list
@@ -227,7 +228,15 @@ class TextBankPython(ClassTextBank):
         #STATIC
         elif mtd.static_flag:
             s = self.static_mtd_format.format(self.indent,mtd.name,param_str,
-                                              comment,your_code_here)            
+                                              comment,your_code_here)
+
+        #__INIT__ METHOD - will be filled with instancial attributes
+        elif mtd.name == "__init__":
+            combined = "{}{}".format(self.attributes,your_code_here)
+            s = self.mtd_format.format(self.indent,mtd.name,param_str,
+                                              comment,combined)
+            self.init_present_flag = True
+        
         #CLASSIC
         else:
             s = self.mtd_format.format(self.indent,mtd.name,param_str,
@@ -378,7 +387,7 @@ class TextBankPython(ClassTextBank):
             comment = ""            
             
         #INIT METHOD
-        if not self.attributes == "":
+        if not self.attributes == "" and not self.init_present_flag:
             init = self.init_format.format(self.indent, self.attributes)
             self.methods = "{}{}".format(init,self.methods)
         
