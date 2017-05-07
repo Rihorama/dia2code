@@ -10,9 +10,9 @@ class ErrorHandler:
         
         self.exit_code["parameter"] = 1
         self.exit_code["xml"] = 2
-        self.exit_code["diagram"] = 2
-        self.exit_code["parser"] = 3
-        self.exit_code["generator"] = 4
+        self.exit_code["diagram"] = 3
+        self.exit_code["parser"] = 4
+        self.exit_code["generator"] = 5
         
         
         #dictionary for error print quotes
@@ -55,7 +55,7 @@ class ErrorHandler:
         # TABLE NAME MISSING
         self.err_dict["dia:table_name_missing"] = ("In dia xml file: incomplete table element. Name attribute missing.")
         
-        # CLASS NAME MISSING
+        # CLASS NAME MISSING - exit code for this is xml
         self.err_dict["dia:class_name_missing"] = ("In dia xml file: incomplete class element. Name attribute missing.")
         
         # DIRECTION COLLISION
