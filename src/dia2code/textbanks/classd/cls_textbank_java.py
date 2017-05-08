@@ -14,6 +14,8 @@ class TextBankJava(ClassTextBank):
         self.param_comments = ""        #help variable to store parameter comments
         
         self.abstract_flag = False
+        self.assoc_index = 1               #incremented to secure unique names of
+                                           #association variables
 
          
         
@@ -242,7 +244,8 @@ class TextBankJava(ClassTextBank):
             name = "{}_{}_association".format(role,other_dict["class"].name)
             
         else: #we must manage with format: "othername_association"
-            name = "{}_association".format(other_dict["class"].name)
+            name = "{}_association{}".format(other_dict["class"].name,self.assoc_index)
+            self.assoc_index = self.assoc_index + 1 #increasing the counter, this number is taken
             
         
         

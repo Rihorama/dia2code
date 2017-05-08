@@ -16,6 +16,9 @@ class TextBankPython(ClassTextBank):
         
         self.abstract_flag = False
         self.init_present_flag = False  #is the __init__ method present in the diagram
+        
+        self.assoc_index = 1               #incremented to secure unique names of
+                                           #association variables
 
          
         
@@ -292,7 +295,8 @@ class TextBankPython(ClassTextBank):
             name = "{}_{}_association".format(role,other_dict["class"].name)
             
         else: #we must manage with format: "othername_association"
-            name = "{}_association".format(other_dict["class"].name)            
+            name = "{}_association{}".format(other_dict["class"].name,self.assoc_index)
+            self.assoc_index = self.assoc_index + 1 #increasing the counter, this number is taken        
         
         
         #this class is the "member" class and it will have attribute referencing the "other" class

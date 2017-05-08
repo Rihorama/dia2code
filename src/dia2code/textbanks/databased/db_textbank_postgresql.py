@@ -34,7 +34,7 @@ class TextBankPostgresql(DatabaseTextBank):
         
         
         # PRIMARY KEY PATTERN - for the primary key defining, comes last so no comma
-        #                     - "PRIMARY KEY ({name})"
+        #                     - "PRIMARY KEY ({attr_name})"
         self.primary_format = "PRIMARY KEY ({})\n"
         
         
@@ -46,6 +46,11 @@ class TextBankPostgresql(DatabaseTextBank):
         # FOREIGN KEY PATTERN - for foreign key defining
         #                     - "CONSTRAINT {unique_name} FOREIGN KEY ({attr_that_is_fk}) REFERENCES {referenced_table}({referenced_attr})"
         self.foreign_format = "CONSTRAINT {} FOREIGN KEY ({}) REFERENCES {}({}),\n"
+        
+        
+        # UNIQUE PATTERN - for UNIQUE contraint defining
+        #                     - "UNIQUE ({attr_name})"
+        self.unique_format = "UNIQUE ({})\n"
         
         
         # NOT NULL
@@ -109,7 +114,8 @@ class TextBankPostgresql(DatabaseTextBank):
         
         #UNIQUE CONSTRAINT if present and not for primary key (included in being primary key)
         if attr.unique and not attr.p_key_flag:
-            s = self.getConstraintString("UNIQUE",attr.name)
+            s = self.unique_format.format(attr.name)
+            s = "{}{}".format(self.indent,s)
             self.constraint_string = "{}{}".format(self.constraint_string,s)
             
             

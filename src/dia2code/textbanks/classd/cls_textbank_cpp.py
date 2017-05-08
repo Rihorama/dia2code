@@ -17,9 +17,11 @@ class TextBankCpp(ClassTextBank):
         self.protected_mtd_string = ""     #for protected methods
         self.public_mtd_string = ""        #for public methods
         
-        self.definitions = ""              #definitions of methods with empty body
-        
+        self.definitions = ""              #definitions of methods with empty body        
         self.param_comments = ""           #help variable to store parameter comments
+        self.assoc_index = 1               #incremented to secure unique names of
+                                           #association variables
+        
 
          
         
@@ -316,7 +318,8 @@ class TextBankCpp(ClassTextBank):
             name = "{}_{}_association".format(role,other_dict["class"].name)
             
         else: #we must manage with format: "othername_association"
-            name = "{}_association".format(other_dict["class"].name)
+            name = "{}_association{}".format(other_dict["class"].name,self.assoc_index)
+            self.assoc_index = self.assoc_index + 1 #increasing the counter, this number is taken
             
         
         
