@@ -69,7 +69,7 @@ class TextBankPython(ClassTextBank):
         # ABSTRACT METHOD PATTERN - for declaring abstract methods with a decorator
         #                            - "{indent}@abstractmethod\n
         #                               {indent}def {method_name}({parameters}):\n{multiline_comment}\n{indent*2}pass\n"
-        self.abstract_mtd_format = "{}@abstractmethod\n{}def {}({}):\n{}\n{}pass\n"
+        self.abstract_mtd_format = "{}@abstractmethod\n{}def {}({}):\n{}{}pass\n"
         
 
         # ABSTRACT MODULE IMPORT - in case abstract methods are present we need to import this

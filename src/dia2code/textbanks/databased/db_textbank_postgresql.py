@@ -148,8 +148,10 @@ class TextBankPostgresql(DatabaseTextBank):
             here_names = "{},{}".format(here_names,new_name)          #attributes in child table
             foreign_names = "{},{}".format(foreign_names,f_key.name)  #referenced attributes            
             
-            #we use the new name we created and data type and nullable flag from the reffed one + empty comment
-            s = self.getAttributeString(new_name,f_key.d_type,f_key.nullable,"")
+            #we use the new name we created and data type from the reffed one,
+            #true for nullable (since we can't determine) and no comment
+            nullable = True
+            s = self.getAttributeString(new_name,f_key.d_type,nullable,"")
             self.fk_attributes = "{}{}".format(self.fk_attributes,s)  
         
         
