@@ -218,7 +218,7 @@ class TextBankPython(ClassTextBank):
         #YOUR CODE HERE    
         your_code_here = self.your_code_here.format(self.indent * 2)
   
-  
+
         #ABSTRACT
         if mtd.abstract_flag:
             s = self.abstract_mtd_format.format(self.indent,self.indent,mtd.name,
@@ -366,9 +366,12 @@ class TextBankPython(ClassTextBank):
                                                   param.comment)
                 self.param_comments = "{}{}".format(self.param_comments,c)
         
+        
         #else removing the final comma
-        else:
-            param_str = param_str[:-1]            
+        param_str = param_str[:-1]   
+        
+        #else removing the last newline from comments
+        self.param_comments = self.param_comments[:-1] 
             
         return param_str
     

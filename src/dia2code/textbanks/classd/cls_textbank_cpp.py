@@ -319,6 +319,8 @@ class TextBankCpp(ClassTextBank):
             
         else: #we must manage with format: "othername_association"
             name = "{}_association{}".format(other_dict["class"].name,self.assoc_index)
+            print(other_dict["class"].name)
+            print(name)
             self.assoc_index = self.assoc_index + 1 #increasing the counter, this number is taken
             
         
@@ -330,7 +332,7 @@ class TextBankCpp(ClassTextBank):
         if assoc.isSingleMultiplicity(other): #new attribute with no static prefix and no comment
             s = self.attribute_format.format("",other_dict["class"].name,
                                              name,"")
-            #s = "{} {}".format(other_dict["class"].name, name)
+
             
         else: #multiple or variable amount of values => vector
             s = self.vector_format.format(other_dict["class"].name, name)

@@ -76,7 +76,7 @@ class TextBankJava(ClassTextBank):
         #                   - "{indent} * @param {name} {comment}\n"
         self.parameter_comment = "{} * @param {} {}\n"
         
-        #JAVADOC RETURN VALUE - To be added in the method description if the function doesn|t return void.
+        #JAVADOC RETURN VALUE - To be added in the method description if the function doesn't return void.
         #                   - "{indent} * @return {data_type}\n"
         self.return_value_comment = "{} * @return {}\n"
 
@@ -169,7 +169,7 @@ class TextBankJava(ClassTextBank):
             comment = "{}{}".format(comment,self.param_comments)
             
         #is there a return value?
-        if not mtd.d_type == "void":
+        if (not mtd.d_type == "void" and not mtd.d_type == ""):
             ret = self.return_value_comment.format(self.indent,mtd.d_type)
             comment = "{}{}".format(comment,ret)
         
