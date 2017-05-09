@@ -54,8 +54,8 @@ class TextBankJava(ClassTextBank):
         
         
         # VECTOR PATTERN - for defining vector variables
-        #                - "Vector {name} = new Vector();\n"
-        self.vector_format = "Vector {} = new Vector();\n"
+        #                - "{indent}{access_modifier}Vector<{of_what}> {name}= new Vector<{of_what}>();\n"
+        self.vector_format = "{}{} Vector<{}> {} = new Vector<{}>();\n"
         
         
         # INSERT CODE COMMENT - to be put inside empty method definition body
@@ -252,15 +252,17 @@ class TextBankJava(ClassTextBank):
         #this class is the "member" class and it will have attribute referencing the "other" class
         #thus the multiplicity of the other class matters
         s = ""
+        other_class_name = other_dict["class"].name
         
         if assoc.isSingleMultiplicity(other): #new attribute, public with no static modifier and no comment
-            s = self.attribute_format.format(self.indent,"public","",other_dict["class"].name,
+            s = self.attribute_format.format(self.indent,"private","",other_class_name,
                                              name,"")            
         else: #multiple or variable amount of values => vector
-            s = self.vector_format.format(name)        
+            s = self.vector_format.format(self.indent,"private",other_class_name,name,
+                                          other_class_name)    
         
-        #adds 2x indent
-        s = "{}{}".format(self.indent * 2,s)        
+        #adds to the rest
+        self.attributes = "{}{}".format(self.attributes,s)
 
         return
         
