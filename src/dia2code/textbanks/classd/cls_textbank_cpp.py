@@ -320,8 +320,6 @@ class TextBankCpp(ClassTextBank):
             
         else: #we must manage with format: "othername_association"
             name = "{}_association{}".format(other_dict["class"].name,self.assoc_index)
-            print(other_dict["class"].name)
-            print(name)
             self.assoc_index = self.assoc_index + 1 #increasing the counter, this number is taken
             
         

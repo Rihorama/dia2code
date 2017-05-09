@@ -68,8 +68,8 @@ class TextBankPython(ClassTextBank):
         
         # ABSTRACT METHOD PATTERN - for declaring abstract methods with a decorator
         #                            - "{indent}@abstractmethod\n
-        #                               {indent}def {method_name}({parameters}): pass\n{[multiline_comment]}\n"
-        self.abstract_mtd_format = "{}@abstractmethod\n{}def {}({}): pass\n{}\n"
+        #                               {indent}def {method_name}({parameters}):\n{multiline_comment}\n{indent*2}pass\n"
+        self.abstract_mtd_format = "{}@abstractmethod\n{}def {}({}):\n{}\n{}pass\n"
         
 
         # ABSTRACT MODULE IMPORT - in case abstract methods are present we need to import this
@@ -223,7 +223,7 @@ class TextBankPython(ClassTextBank):
         #ABSTRACT
         if mtd.abstract_flag:
             s = self.abstract_mtd_format.format(self.indent,self.indent,mtd.name,
-                                                param_str,comment)
+                                                param_str,comment,self.indent*2)
             self.abstract_flag = True
             #formats the abstract static var and adds it to the other static vars
             abstract_var = self.abstract_var.format(self.indent)
