@@ -121,7 +121,8 @@ class TextBankCpp(ClassTextBank):
         self.protected_mtd_string = ""
         self.public_mtd_string = ""
         
-        self.definitions = ""            
+        self.definitions = ""  
+        self.assoc_index = 1
             
         return
 

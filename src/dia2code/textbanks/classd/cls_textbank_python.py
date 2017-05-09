@@ -125,6 +125,7 @@ class TextBankPython(ClassTextBank):
         self.param_comments = ""
         
         self.abstract_flag = False
+        self.assoc_index = 1
             
         return
 
