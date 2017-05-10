@@ -71,6 +71,16 @@ class TextBankPython(ClassTextBank):
         #                               {indent}def {method_name}({parameters}):\n{multiline_comment}\n{indent*2}pass\n"
         self.abstract_mtd_format = "{}@abstractmethod\n{}def {}({}):\n{}{}pass\n"
         
+        
+        # PARAMETER PATTERN - method parameter without default value
+        #                            - "{name},"
+        self.param_format = "{},"
+        
+        
+        # DEFAULT PARAMETER VALUE PATTERN - to set a default value for a method parameter
+        #                            - "{name} = {default_value},"
+        self.default_param_format = "{} = {},"
+        
 
         # ABSTRACT MODULE IMPORT - in case abstract methods are present we need to import this
         self.abstract_import = "from abc import ABCMeta, abstractmethod\n"
@@ -357,10 +367,19 @@ class TextBankPython(ClassTextBank):
         """
         
         param_str = "self,"     #self is always present
+        default_param_str = ""
         self.param_comments = ""
         
         for param in mtd.param_list:
-            param_str = "{}{},".format(param_str,param.name)
+            
+            if param.value == None:
+                s = self.param_format.format(param.name)
+                param_str = "{}{}".format(param_str,s)
+                
+            else:
+                #the string with default value is saved in default_param_string
+                s = self.default_param_format.format(param.name, param.value)
+                default_param_str = "{}{}".format(param_str,s)
             
             if not param.comment == "":
                 c = self.parameter_comment.format(self.indent * 2, param.name,
@@ -368,10 +387,13 @@ class TextBankPython(ClassTextBank):
                 self.param_comments = "{}{}".format(self.param_comments,c)
         
         
-        #else removing the final comma
+        #putting the two together
+        param_str = "{}{}".format(param_str,default_param_str)
+        
+        #removing the final comma
         param_str = param_str[:-1]   
         
-        #else removing the last newline from comments
+        #removing the last newline from comments
         self.param_comments = self.param_comments[:-1] 
             
         return param_str

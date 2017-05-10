@@ -83,12 +83,12 @@ class TextBankCpp(ClassTextBank):
         
         
         # PARAMETER PATTERN - method parameter without default value
-        #                            - "{data_type} {name},\n"
+        #                            - "{data_type} {name},"
         self.param_format = "{} {},"
         
         
         # DEFAULT PARAMETER VALUE PATTERN - to set a default value for a method parameter
-        #                            - "{data_type} {name} = {default_value},\n"
+        #                            - "{data_type} {name} = {default_value},"
         self.default_param_format = "{} {} = {},"
         
         
