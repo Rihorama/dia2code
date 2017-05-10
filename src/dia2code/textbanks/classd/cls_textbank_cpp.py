@@ -17,8 +17,12 @@ class TextBankCpp(ClassTextBank):
         self.protected_mtd_string = ""     #for protected methods
         self.public_mtd_string = ""        #for public methods
         
-        self.definitions = ""              #definitions of methods with empty body        
+        #restarted every at the start of every getParameters() call
+        self.declaration_param_string = "" #parameter string used in method declaration (has default values)
+        self.definition_param_string = ""  #parameter stringused in method definition (no default values)
         self.param_comments = ""           #help variable to store parameter comments
+        
+        self.definitions = ""              #definitions of methods with empty body        
         self.assoc_index = 1               #incremented to secure unique names of
                                            #association variables
         
@@ -76,6 +80,16 @@ class TextBankCpp(ClassTextBank):
         # VIRTUAL METHOD DECLARATION PATTERN - for declaring pure virtual methods
         #                            - "{[virtual]}{data_type }{method_name}({parameters}){[const]} = 0;{line_comment}\n"
         self.virtual_mtd_declaration_format = "{}{}{}({}){} = 0;{}\n"
+        
+        
+        # PARAMETER PATTERN - method parameter without default value
+        #                            - "{data_type} {name},\n"
+        self.param_format = "{} {},"
+        
+        
+        # DEFAULT PARAMETER VALUE PATTERN - to set a default value for a method parameter
+        #                            - "{data_type} {name} = {default_value},\n"
+        self.default_param_format = "{} {} = {},"
         
         
         # STD::VECTOR PATTERN - for defining vector variables
@@ -199,13 +213,12 @@ class TextBankCpp(ClassTextBank):
         
         #PARAMETERS
         #first we generate string with all parameters
-        param_str = self.getParameters(mtd)
+        self.getParameters(mtd)
         
         #were any parameter comments present?
-        if not self.param_comments == "":
+        if not self.declaration_param_string == "":
             #wrapping it with a multiline comment
-            self.param_comments = self.multiline_comment.format(self.param_comments)
-        
+            self.param_comments = self.multiline_comment.format(self.param_comments)        
         
         
         #COMMENT
@@ -244,12 +257,13 @@ class TextBankCpp(ClassTextBank):
         if mtd.abstract_flag:
             virtual = "virtual "
             s = self.virtual_mtd_declaration_format.format(virtual,d_type,mtd.name,
-                                                           param_str,const,comment)            
+                                                           self.declaration_param_string,
+                                                           const,comment)            
         #OR NOT
         else:
             s = self.mtd_declaration_format.format(static,d_type,mtd.name,
-                                                   param_str,const,comment)
-        
+                                                   self.declaration_param_string,
+                                                   const,comment)        
         
         #adds 2x indent
         s = "{}{}".format(indent_here,s)
@@ -263,8 +277,9 @@ class TextBankCpp(ClassTextBank):
         #DEFINITION STRING (only for non virtual methods)
         if not mtd.abstract_flag:
             
-            s = self.mtd_definition_format.format(d_type,self.cls.name,mtd.name,param_str,
-                                                    self.param_comments, self.your_code_here_str)            
+            s = self.mtd_definition_format.format(d_type,self.cls.name,mtd.name,
+                                                  self.definition_param_string,
+                                                  self.param_comments, self.your_code_here_str)            
             self.definitions = "{}{}".format(self.definitions,s)
         
         
@@ -394,28 +409,54 @@ class TextBankCpp(ClassTextBank):
             separated with comma.
         """
         
-        param_str = ""
+        #CLEARING PARAMETER STRINGS
+        self.declaration_param_string = "" #parameter string used in method declaration (has default values)
+        self.definition_param_string = ""  #parameter stringused in method definition (no default values)
         self.param_comments = ""
         
+        param_string = ""
+        default_param_string = ""
+        default_without_string = ""
+        
         for param in mtd.param_list:
-            s = "{} {},".format(param.d_type,param.name)
-            param_str = "{}{}".format(param_str,s)
+            
+            if param.value == None:
+                s = self.param_format.format(param.d_type,param.name)
+                param_string = "{}{}".format(param_string,s)
+                
+            else:
+                #the string with default value is saved in default_param_string
+                s = self.default_param_format.format(param.d_type,param.name,
+                                                         param.value)
+                default_param_string = "{}{}".format(param_string,s)
+                
+                #however, the same parameter must be saved also WITHOUT default value
+                #to be put in the method definition, that's what
+                #default_param_without_string is for
+                s2 = self.param_format.format(param.d_type,param.name)
+                default_without_string = "{}{}".format(default_without_string,s2)
             
             if not param.comment == "":
                 c = self.parameter_comment.format(param.d_type,param.name,param.comment)
                 self.param_comments = "{}{}".format(self.param_comments,c)
-                
+        
+        
+        #PARAMETERS FOR METHOD DECLARATION (with default values)
+        self.declaration_param_string = "{}{}".format(param_string,default_param_string)
+        self.declaration_param_string = self.declaration_param_string[:-1]  #removing the last comma
+        
+        #PARAMETERS FOR METHOD DEFINITION (no default values)
+        self.definition_param_string = "{}{}".format(param_string,default_without_string)
+        self.definition_param_string = self.definition_param_string[:-1]  #removing the last comma
+        
         
         #if no parameters, we insert void
-        if param_str == "":
-            param_str = "void"
-        
-        #else removing the final comma
-        else:
-            param_str = param_str[:-1]
+        if self.declaration_param_string == "":
+            self.declaration_param_string = "void"
+            self.definition_param_string = "void"
             
             
-        return param_str
+        return
     
     
     
