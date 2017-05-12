@@ -52,7 +52,7 @@ class TextBankPostgresql(DatabaseTextBank):
         
         # UNIQUE PATTERN - for UNIQUE contraint defining
         #                     - "UNIQUE ({attr_name})"
-        self.unique_format = "UNIQUE ({})\n"
+        self.unique_format = "UNIQUE ({}),\n"
         
         
         # NOT NULL
