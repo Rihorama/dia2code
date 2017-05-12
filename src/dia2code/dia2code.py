@@ -32,6 +32,8 @@ def main():
     elif mode == "class":
         generator.generate(parser.class_dict)
         
+    print("Code generating sucessful!")
+        
 
 if __name__ == "__main__":
     
