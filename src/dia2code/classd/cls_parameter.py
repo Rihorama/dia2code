@@ -17,7 +17,7 @@ class Parameter:
         
 
             
-    def print_me(self):
+    def printMe(self):
         """A simple print method for debugging purposes.
         """
         

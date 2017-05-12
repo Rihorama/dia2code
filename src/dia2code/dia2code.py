@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from config.configure         import parse_arguments
+from config.configure         import parseArguments
 import config.args_checker    as checker
 from factory.factories        import ParserFactory,GeneratorFactory
 
@@ -8,18 +8,18 @@ from factory.factories        import ParserFactory,GeneratorFactory
 def main():
     
     #setting argparse and parsing arguments
-    args = parse_arguments()
+    args = parseArguments()
     
-    mode         =  checker.check_mode(args.mode)
-    src          =  checker.check_src(args.src)
-    dst          =  checker.check_dst(args.destination)
-    language     =  checker.check_language(args.language,mode)
-    file_name    =  checker.check_filename(args.name,src)
-    print_option =  checker.check_print(args.print) 
+    mode         =  checker.checkMode(args.mode)
+    src          =  checker.checkSrc(args.src)
+    dst          =  checker.checkDst(args.destination)
+    language     =  checker.checkLanguage(args.language, mode)
+    file_name    =  checker.checkFilename(args.name, src)
+    print_option =  checker.checkPrint(args.print)
     
     
     parser = ParserFactory.pick(mode,src)
-    dict_name = ParserFactory.get_dict_name(mode)
+    dict_name = ParserFactory.getDictName(mode)
     dict_full = "parser.{}".format(dict_name)
     
     generator = GeneratorFactory.pick(mode,dst,file_name,language,print_option)

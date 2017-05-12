@@ -27,12 +27,12 @@ class Method:
             self.my_class.abstract_flag = True
 
             
-    def print_me(self):
+    def printMe(self):
         """A simple print method for debugging purposes.
         """
 
         for i in self.param_list:
-            i.print_me()
+            i.printMe()
             
         print("  METHOD {}".format(self))
         print("  Name: {}".format(self.name))
@@ -40,7 +40,7 @@ class Method:
         print("  Visibility: {}".format(self.visibility))
         print("  Parameters: {}")
         for i in self.param_list:
-            i.print_me()
+            i.printMe()
         print("  ###############")
 
             

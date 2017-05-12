@@ -41,7 +41,7 @@ class ClassUmlParser(XmlUmlParser):
         #run for creating classes
         for child in root[1]:
             if child.attrib['type'] == "UML - Class":
-                self.add_class(child)
+                self.addClass(child)
                 
         #if class_dict empty -> wrong type of dia diagram
         if self.class_dict == {}:                             ###
@@ -53,22 +53,22 @@ class ClassUmlParser(XmlUmlParser):
         #run for creating connections
         for child in root[1]:
             if child.attrib['type'] == "UML - Association":
-                self.add_connection(child,"association")
+                self.addConnection(child, "association")
             
             elif child.attrib['type'] == "UML - Generalization":
-                self.add_connection(child,"generalization")
+                self.addConnection(child, "generalization")
                 
             elif child.attrib['type'] == "UML - Dependency":
-                self.add_connection(child,"dependency")
+                self.addConnection(child, "dependency")
                 
             elif child.attrib['type'] == "UML - Realizes":
-                self.add_connection(child,"realizes")
+                self.addConnection(child, "realizes")
                 
         return
       
                 
                 
-    def add_class(self,cls):
+    def addClass(self, cls):
         """Takes an element reprezenting a dia table
         and creates a cls_class.Class object based on it.
         
@@ -123,7 +123,7 @@ class ClassUmlParser(XmlUmlParser):
                 
                 #parses new attribute and appends it to the list of this class's attributes
                 for child in new_root:
-                    new_attr = self.parse_child(child,new_class,"attribute")
+                    new_attr = self.parseChild(child, new_class, "attribute")
                     new_class.attr_list.append(new_attr)
             
             
@@ -132,7 +132,7 @@ class ClassUmlParser(XmlUmlParser):
                 
                 #parses new method and appends it to the list of this class's methods
                 for child in new_root:
-                    new_method = self.parse_child(child,new_class,"method")
+                    new_method = self.parseChild(child, new_class, "method")
                     new_class.method_list.append(new_method)
 
         
@@ -140,7 +140,7 @@ class ClassUmlParser(XmlUmlParser):
                 
         
     
-    def parse_child(self,child,parent,child_type):
+    def parseChild(self, child, parent, child_type):
         """Method receives an element representing a single attribute
         or operation of a class. It parses its info into a dictionary,
         which is returned.
@@ -171,7 +171,7 @@ class ClassUmlParser(XmlUmlParser):
                 
                 for param in new_root:
                     #sending None because in cls.parameter this value is ignored anyway
-                    new_param = self.parse_child(param,None,"parameter")
+                    new_param = self.parseChild(param, None, "parameter")
                     param_list.append(new_param)
                     
                 attr_dict["parameters"] = param_list
@@ -208,7 +208,7 @@ class ClassUmlParser(XmlUmlParser):
     
     
     
-    def add_connection(self,connection,name):
+    def addConnection(self, connection, name):
         """This method finds classes on both sides of the given connection
         arrow element and updates them.
         

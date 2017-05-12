@@ -32,7 +32,7 @@ class Class:
 
 
         
-    def print_me(self):
+    def printMe(self):
         """A simple print method for debugging purposes.
         Prints the class name, stereotype, inheritance, dependency
         and realization flags, attributes, methods and also associations
@@ -49,16 +49,16 @@ class Class:
         print("Realizes flag: {}".format(self.realizes_flag))
         print("Atributes:")        
         for attr in self.attr_list:
-            attr.print_me()
+            attr.printMe()
             
         print("Methods:")        
         for mtd in self.method_list:
-            mtd.print_me()
+            mtd.printMe()
             
         print("Associations:")
         print(self.association_list)
         for assoc in self.association_list:
-            assoc.print_me()
+            assoc.printMe()
             
         print("###########################\n\n")
 

@@ -37,7 +37,7 @@ class DatabaseUmlParser(XmlUmlParser):
         #run for creating tables
         for child in root[1]:
             if child.attrib['type'] == 'Database - Table':
-                self.add_table(child)
+                self.addTable(child)
         
         
         #if table_dict empty -> wrong type of dia diagram
@@ -51,13 +51,13 @@ class DatabaseUmlParser(XmlUmlParser):
         #run for adding references
         for child in root[1]:
             if child.attrib['type'] == 'Database - Reference':
-                self.add_reference(child)
+                self.addReference(child)
                 
         return
       
                 
                 
-    def add_table(self,table):
+    def addTable(self, table):
         """Takes an element reprezenting a dia table
         and creates a db_table object based on it.
         
@@ -101,7 +101,7 @@ class DatabaseUmlParser(XmlUmlParser):
                 new_root = child
                 
                 for child in new_root:
-                    new_attr = self.parse_attribute(child,new_table)
+                    new_attr = self.parseAttribute(child, new_table)
                     attr_list.append(new_attr)
                     
                     if new_attr.p_key_flag:
@@ -114,7 +114,7 @@ class DatabaseUmlParser(XmlUmlParser):
                 
         
         
-    def parse_attribute(self,attr,table):
+    def parseAttribute(self, attr, table):
         """Method receives an element representing a single attribute
         of a table. It parses the attribute's info into a dictionary,
         which is returned.
@@ -154,7 +154,7 @@ class DatabaseUmlParser(XmlUmlParser):
     
     
     
-    def add_reference(self,ref):
+    def addReference(self, ref):
         """This method finds tables on both sides of the given reference
         arrow element and updates them.
         
@@ -202,8 +202,8 @@ class DatabaseUmlParser(XmlUmlParser):
         
         
         #updating both tables
-        master.add_slave(slave)
-        slave.add_foreign_key(master)
+        master.addSlave(slave)
+        slave.addForeignKey(master)
         
         return
         

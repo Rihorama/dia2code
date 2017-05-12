@@ -2,7 +2,7 @@
 
 import argparse
 
-def parse_arguments():
+def parseArguments():
     """Wrapping up argparse functionality in a separate function to make the code
     more well-aranged.
     

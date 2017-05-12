@@ -9,7 +9,7 @@ from error_handler import ErrorHandler
 err = ErrorHandler()
 
 
-def check_mode(mode):
+def checkMode(mode):
     """Takes argument passed as mandatory "mode" argument and
     checks if it's either "d" for database or "c" for class.
     Returns string representing the mode as full word ("database"
@@ -37,7 +37,7 @@ def check_mode(mode):
     return s
     
 
-def check_src(src): 
+def checkSrc(src):
     """Takes argument passed as mandatory "src" argument and checks
     if the given path exists. If yes, returns the path as it is.
     Else prints an error message.
@@ -57,7 +57,7 @@ def check_src(src):
         
     return src
     
-def check_dst(dst):
+def checkDst(dst):
     """Takes argument passed as optional "dst" argument
     (empty string if argument not present). If empty, sets
     the default destination path to the current folder ("./").
@@ -88,7 +88,7 @@ def check_dst(dst):
     return dst
         
 
-def check_language(language,mode):
+def checkLanguage(language, mode):
     """Takes argument passed as optional "language" argument
     (empty string if argument not present). If empty, sets
     the default language to either "c++" or "mysql" depending on
@@ -127,7 +127,7 @@ def check_language(language,mode):
     return language
     
 
-def check_filename(name,src):
+def checkFilename(name, src):
     """Takes argument passed as optional "name" argument
     (empty string if argument not present). If empty, sets
     the default result file name to the source file name.
@@ -152,7 +152,7 @@ def check_filename(name,src):
     return file_name
         
  
-def check_print(prnt):
+def checkPrint(prnt):
     """Takes argument passed as optional "print" argument
     (empty string if argument not present). If empty, sets
     the default option to "f" - print to one file. Other valid

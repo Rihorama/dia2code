@@ -28,7 +28,7 @@ class ParserFactory:
             return ClassUmlParser(src)
     
     
-    def get_dict_name(mode):
+    def getDictName(mode):
         """Provides correct dictionary name based on given mode.
         
         Args:

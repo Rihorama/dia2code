@@ -27,7 +27,7 @@ class Table:
         
         
         
-    def add_slave(self, slave):
+    def addSlave(self, slave):
         """Adds info that this table is referenced by
         another table. Updates is_f_key_cnt and
         referenced_by attributes.
@@ -43,7 +43,7 @@ class Table:
         
         
         
-    def add_foreign_key(self, master):
+    def addForeignKey(self, master):
         """Creates a foreign key referencing the given master table.
         Updates this table's attr_list with the new attribute
         and updates f_key_cnt and f_key_attr_list variables.
