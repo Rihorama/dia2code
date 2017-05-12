@@ -7,7 +7,6 @@ class TextBankPostgresql(DatabaseTextBank):
     def __init__(self):
                 
         self.table = None
-        self.fk_cnt = 0                 #counter of foreign keys to ensure unique fk name
         self.table_string = ""          #filled with wrapUpTable()
         
         self.attr_string = ""           #to accumulate attribute definitions
@@ -15,6 +14,9 @@ class TextBankPostgresql(DatabaseTextBank):
         self.foreign_string = ""        #for foreign keys
         self.primary_string = ""        #for primary key
         self.fk_attributes = ""         #attributes to accomodate foreign key connection
+        
+        self.fk_cnt = 0                 #counter of foreign keys to ensure unique fk name
+        self.constraint_cnt = 0         #counter to ensure unique contraint names
         
         
         #--------- FORMAT STRING PATTERNS -----------
@@ -263,7 +265,8 @@ class TextBankPostgresql(DatabaseTextBank):
             Formated string.
         """
         
-        constraint_name = "{}_{}".format(attr_name,constraint_type.lower())
+        self.constraint_cnt = self.constraint_cnt + 1
+        constraint_name = "{}{}__{}".format(constraint_type.lower(),self.constraint_cnt,attr_name)
         s = self.constraint_format.format(constraint_name,constraint_type,attr_name)
         
         #adding indent
