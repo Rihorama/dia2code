@@ -29,7 +29,7 @@ def check_mode(mode):
         s = "class"
         
     else:                                                           ###
-        err.print_error_onevar("parameter:wrong_mode",mode)         ###
+        err.printErrorOnevar("parameter:wrong_mode", mode)         ###
         e_code = err.exit_code["parameter"]                         ###
                                                                     ###
         exit(e_code)                                                ###
@@ -50,7 +50,7 @@ def check_src(src):
     """
     
     if not os.path.exists(src):                                     ###    
-        err.print_error_onevar("parameter:bad_source",src)          ###
+        err.printErrorOnevar("parameter:bad_source", src)          ###
         e_code = err.exit_code["parameter"]                         ###
                                                                     ###
         exit(e_code)                                                ###
@@ -80,7 +80,7 @@ def check_dst(dst):
         dst = "{}/".format(dst)
         
     if not os.path.exists(dst):                                     ###    
-        err.print_error_onevar("parameter:bad_destination",dst)     ###
+        err.printErrorOnevar("parameter:bad_destination", dst)     ###
         e_code = err.exit_code["parameter"]                         ###
                                                                     ###
         exit(e_code)                                                ###
@@ -119,7 +119,7 @@ def check_language(language,mode):
         
     #language given but not supported
     elif (mode == "database" and flag_db) or (mode == "class" and flag_cls):    ###        
-        err.print_error_twovar("parameter:unsupported_language",language,mode)  ###
+        err.printErrorTwovar("parameter:unsupported_language", language, mode)  ###
         e_code = err.exit_code["parameter"]                                     ###
                                                                                 ###
         exit(e_code)                                                            ###
@@ -178,7 +178,7 @@ def check_print(prnt):
         print_option = prnt
         
     else:                                                               ###
-        err.print_error_onevar("parameter:wrong_print",args.print)      ###
+        err.printErrorOnevar("parameter:wrong_print", args.print)      ###
         e_code = err.exit_code["parameter"]                             ###
                                                                         ###
         exit(e_code)                                                    ###

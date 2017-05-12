@@ -41,7 +41,7 @@ class XmlUmlParser(UmlParser):
             xml_tree = ET.parse(f) 
             
         except ET.ParseError:                                      ###
-            err.print_error_onevar("parameter:not_xml",xml_path)   ###
+            err.printErrorOnevar("parameter:not_xml", xml_path)   ###
             e_code = err.exit_code["parameter"]                    ###
                                                                    ###
             exit(e_code)            
@@ -66,7 +66,7 @@ class XmlUmlParser(UmlParser):
             f = open(xml_path,'rb')
             
         except (OSError, IOError):                                            ###
-            err.print_error_onevar("parameter:trouble_opening_file",xml_path) ###
+            err.printErrorOnevar("parameter:trouble_opening_file", xml_path) ###
             e_code = err.exit_code["parameter"]                               ###
                                                                               ###
             exit(e_code)                                                      ###

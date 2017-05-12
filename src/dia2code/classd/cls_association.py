@@ -136,7 +136,7 @@ class Association:
             m_class = self.B_dict["class"]
             
         else:
-            err.print_error("generator:runtime")
+            err.printError("generator:runtime")
             e_code = err.exit_code["generator"]
                 
             exit(e_code)
@@ -157,14 +157,14 @@ class Association:
             x = m.split("..") #if correct, we get list of two
             
             if not len(x) == 2: #not a list of two, it's wrong                                  #
-                self.err.print_error_twovar("generator:wrong_multiplicity",m,m_class.name)      #
+                self.err.printErrorTwovar("generator:wrong_multiplicity", m, m_class.name)      #
                 e_code = self.err.exit_code["generator"]                                        #
                                                                                                 #
                 exit(e_code)                                                                    #
                 #TODO: Solve these errors earlier, this is dirty, does not close file in code
             
             elif not (x[0].isdigit and (x[1].isdigit or x[1] == "*")):                          #
-                self.err.print_error_twovar("generator:wrong_multiplicity",m,m_class.name)      #
+                self.err.printErrorTwovar("generator:wrong_multiplicity", m, m_class.name)      #
                 e_code = self.err.exit_code["generator"]                                        #
                                                                                                 #
                 exit(e_code)                                                                    #

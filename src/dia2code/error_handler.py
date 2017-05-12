@@ -108,7 +108,7 @@ class ErrorHandler:
     
     #PRINTERS - empty print is there to add one extra line, textwrap has problems with that
         
-    def print_error(self,index):
+    def printError(self, index):
         
         string = "\nERROR - {}".format(self.err_dict[index]) 
         
@@ -116,7 +116,7 @@ class ErrorHandler:
         print("")
         
     
-    def print_error_onevar(self,index,var1):
+    def printErrorOnevar(self, index, var1):
         
         s = self.err_dict[index].format(var1)
         string = "\nERROR - {}".format(s)
@@ -125,7 +125,7 @@ class ErrorHandler:
         print("")
         
     
-    def print_error_twovar(self,index,var1,var2):
+    def printErrorTwovar(self, index, var1, var2):
         
         s = self.err_dict[index].format(var1,var2)
         string = "\nERROR - {}".format(s)

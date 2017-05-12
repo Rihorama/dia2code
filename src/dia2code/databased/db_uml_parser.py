@@ -42,7 +42,7 @@ class DatabaseUmlParser(XmlUmlParser):
         
         #if table_dict empty -> wrong type of dia diagram
         if self.table_dict == {}:                                ###
-            self.err.print_error("parser:database_wrong_dia")    ###
+            self.err.printError("parser:database_wrong_dia")    ###
             e_code = self.err.exit_code["parser"]                ###
                                                                  ###
             exit(e_code)                                         ###
@@ -88,7 +88,7 @@ class DatabaseUmlParser(XmlUmlParser):
             new_table = db_table.Table(name,t_id,comment)
             
         else:                                                 ###
-            self.err.print_error("dia:table_name_missing")    ###
+            self.err.printError("dia:table_name_missing")    ###
             e_code = self.err.exit_code["xml"]                ###
                                                               ###
             exit(e_code)                                      ###
@@ -175,7 +175,7 @@ class DatabaseUmlParser(XmlUmlParser):
         #new_root == None means the connection exists but is not properly
         #connected to any table in the diagram
         if new_root == None:                             ###
-            self.err.print_error("dia:ref_not_closed")   ###
+            self.err.printError("dia:ref_not_closed")   ###
             e_code = self.err.exit_code["diagram"]       ###
                                                          ###
             exit(e_code)                                 ###
@@ -195,7 +195,7 @@ class DatabaseUmlParser(XmlUmlParser):
                 
         #error check if either table not found
         if master == None or slave == None:              ###
-            self.err.print_error("dia:ref_not_closed")   ###
+            self.err.printError("dia:ref_not_closed")   ###
             e_code = self.err.exit_code["diagram"]       ###
                                                          ###
             exit(e_code)                                 ###

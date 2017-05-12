@@ -161,7 +161,7 @@ class DatabaseGenerator(Generator):
             
         #if we get here, it means table_dict hasn't been emptied in 100 cycles
         #which is an error, either too long chain reference or circular reference
-        err.print_error("generator:cycle_limit_exceeded")           ###
+        err.printError("generator:cycle_limit_exceeded")           ###
         e_code = err.exit_code["generator"]                         ###
                                                                     ###
         exit(e_code)                                                ###
