@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from config.configure         import parse_arguments
 import config.args_checker    as checker
