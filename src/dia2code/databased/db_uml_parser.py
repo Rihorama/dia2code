@@ -206,23 +206,3 @@ class DatabaseUmlParser(XmlUmlParser):
         slave.addForeignKey(master)
         
         return
-        
-            
-def run():    
-    
-    parser = UmlParser('./Diagram_firma.dia')
-    parser.parse()
-
-    db_type = "mysql"
-    saving_type = 1
-    file_name = "dump"
-    dest_path = "./pokus/"
-    
-    generator = db_generator.DatabaseGenerator(dest_path,file_name,db_type,saving_type)
-    generator.generate(parser.table_dict)
-
-    
-    
-if __name__ == "__main__":
-    
-    run()
