@@ -36,52 +36,7 @@ class Association:
                        "visibility"   : None,
                        "arrow_visible": None}
 
-    
-    
-    def correctDirection(self):
-        """This method compares the given direction (self.direction)
-        with individually set arrow visibility (as these two elements
-        are not linked). This action needs to be taken because
-        of a bug found in the way direction displays in Dia. This bug
-        might lead the user to enter invalid direction info to
-        achieve the correct visual appearance. 
-        
-        This method usage doesn't entirely eliminate the chance
-        of undesired data coming through. It only works in a directed
-        association if the user uses both direction and individual arrows.
-        
-        If the user uses only direction and leaves both arrows set to No,
-        there is no way to determine if the data coming correspond to
-        user's intentions or not.
-        
-        Returns:
-            bool - True if direction and arrows correspond, False otherwise.
-        """
-        
-        #arrow only points to A
-        directed_flag_A = self.A_dict["arrow_visible"] and not self.B_dict["arrow_visible"]
-        #arrow only points to B
-        directed_flag_B = self.B_dict["arrow_visible"] and not self.A_dict["arrow_visible"]
-        #both arrows visible
-        directed_flag_both = self.B_dict["arrow_visible"] and self.A_dict["arrow_visible"]
-        
-        #arrow points to A, direction says we point to B
-        collision_A = directed_flag_A and self.direction == "A to B"
-        #arrow points to B, direction says we point to A
-        collision_B = directed_flag_B and self.direction == "B to A"
-        #arrow points to both A and B but direction suggests one-sided association
-        collision_both = directed_flag_both and not self.direction == "none"
-        
-        #if either collission happened => return False
-        if (collision_A or collision_B or collision_both):
-            return False
-        
-        else:
-            return True
-        
-        
-    
-    
+
     
     def whichMemberIs(self,cls):
         """Gets a class and decides whether it's A or B member in

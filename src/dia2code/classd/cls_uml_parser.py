@@ -342,32 +342,19 @@ class ClassUmlParser(XmlUmlParser):
                 
             elif name == "show_arrow_b" and child[0].attrib["val"] == "true":
                 new_assoc.B_dict["arrow_visible"] = True
-            
-            
-            #last but not least, analyzes if given direction and displayed arrows don't
-            #collide:
-            flag = new_assoc.correctDirection()
-            
-            #if yes, we rather print error than choose either variant
-            if not flag:                                                                           ###
-                self.err.printErrorTwovar("dia:direction_collision", A_class.name, B_class.name)   ###
-                e_code = self.err.exit_code["diagram"]                                             ###
-                                                                                                   ###
-                exit(e_code)                                                                       ###
-                
+                            
         
-        #if direction says "none" but arrows are visible, we adjust the direction
-        if new_assoc.direction == "none":
-            new_direction = "none"
+        #no arrows are considered bi directional (both classes will know about each other)
+        new_direction = "none"
+        
+        if new_assoc.A_dict["arrow_visible"] and not new_assoc.B_dict["arrow_visible"]:
+            new_direction = "B to A"
             
-            if new_assoc.A_dict["arrow_visible"] and not new_assoc.B_dict["arrow_visible"]:
-                new_direction = "B to A"
-                
-            elif not new_assoc.A_dict["arrow_visible"] and new_assoc.B_dict["arrow_visible"]:
-                new_direction = "A to B"
+        elif not new_assoc.A_dict["arrow_visible"] and new_assoc.B_dict["arrow_visible"]:
+            new_direction = "A to B"
             
-            #updating the direction
-            new_assoc.direction = new_direction
+        #updating the direction
+        new_assoc.direction = new_direction
             
         
         #ADDING ASSOCIATION TO RESPECTIVE CLASSES
@@ -386,22 +373,3 @@ class ClassUmlParser(XmlUmlParser):
         
         
         return
-    
-
-def run():    
-    
-    parser = UmlParser('./Class1.dia')
-    parser.parse()
-    
-    cls_type = "cpp"
-    saving_type = 2
-    file_name = "pokus"
-    dest_path = "./pokus/"
-    
-    generator = cls_generator.ClassGenerator(dest_path,file_name,cls_type,saving_type)
-    generator.generate(parser.class_dict)
-
-    
-if __name__ == "__main__":
-    
-    run()
