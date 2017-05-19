@@ -366,18 +366,13 @@ class TextBankPython(ClassTextBank):
             A string containing all parameters of the given method separated with comma.
         """
         
-        param_str = "self,"     #self is always present
+        param_str = ""     #self is always present
         default_param_str = ""
         self.param_comments = "" 
         
         for param in mtd.param_list:
             
-            #if self is present from diagram, we skip it, it
-            #was already automatically aded at the beginning
-            if param.name == "self":
-                continue
-            
-            elif param.value == None:
+            if param.value == None:
                 s = self.param_format.format(param.name)
                 param_str = "{}{}".format(param_str,s)
                 
