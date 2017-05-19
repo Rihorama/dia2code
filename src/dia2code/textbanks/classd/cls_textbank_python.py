@@ -368,18 +368,23 @@ class TextBankPython(ClassTextBank):
         
         param_str = "self,"     #self is always present
         default_param_str = ""
-        self.param_comments = ""
+        self.param_comments = "" 
         
         for param in mtd.param_list:
             
-            if param.value == None:
+            #if self is present from diagram, we skip it, it
+            #was already automatically aded at the beginning
+            if param.name == "self":
+                continue
+            
+            elif param.value == None:
                 s = self.param_format.format(param.name)
                 param_str = "{}{}".format(param_str,s)
                 
             else:
                 #the string with default value is saved in default_param_string
                 s = self.default_param_format.format(param.name, param.value)
-                default_param_str = "{}{}".format(param_str,s)
+                default_param_str = "{}{}".format(default_param_str,s)
             
             if not param.comment == "":
                 c = self.parameter_comment.format(self.indent * 2, param.name,
